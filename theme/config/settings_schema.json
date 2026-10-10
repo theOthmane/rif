@@ -69,6 +69,11 @@
         "max": 6,
         "step": 1,
         "default": 3
+      },
+      {
+        "type": "image_picker",
+        "id": "hero_poster",
+        "label": "t:labels.hero_poster"
       }
     ]
   },

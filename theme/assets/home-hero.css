@@ -1,0 +1,174 @@
+/** RIFANO home hero — "Be different / Be RIFANO" over the watch stage (poster version).
+    Tokens live in tokens.css. Spec 14 mounts the canvas inside .hero__stage and turns
+    .hero into the scroll runway; the class names below are its contract. */
+
+/* One screen minus the sticky chrome. The chrome height depends on the merchant's
+   announcement text and its wrapping, so home-hero.js measures .site-chrome into
+   --hero-chrome-h; the fallback estimate (header + a short announcement) keeps the
+   first screen usable without JS. */
+.hero__sticky {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  min-height: calc(100svh - var(--hero-chrome-h, calc(var(--s-8) + var(--s-6))));
+  max-inline-size: var(--page-max);
+  margin-inline: auto;
+  padding: var(--s-5) var(--gutter) var(--s-6);
+  text-align: center;
+}
+
+/* Tagline: Bodoni via .t-display, the hero scale, two fixed lines. */
+.hero__title {
+  margin: 0;
+  font-size: var(--fs-3xl);
+  text-wrap: balance;
+}
+
+.hero__line {
+  display: block;
+  animation: hero-rise var(--dur-3) var(--ease-out) both;
+}
+
+/* Line 2 is the brand moment: italic, brushed silver (a permitted silver use —
+   the tagline the brand is built on, set once on the home page). */
+.hero__line--accent {
+  font-style: italic;
+  background: var(--c-silver);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation-delay: calc(var(--dur-1) / 2);
+}
+
+/* Stage: the watch (poster or placeholder) plus its contact shadow. The poster is
+   absolutely positioned so both caps resolve against the stage's definite size;
+   the bitmap keeps its ratio, so there is no CLS and no overflow into the tagline. */
+.hero__stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-block-size: 0;
+  inline-size: 100%;
+  animation: hero-settle var(--dur-3) var(--ease-out) both;
+  animation-delay: var(--dur-1);
+}
+
+.hero__poster {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-inline-size: 100%;
+  max-block-size: min(62svh, 100%);
+  object-fit: contain;
+}
+
+/* Contact shadow / soft reflection. A shadow cannot read on pure black, so the
+   floor is a low-alpha silver pool — the watch's light touching the ground. */
+.hero__floor {
+  position: absolute;
+  inset-inline: 0;
+  margin-inline: auto;
+  inset-block-end: var(--s-2);
+  inline-size: min(64%, 24rem);
+  block-size: var(--s-3);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--c-silver-3) 25%, transparent), transparent);
+  pointer-events: none;
+}
+
+/* Placeholder, when no poster is set: a centred spotlight over a thin silver
+   dial ring. The ring is the one silver accent here — a 1px hairline outline. */
+.hero__stage--placeholder {
+  --hero-dial: min(64vw, 38svh);
+}
+
+.hero__stage--placeholder::before,
+.hero__stage--placeholder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+}
+
+.hero__stage--placeholder::before {
+  inline-size: min(calc(var(--hero-dial) * 1.6), 100%);
+  block-size: min(calc(var(--hero-dial) * 1.6), 100%);
+  background: radial-gradient(closest-side, var(--c-surface-2), var(--c-bg));
+}
+
+.hero__stage--placeholder::after {
+  inline-size: var(--hero-dial);
+  block-size: var(--hero-dial);
+  border: 1px solid var(--c-silver-3);
+  border-radius: var(--radius-pill);
+}
+
+/* With a placeholder the watch sits at the stage's optical centre, so the floor
+   rises to meet the dial's bottom arc instead of the stage's bottom edge. */
+.hero__stage--placeholder .hero__floor {
+  inset-block-end: calc(50% - var(--hero-dial) / 2);
+}
+
+.hero__cta {
+  margin: 0;
+}
+
+/* Entrance: once, on load — lines rise 12px, staggered 80ms; the watch settles
+   0.98 → 1. Nothing loops.
+   The fades start at 0.001, not 0: an element whose only paint is fully
+   transparent is excluded from LCP, and the compositor then fades it in without
+   a new main-thread paint — the h1 (or the poster) would never register as the
+   largest contentful paint. 0.001 is visually identical to 0. */
+@keyframes hero-rise {
+  from {
+    opacity: 0.001;
+    transform: translateY(var(--s-3));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-settle {
+  from {
+    opacity: 0.001;
+    scale: 0.98;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* Pointer parallax (fine pointers only): home-hero.js writes --hero-tilt-x/y.
+   Touch and reduced-motion never bind it, and without a pointer the transform
+   is the identity. */
+@media (hover: hover) and (pointer: fine) {
+  .hero__stage {
+    transform: perspective(60rem) rotateX(var(--hero-tilt-x, 0deg)) rotateY(var(--hero-tilt-y, 0deg));
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+}
+
+/* Reduced motion is a supported path: nothing animates. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__line,
+  .hero__stage {
+    animation: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero__sticky {
+    gap: var(--s-5);
+    padding-block: var(--s-6) var(--s-7);
+  }
+}
+
+@media (min-width: 1200px) {
+  .hero__sticky {
+    gap: var(--s-6);
+    padding-block: var(--s-7) var(--s-8);
+  }
+}

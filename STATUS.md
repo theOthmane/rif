@@ -639,3 +639,61 @@ Sort option names ("Featured"…) are Shopify-platform strings; they follow the 
 Cart count > 0 still untestable (0 products).
 
 Next: spec 06 (home intro + hero poster). Do not start until told.
+
+### Spec 06 — Home intro: tagline + hero (poster version) (this session)
+
+Date: 2026-10-11. Commit `feat(06): home hero poster + tagline`.
+
+Files: new `theme/sections/home-hero.liquid`, `theme/assets/home-hero.css`, `theme/assets/home-hero.js`;
+`theme/templates/index.json` (home-hero replaces the spec-00 `main` stub); **deleted** `theme/sections/main-index.liquid`;
+`theme/locales/fr.default.json` (`rifano.hero_cta`); `theme/config/settings_schema.json` (`hero_poster` image_picker in the RIFANO
+group); `theme/locales/en.default.schema.json` (**companion file not in the spec's list** — one label key, `labels.hero_poster`;
+without it the merchant sees the raw `t:` key in the editor). `home-hero.js` is named by the spec's Requirements
+("a ≤30-line script in `home-hero.js`") but missing from its Files list — built as named. README.md:92 still shows a
+`main-index` JSON example; not in this spec's list, left as-is for a docs pass.
+
+Impeccable `shape home hero` was run first, as the spec ordered: context loaded via the skill; one owner decision
+(pointer parallax: ship + keep only if browser verification says it reads subtle → **shipped and kept**); the compact
+brief follows the spec's structure. Sketch (`brand/sketch-home.jpeg`) re-checked: tagline stacked above the stage.
+
+Behaviour: `.hero` one screen minus sticky chrome — `home-hero.js` measures `.site-chrome` into `--hero-chrome-h`
+(ResizeObserver; token fallback 96px for no-JS), so a longer merchant announcement never pushes the CTA below the
+fold. Tagline = the page's only h1, Bodoni `--fs-3xl`, two lines, line 2 italic with the silver gradient. Stage:
+poster via `image_url` 1600 / srcset 800-1200-1600 / `fetchpriority="high"` / eager / `object-fit: contain` / 62svh
++ stage cap; absolute positioning keeps both caps definite so no CLS and no overflow into the tagline. No poster →
+placeholder: centred radial spotlight (`--c-surface-2`→`--c-bg`), 1px `--c-silver-3` dial ring (`--radius-pill`
+gets its first consumer), plus the `.hero__floor` ellipse (low-alpha silver pool; a dark shadow cannot read on pure
+black). CTA `.btn` → `routes.collections_url`. Entrance once on load: lines rise `--s-3` (12px), staggered
+`calc(--dur-1 / 2)` (80ms), watch settles 0.98→1 at `--dur-1` delay, all `--dur-3`; nothing loops. Parallax: fine
+pointers only, not reduced motion, ≤3° via `--hero-tilt-x/y`, rAF + passive listeners, reset on pointerleave.
+Reduced motion: `animation: none`; page completely static.
+
+Two findings worth recording. (1) **LCP vs `opacity: 0` entrance**: the first build faded from `opacity: 0` and the
+h1 never registered as an LCP element — the main thread paints it fully transparent and the compositor does the fade,
+so LCP stayed on the announcement paragraph. Fades now start at `0.001` (visually identical); LCP is the h1 without a
+poster and the poster img with one. (2) **Parallax direction was verified, not guessed**: probe elements at
+exaggerated angles proved `rotateY(+)` magnifies the *left* side and `rotateX(+)` the *bottom*, so the signs are
+`-x` / `+y` — the surface leans toward the pointer (near side comes forward).
+
+Verification (all live, theme `rifano-smoke` #185969639647): theme check **0 errors, 0 warnings** (44 files; a broken
+copy in /tmp proves `home-hero.liquid` is actually inspected). MCP `validate_theme`: **7/7 VALID**. Push smoke
+**0 errors** (final state; temp test files were pushed and then removed by the final push — "Cleaning your remote
+theme" ran). Browser, agent-browser Chrome 155 at 375×667 and 1440×900: CTA bottom 643 ≤ 667 at load (all three hero
+elements visible without scrolling), `scrollWidth == clientWidth` everywhere, CLS 0, LCP = `hero__line` (15,860)
+without poster / `hero__poster` (76,358) with poster. Poster path verified with `brand/hero/poster.png` copied in as
+a **temporary uncommitted asset** (never committed, deleted before the final push) — 375/1440 screenshots show the
+watch contained at ratio with the floor pool; zero `.png/.jpg/.svg` files exist anywhere in `theme/` and no
+`brand/` reference exists outside `.md`. Reduced motion: `getAnimations()` = `[]`, everything at final state.
+Parallax: end-to-end in a headed browser (headless reports `hover: none`), tilts to −2.81°/2.11° at the bottom-right
+and mirror-image top-left; static screenshots at max read as a barely-there weight shift — kept. axe on `.hero`:
+**0 violations**; the 2 incompletes are gradient backgrounds axe cannot compute (hand-checked: silver gradient text
+5.57:1 worst stop; black on the silver `.btn` ≥ 5.7:1 worst stop). Page-wide violations (2) come from Shopify's
+injected preview-bar iframe only. Detector: `[]` exit 0 (standing caveat: it does not scan `.liquid`).
+
+Not verified / open: the entrance has not been seen on a real phone (only mid-flight opacity samples + screenshots);
+the 375px preview bar overlays ~16px of the CTA in Shopify's preview mode only (absent in the real storefront
+render, verified at the plain URL). Owner to eyeball in `theme dev`: the entrance feel and the parallax on a real
+desktop. Owner, Shopify admin: when spec 13's poster is final, set **Theme settings → RIFANO → Hero poster**
+(the store currently has none, so preview shows the dial placeholder by design).
+
+Next: spec 07 (home rows + "Plus"). Do not start until told.

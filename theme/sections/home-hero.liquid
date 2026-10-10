@@ -1,0 +1,52 @@
+{% comment %}
+  RIFANO home intro: "Be different / Be RIFANO" over the watch stage.
+  Poster version — spec 14 mounts the canvas inside .hero__stage later, so the
+  class names below are its contract and must not be renamed. This section is
+  the home page's only <h1>.
+{% endcomment %}
+
+{{ 'home-hero.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign hero_poster = settings.hero_poster
+%}
+
+<section class="hero" data-hero>
+  <div class="hero__sticky">
+    <h1 class="hero__title t-display">
+      <span class="hero__line">{{ 'rifano.tagline_1' | t }}</span>
+      <span class="hero__line hero__line--accent">{{ 'rifano.tagline_2' | t }}</span>
+    </h1>
+
+    <div class="hero__stage{% if hero_poster == blank %} hero__stage--placeholder{% endif %}">
+      {% if hero_poster != blank %}
+        <img
+          class="hero__poster"
+          src="{{ hero_poster | image_url: width: 1600 }}"
+          srcset="{{ hero_poster | image_url: width: 800 }} 800w, {{ hero_poster | image_url: width: 1200 }} 1200w, {{ hero_poster | image_url: width: 1600 }} 1600w"
+          sizes="(min-width: 768px) 60vw, 100vw"
+          width="{{ hero_poster.width }}"
+          height="{{ hero_poster.height }}"
+          alt="{{ hero_poster.alt | escape }}"
+          fetchpriority="high"
+          loading="eager"
+        >
+      {% endif %}
+      <div class="hero__floor" aria-hidden="true"></div>
+    </div>
+
+    <p class="hero__cta">
+      <a class="btn" href="{{ routes.collections_url }}">{{ 'rifano.hero_cta' | t }}</a>
+    </p>
+  </div>
+</section>
+
+<script src="{{ 'home-hero.js' | asset_url }}" type="module" defer></script>
+
+{% schema %}
+{
+  "name": "Home hero",
+  "settings": [],
+  "presets": [{ "name": "Home hero" }]
+}
+{% endschema %}
