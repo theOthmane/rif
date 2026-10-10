@@ -16,7 +16,7 @@ Product truth: `PRODUCT.md`. Visual system: `DESIGN.md` (spec 01). Agent rules: 
 
 | Topic | Decision |
 |---|---|
-| Base | Shopify **Skeleton** in `theme/`: Liquid templates + `{% block %}`, **no sections, no JSON templates** (see `theme/AGENTS.md`) |
+| Base | Shopify **Skeleton** in `theme/`: Liquid templates + `{% block %}`, **no sections, no JSON templates** (see `theme/AGENTS.md`). Requires a store whose upload accepts `{% block %}`/`{% partial %}`, proven by a push test. Spec 06+ is blocked until the store decision in STATUS.md is resolved (see the Gate row for the push check) |
 | Language | UI French only (`fr.default.json`). Darija only as brand touches ("Mrehba bik") |
 | Fonts | **Bodoni Moda** (display) + **Manrope** (body), self-hosted variable WOFF2 in `theme/assets/` |
 | Colour | Tinted near-black ground, warm-neutral light text, brushed-silver accent. Never `#000` |
@@ -28,7 +28,7 @@ Product truth: `PRODUCT.md`. Visual system: `DESIGN.md` (spec 01). Agent rules: 
 | Hero watch | An **original RIFANO watch** (RF on the dial), generated from Watch-2 as a *reference only*. No third-party logos anywhere on the site |
 | JS | Vanilla ES modules + custom elements. No jQuery, no frameworks, no CDN scripts |
 | Skills | Impeccable = tokens, critique, audit, polish. scroll-craft = hero art direction and verification only. taste-skill = one optional polish pass. Priority on conflict: **PRODUCT.md > DESIGN.md > Impeccable > scroll-craft > taste-skill** |
-| Gate | `theme check` 0 errors (Shopify Dev MCP or `npx @shopify/cli@latest theme check --path theme`) before **every** commit |
+| Gate | `theme check` 0 errors AND `theme push --unpublished` to the preview store (fexgzv-pq) shows no new Liquid errors, before every commit. Record both results in STATUS.md. |
 | CLI | Global `shopify` is broken. Always use `npx @shopify/cli@latest` |
 
 ## 3. Phases and specs

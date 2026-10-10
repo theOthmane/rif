@@ -32,10 +32,10 @@ You are building the RIFANO Shopify theme. You get **one spec per session**.
 ## Workflow for every spec
 1. Read the spec. List the files you will create or edit.
 2. Implement.
-3. Run `npx @shopify/cli@latest theme check --path theme` (or the MCP validator). Fix until **0 errors**. Warnings: fix if in files you touched.
+3. Run `npx @shopify/cli@latest theme check --path theme` (or the MCP validator). Fix until **0 errors**. Warnings: fix if in files you touched. Then run `npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --unpublished --theme rifano-smoke --no-input`. theme check cannot see store-side Liquid errors; this can. Report the error count. Until the store decision in STATUS.md is resolved, the known baseline is 13 errors (12 `Unknown tag 'block'`, 1 `Unknown tag 'partial'`). Any error beyond that baseline is a fail you must fix.
 4. Check every acceptance criterion in the spec. State pass/fail for each.
 5. Update `STATUS.md`: date, spec number, what changed, theme-check result, anything left open.
-6. `git add -A && git commit -m "feat(NN): <short summary>" && git push`.
+6. Stage only the files in the spec's file list plus `STATUS.md`. If `git status` shows anything else, list it in your reply and leave it unstaged. `git add <files> && git commit -m "feat(NN): <short summary>" && git push`.
 7. Reply with: files changed, acceptance checklist, anything the owner must do in Shopify admin.
 
 If blocked: write the blocker in `STATUS.md`, commit what passes theme check, and stop. Never fake a pass.

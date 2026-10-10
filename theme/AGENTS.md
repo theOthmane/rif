@@ -89,6 +89,10 @@ Keep child calls in the caller-owned body, never in block or snippet
 implementations. LiquidDoc examples may show block calls, but must be authored
 in a layout or template when used.
 
+theme check parses this tag, but stores without the new Liquid environment
+reject it at upload (`Unknown tag`); validate with `theme push`. Wrapping it in
+`{% if %}` does not help, because it is a parse-time error.
+
 ## The partial tag
 
 ```liquid
@@ -104,7 +108,7 @@ canonical partial-refresh example. Spec 01 deleted both; the pattern they
 demonstrated is: the tip sentence lives in a `{% partial 'liquid-tip' %}`
 region, and a module calls `partials.refresh("liquid-tip")` to swap in a
 fresh server-rendered tip. Recover the original at
-`git show HEAD~1:theme/assets/liquid-tips.js`. Import `partials` from
+`git show 8c04487:theme/assets/liquid-tips.js`. Import `partials` from
 `@shopify/partial-rendering`. Use `refresh()` to fetch and apply regions from
 the current page URL, or `fetch()` followed by `apply()` when you need control
 over the request URL, method, body, or when the update appears. Fetch related
@@ -124,6 +128,10 @@ shared links and browser navigation produce the same result.
 The `{% partial %}` tag renders on the storefront only when
 `shop.features.agentic_editor_enabled?` is on and the page is served by
 StorefrontRenderer; otherwise the storefront raises `Unknown tag 'partial'`.
+
+theme check parses this tag, but stores without the new Liquid environment
+reject it at upload (`Unknown tag`); validate with `theme push`. Wrapping it in
+`{% if %}` does not help, because it is a parse-time error.
 
 ## Blocks
 

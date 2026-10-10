@@ -195,3 +195,11 @@ The failing files in the upstream push are `layout/theme.liquid:35`, `templates/
 
 Nothing in `theme/` was changed to pursue this. The only change in this commit is this STATUS.md entry.
 
+### QA recovery — R1
+
+QA report committed at `a6e45c2`; themes pulled from `fexgzv-pq` contain no block/partial files; `theme dev` returns `500 "Unknown tag 'block'"` on every page; storefront password now known (see `QA-REPORT.md`); store decision pending with the owner; spec work stays paused.
+
+Gate hardened (docs only): `AGENTS.md` workflow step 3 now runs the `theme push --unpublished` smoke after `theme check` (13-error baseline: 12 `Unknown tag 'block'` + 1 `Unknown tag 'partial'` until the store decision resolves); step 6 stages only the spec's files + `STATUS.md`. `PLAN.md` §2 Gate and Base rows updated. `theme/AGENTS.md` recovery pointer pinned to `8c04487`, and both tag sections now warn that the tags parse in theme check but are rejected at upload (parse-time; `{% if %}` does not guard).
+
+R1 gate results: `npx @shopify/cli@latest theme check --path theme` — 0 errors, 2 `OrphanedSnippet` warnings (`snippets/price.liquid`, `snippets/product-card.liquid`; expected until spec 07/08/09/12 lands a consumer). `npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --unpublished --theme rifano-smoke --no-input` — exactly the 13-error baseline (12 `Unknown tag 'block'`, 1 `Unknown tag 'partial'`), no new Liquid errors. Store hygiene: the smoke left two unpublished `rifano-smoke` themes (#185968918751, #185968951519) to delete with the other throwaways.
+
