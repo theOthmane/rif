@@ -8,6 +8,7 @@
     {{ 'tokens.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'header.css' | asset_url | stylesheet_tag }}
 
     {% # Inlined CSS Variables. Must render after tokens.css so the merchant overrides of --page-max / --gutter win the cascade. %}
     {% render 'css-variables' %}
@@ -22,7 +23,11 @@
     <a href="#main-content" class="skip-link">{{ 'rifano.skip_to_content' | t }}</a>
 
     {% block 'container', tag: 'div' %}
-      {% block 'header' -%}{%- endblock %}
+      {% block 'announcement' -%}{%- endblock %}
+      <menu-drawer>
+        {% block 'header' -%}{%- endblock %}
+        {% block 'menu-drawer' -%}{%- endblock %}
+      </menu-drawer>
     {% endblock %}
 
     <main id="main-content">

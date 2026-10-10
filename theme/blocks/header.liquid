@@ -1,52 +1,64 @@
 {% doc %}
-  Renders the theme's storefront header: shop title, main menu,
-  customer account entry, and cart link. Composed directly in
-  layout/theme.liquid so it wraps every page.
+  RIFANO site header: menu button left, RF monogram centre, cart right.
+  Sticky with a scroll hairline. Self-contained: callers must leave the body empty.
 {% enddoc %}
 
-<header {{ block.shopify_attributes }}>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
+{% # Sentinel for the scroll hairline. Observed by menu-drawer.js via IntersectionObserver (no scroll listener). %}
+<div class="header__sentinel" aria-hidden="true"></div>
 
-  <div class="header__menu">
-    {% for link in block.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+<header class="site-header" {{ block.shopify_attributes }}>
+  <div class="site-header__inner">
+    <div class="site-header__left">
+      <button
+        type="button"
+        id="menu-button"
+        class="icon-button header__menu-button"
+        aria-controls="menu-drawer"
+        aria-expanded="false"
+      >
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+        <span class="visually-hidden">{{ 'rifano.menu' | t }}</span>
+      </button>
+    </div>
 
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ block.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
-    {% endif %}
+    <div class="site-header__logo">
+      {% # TODO spec-02: replace with {% render 'logo', variant: 'monogram' %} once snippets/logo.liquid lands. %}
+      <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name }}">
+        <span class="header__monogram" aria-hidden="true">RF</span>
+      </a>
+    </div>
 
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
+    <div class="site-header__right">
+      <a
+        href="{{ routes.cart_url }}"
+        class="icon-button header__cart"
+        aria-label="{{ 'rifano.cart_with_count' | t: count: cart.item_count }}"
+      >
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M6 8h12l1 12H5L6 8z" />
+          <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+        </svg>
+        {% partial 'cart-count' %}
+          <span
+            id="cart-icon-bubble"
+            class="cart-count"
+            {% if cart.item_count == 0 %}
+              hidden
+            {% endif %}
+          >
+            {{ cart.item_count }}
+          </span>
+        {% endpartial %}
+      </a>
+    </div>
   </div>
 </header>
 
 {% schema %}
 {
-  "name": "t:general.header",
-  "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
-    },
-    {
-      "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
-    }
-  ]
+  "name": "Header",
+  "settings": []
 }
 {% endschema %}

@@ -73,6 +73,18 @@
     "tagline_1": "Be different.",
     "tagline_2": "Be RIFANO.",
     "welcome": "Mrehba bik",
-    "skip_to_content": "Aller au contenu"
+    "skip_to_content": "Aller au contenu",
+    "menu": "Menu",
+    "close": "Fermer",
+    "search_placeholder": "Rechercher une montre, un collier…",
+    "search_label": "Rechercher",
+    "cart": "Panier",
+    "cart_with_count": "Panier ({{ count }} articles)",
+    "menu_empty": "Menu bientôt disponible",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "email_label": "E-mail",
+    "cod_delivery": "Paiement à la livraison · Livraison gratuite partout au Maroc"
   }
 }

@@ -1,0 +1,20 @@
+{% doc %}
+  Persistent COD announcement bar. Self-contained: callers must leave the body empty.
+{% enddoc %}
+
+<div class="announcement t-label" {{ block.shopify_attributes }}>
+  <p class="announcement__text">
+    {% if settings.announcement_text != blank %}
+      {{ settings.announcement_text }}
+    {% else %}
+      {{ 'rifano.announcement' | t }}
+    {% endif %}
+  </p>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement",
+  "settings": []
+}
+{% endschema %}
