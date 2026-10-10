@@ -1,0 +1,43 @@
+:root {
+  /* colour: tinted near-black ground, never #000 */
+  --c-bg: #0d0e10;          /* page */
+  --c-surface: #15161a;     /* cards, drawers */
+  --c-surface-2: #1d1f24;   /* hover, inputs */
+  --c-line: #2a2d33;        /* hairlines */
+  --c-text: #ecebe8;        /* primary text (warm) */
+  --c-text-2: #a7a9ae;      /* secondary text (tinted, ≥ 4.5:1 on --c-bg) */
+  --c-silver-1: #e7e9ec; --c-silver-2: #b9bdc3; --c-silver-3: #7f848b;
+  --c-silver: linear-gradient(135deg, var(--c-silver-1) 0%, var(--c-silver-2) 45%, var(--c-silver-3) 70%, var(--c-silver-1) 100%);
+  --c-accent: var(--c-silver-2); /* focus rings, active states */
+  --c-danger: #e0796b; --c-success: #8fc5a0;
+
+  /* type */
+  --font-display: "Bodoni Moda", "Didot", Georgia, serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+  --fs-xs: 0.75rem; --fs-sm: 0.875rem; --fs-md: 1rem; --fs-lg: 1.125rem;
+  --fs-xl: clamp(1.375rem, 1.1rem + 1.2vw, 1.75rem);
+  --fs-2xl: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+  --fs-3xl: clamp(2.5rem, 1.6rem + 4.5vw, 4.75rem);   /* hero tagline */
+  --lh-tight: 1.05; --lh-snug: 1.25; --lh-body: 1.6;
+  --tracking-label: 0.14em;  /* uppercase Manrope labels */
+  --tracking-display: -0.01em;
+
+  /* space: 4px base */
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
+  --s-6: 2rem; --s-7: 3rem; --s-8: 4rem; --s-9: 6rem;
+  --section-y: clamp(3rem, 2rem + 4vw, 6rem);
+  --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+  --page-max: 90rem;
+
+  /* shape and depth */
+  --radius-sm: 2px; --radius-md: 4px; --radius-pill: 999px;
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -12px rgb(0 0 0 / 0.6);
+
+  /* motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-1: 160ms; --dur-2: 280ms; --dur-3: 600ms;
+
+  /* layers */
+  --z-header: 50; --z-drawer: 100; --z-toast: 150;
+}
+@media (prefers-reduced-motion: reduce) { :root { --dur-1: 0ms; --dur-2: 0ms; --dur-3: 0ms; } }

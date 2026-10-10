@@ -46,7 +46,17 @@
     "padding": "Padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
-    "show_payment_icons": "Show payment icons"
+    "show_payment_icons": "Show payment icons",
+    "announcement_text": "Announcement text",
+    "whatsapp_number": "WhatsApp number (digits only, wa.me format)",
+    "instagram_url": "Instagram URL",
+    "tiktok_url": "TikTok URL",
+    "support_email": "Support email",
+    "delivery_text": "Delivery text",
+    "warranty_text": "Warranty text",
+    "returns_text": "Returns text",
+    "home_rows_menu": "Home rows menu",
+    "rows_visible": "Visible rows"
   },
   "options": {
     "alignment": {

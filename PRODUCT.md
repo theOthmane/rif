@@ -10,7 +10,7 @@ web
 
 Primary users are 17–40, mostly in Morocco: young working professionals, ambitious people, and entrepreneurs on their way to the top 1%. They arrive predominantly on mobile, frequently from Instagram or TikTok, and arrive with little patience for friction. Secondary usage context is the store owner (RIFANO), who configures the theme in Shopify admin and ships copy, products, and policy text in.
 
-Accessibility requirements have not been established by the owner. TBD.
+Accessibility: WCAG 2.2 AA.
 
 ## Product Purpose
 
@@ -24,7 +24,7 @@ Success means a visitor landing from a short-form video or a shared link can bro
 
 The 1% mindset: prestige, aura, ambition, productivity. RIFANO speaks to people who are on their way to the top 1%, and it treats a watch as a marker of earned status rather than an accessory.
 
-The mechanism that a neighbouring store could not truthfully copy is positioning plus channel: Moroccan Instagram/TikTok-native discovery funnelled into a cash-on-delivered, free-delivery-anywhere-in-Morocco purchase, where the risk sits with the merchant, not the customer. Free delivery everywhere in Morocco plus COD only is a deliberate commitment, not a promotion.
+The mechanism that a neighbouring store could not truthfully copy is positioning plus channel: Moroccan Instagram/TikTok-native discovery funnelled into a cash-on-delivery, free-delivery-anywhere-in-Morocco purchase, where the risk sits with the merchant, not the customer. Free delivery everywhere in Morocco plus COD only is a deliberate commitment, not a promotion.
 
 ## Operating Context
 
@@ -33,9 +33,7 @@ The mechanism that a neighbouring store could not truthfully copy is positioning
 - Commerce: Cash on Delivery only, free delivery everywhere in Morocco, native Shopify checkout with COD enabled.
 - UI language: French. Darija is permitted only for small brand touches (e.g. "Mrehba bik"). Tagline: "Be different. Be RIFANO."
 - Storefront code: a Skeleton-based Shopify theme in `theme/`, liquid-only with Skeleton's section/block architecture.
-- Toolchain: the global `shopify` binary is broken on this machine; use `npx @shopify/cli@latest`.
-- Verification gate: `shopify theme check` must pass with 0 errors via the Shopify Dev MCP before every commit. Last run: 26 files inspected, no offenses.
-- Motion tooling preflight (`tools/scroll-craft/`, gitignored) is Ready with optional items missing: `playwright-core` and Chrome not installed, `KIE_AI_API_KEY` not set, scrollcraft registry not created.
+- Verification gate: `theme check` must pass with 0 errors before every commit.
 
 ## Capabilities and Constraints
 
@@ -58,7 +56,9 @@ Constraints:
 
 Policy and contact copy is placeholders in this record and must stay marked as such until the owner supplies final text: delivery 24–72h [PH], warranty 12 months [PH], returns 7 days [PH]. Contact placeholders [PH]: WhatsApp `+212 6 00 00 00 00`, Instagram `@rifano.ma`, TikTok `@rifano.ma`, email `contact@rifano.ma`.
 
-Undecided product facts: the real catalogue (products, variants, prices, photography) is TBD; whether COD is already switched on in the live store admin is TBD; shipping zones, rates, and carrier are TBD; how the scroll-scrubbed 3D hero is produced given that no image or 3D generation is available in the current harness is TBD; whether Bodoni Moda and Manrope ship via Shopify's `font_picker` or self-hosted files is TBD; whether the RF monogram exists as its own asset is TBD, since only `brand/rifano-logo.PNG` is on hand.
+Undecided product facts: the real catalogue (products, variants, prices, photography) is TBD; whether COD is already switched on in the live store admin is TBD; shipping zones, rates, and carrier are TBD.
+
+Decided: Hero production — Owner generates an original RIFANO watch (RF on dial) with Nano Banana, animates it with Veo, frames extracted with ffmpeg. See specs/13. Fonts — Self-hosted variable WOFF2 in theme assets (OFL licences). RF monogram — Traced to SVG from brand/rifano-logo.PNG in specs/02. Analytics — Out of v1 theme scope; handled via Shopify customer events/apps later.
 
 ## Brand Commitments
 
@@ -78,7 +78,7 @@ Reference studied: maisonduhype.com. Keep its persistent COD announcement bar an
 
 What exists: the brand logo and four watch renders listed above; the Skeleton base theme in `theme/` with its shipped templates; repo setup state in `STATUS.md`.
 
-What does not exist and must never be fabricated: product photography and product data beyond the four watch renders, customer testimonials or reviews, press, benchmarks, delivery or warranty records, or sales figures. No product listings have been confirmed to exist in the store.
+What does not exist and must never be fabricated: product photography and product data beyond the four watch renders, customer testimonials or reviews, press, benchmarks, delivery or warranty records, or sales figures. No product listings have been confirmed to exist in the store. `brand/watches/*.png` show third-party brands (AP, Emporio Armani, Rolex, Casio). Reference only; never shipped or shown.
 
 ## Product Principles
 

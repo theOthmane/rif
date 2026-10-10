@@ -1,99 +1,114 @@
-/** Hello world block */
-.welcome {
-  display: grid;
-  grid-template-columns: var(--content-grid);
-  background-color: #f6f6f7;
-  padding: 72px 0;
+/** RIFANO base CSS — type helpers, buttons, inputs. Tokens live in tokens.css. */
+
+/* Typography helpers */
+
+.t-display {
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--lh-tight);
+  font-weight: 500;
+  color: var(--c-text);
 }
 
-.welcome-content {
-  grid-column: 2;
-  display: flex;
-  justify-content: space-between;
+.t-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--c-text-2);
+  line-height: var(--lh-snug);
+}
+
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--c-text);
+}
+
+.t-muted {
+  color: var(--c-text-2);
+}
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  width: 100%;
-  padding: 0 24px;
-}
-
-.welcome-description {
-  max-width: 80ch;
-  line-height: 1.4;
-  margin-top: 1.5rem;
-}
-
-.icon {
-  width: 300px;
-}
-
-.highlights {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(4, 1fr);
-  margin-top: 50px;
-}
-
-@media (max-width: 1100px) {
-  .highlights {
-    grid-template-columns: 1fr;
-  }
-}
-
-.highlight {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 24px;
-  border-radius: 8px;
-  background-color: #eef3ff;
-  color: rgb(92, 95, 98);
-  line-height: 1.4;
-}
-
-.highlight > * + * {
-  margin-top: 1rem;
-}
-
-.highlight h3 {
-  font-size: 1rem;
-  color: rgb(32, 34, 35);
-}
-
-.highlight-description {
-  flex: 1 1;
-}
-
-/**
- * Flashes a liquid-tip after the "show another tip" button swaps in fresh
- * content through partial rendering. The brief highlight pulse draws the
- * eye to the new tip so the change is noticeable without a page reload.
- */
-@keyframes highlight-flash {
-  from {
-    background-color: #c9d9ff;
-  }
-  to {
-    background-color: transparent;
-  }
-}
-
-.highlight-description--flash {
-  animation: highlight-flash 0.6s ease-out;
-  border-radius: 4px;
-}
-
-.highlight a,
-.welcome-content a {
-  display: flex;
-  width: fit-content;
-  background-color: rgb(250, 251, 251);
-  box-shadow: rgba(0, 0, 0, 0.2) 0px -3px 0px 0px inset, rgba(255, 255, 255, 0.9) 0px 2px 0px 0px inset;
-  border: 1px solid rgb(140, 145, 150);
-  border-radius: 4px;
-  color: rgb(92, 95, 98);
-  padding: 3px 10px 5px;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--s-8);
+  padding: var(--s-3) var(--s-5);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
   text-decoration: none;
   cursor: pointer;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--c-silver);
+  color: var(--c-bg);
+  transition: filter var(--dur-1) var(--ease-out);
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--c-line);
+  color: var(--c-text);
+}
+
+.btn--ghost:hover {
+  filter: brightness(1.2);
+}
+
+.btn--block {
+  display: flex;
+  width: 100%;
+}
+
+/* Forms */
+
+label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+  margin-bottom: var(--s-2);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  min-height: var(--s-8);
+  padding: var(--s-3) var(--s-4);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  color: var(--c-text);
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-sm);
+}
+
+textarea {
+  min-height: calc(var(--s-8) * 2);
+}
+
+select {
+  background: var(--c-surface-2);
+  color: var(--c-text);
 }
 
 /** Text block */
@@ -101,30 +116,31 @@
   text-align: var(--text-align);
 }
 .text--title {
-  font-size: 2rem;
+  font-size: var(--fs-2xl);
   font-weight: 700;
 }
 .text--subtitle {
-  font-size: 1.5rem;
+  font-size: var(--fs-xl);
 }
 
 /** Collection page */
 .collection-products {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--s-9), 1fr));
+  gap: var(--s-5);
 }
 
 /** Collections list page */
 .collections {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(var(--collection-card-size), 100%), 1fr));
-  gap: var(--grid-gap);
+  gap: var(--gutter);
 }
 .collections--compact {
-  --collection-card-size: 160px;
+  --collection-card-size: var(--s-8);
 }
 .collections--full {
-  --collection-card-size: 280px;
+  --collection-card-size: var(--s-9);
 }
 .collection-card {
   display: flex;
@@ -135,7 +151,8 @@
 /** Search page */
 .search-results {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--s-9), 1fr));
+  gap: var(--s-5);
 }
 .search-results .prev,
 .search-results .page,
@@ -145,48 +162,58 @@
 
 /** Header */
 header {
-  height: 5rem;
+  min-height: var(--s-8);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--s-4);
 }
 header a {
   position: relative;
   text-decoration: none;
-  color: var(--color-foreground);
+  color: var(--c-text);
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: var(--s-8);
+  min-height: var(--s-8);
 }
 header a sup {
   position: absolute;
   left: 100%;
   overflow: hidden;
-  max-width: var(--page-margin);
+  max-width: var(--gutter);
 }
 header svg {
-  width: 2rem;
+  width: var(--s-5);
+  height: auto;
 }
 header .header__menu,
 header .header__icons {
   display: flex;
-  gap: 1rem;
+  gap: var(--s-4);
 }
 
 /** Footer */
 footer {
   display: flex;
   justify-content: space-between;
-  margin-top: 2rem;
+  gap: var(--s-4);
+  margin-top: var(--s-6);
+  flex-wrap: wrap;
 }
 footer a {
   text-decoration: none;
-  color: var(--color-foreground);
+  color: var(--c-text);
+  min-height: var(--s-8);
+  display: inline-flex;
+  align-items: center;
 }
 footer .footer__links,
 footer .footer__payment {
   display: flex;
-  gap: 1rem;
+  gap: var(--s-4);
+  flex-wrap: wrap;
 }
 
 /** Image snippet */

@@ -8,17 +8,67 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
-    "name": "t:general.typography",
+    "name": "RIFANO",
     "settings": [
       {
-        "type": "header",
-        "content": "t:general.fonts"
+        "type": "text",
+        "id": "announcement_text",
+        "label": "t:labels.announcement_text",
+        "default": "Paiement à la livraison · Livraison gratuite partout au Maroc"
       },
       {
-        "type": "font_picker",
-        "id": "type_primary_font",
-        "default": "work_sans_n4",
-        "label": "t:general.primary"
+        "type": "text",
+        "id": "whatsapp_number",
+        "label": "t:labels.whatsapp_number",
+        "default": "212600000000"
+      },
+      {
+        "type": "url",
+        "id": "instagram_url",
+        "label": "t:labels.instagram_url"
+      },
+      {
+        "type": "url",
+        "id": "tiktok_url",
+        "label": "t:labels.tiktok_url"
+      },
+      {
+        "type": "text",
+        "id": "support_email",
+        "label": "t:labels.support_email",
+        "default": "contact@rifano.ma"
+      },
+      {
+        "type": "text",
+        "id": "delivery_text",
+        "label": "t:labels.delivery_text",
+        "default": "Livraison 24–72h"
+      },
+      {
+        "type": "text",
+        "id": "warranty_text",
+        "label": "t:labels.warranty_text",
+        "default": "Garantie 12 mois"
+      },
+      {
+        "type": "text",
+        "id": "returns_text",
+        "label": "t:labels.returns_text",
+        "default": "Retours sous 7 jours"
+      },
+      {
+        "type": "link_list",
+        "id": "home_rows_menu",
+        "label": "t:labels.home_rows_menu"
+      },
+      {
+        "type": "range",
+        "id": "rows_visible",
+        "label": "t:labels.rows_visible",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "default": 3
       }
     ]
   },

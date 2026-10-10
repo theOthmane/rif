@@ -1,0 +1,78 @@
+{
+  "404": {
+    "title": "404",
+    "not_found": "Page introuvable.",
+    "back_to_shopping": "Retour aux achats"
+  },
+  "blog": {
+    "article_comments": "Commentaires",
+    "article_metadata_html": "{{ date }} par {{ author }}",
+    "comment_form_body": "Commentaire",
+    "comment_form_email": "E-mail",
+    "comment_form_name": "Nom",
+    "comment_form_submit": "Publier",
+    "comment_form_title": "Ajouter un commentaire"
+  },
+  "cart": {
+    "checkout": "Commander",
+    "title": "Panier",
+    "update": "Mettre à jour",
+    "remove": "Retirer"
+  },
+  "customers": {
+    "login": {
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "title": "Connexion"
+    }
+  },
+  "collections": {
+    "title": "Collections"
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Ajouter à Apple Wallet",
+    "card": "Carte cadeau",
+    "expired": "Cette carte cadeau a expiré",
+    "expires_on": "Expire le {{ expires_on }}",
+    "use_at_checkout": "Utilisez cette carte cadeau au moment du paiement"
+  },
+  "hello_world": {
+    "title": "Bonjour !",
+    "intro": "Le thème Skeleton est un thème Shopify minimal et soigneusement structuré pour démarrer rapidement. Conçu avec modularité, maintenabilité et les bonnes pratiques de Shopify.",
+    "description": "Les thèmes façonnent l'expérience de la boutique en ligne pour les marchands et leurs clients. Créez des thèmes rapides et flexibles à grande échelle avec Liquid, le langage de modèles de Shopify, ainsi que HTML, CSS, JavaScript et JSON.",
+    "key_concepts_title": "Concepts clés",
+    "key_concepts_body": "Les thèmes Shopify sont un ensemble de modèles, de blocs et d'assets. Utilisez ces blocs pour créer des thèmes modulaires et personnalisables.",
+    "key_concepts_link": "En savoir plus sur les concepts clés",
+    "liquid_title": "Liquid",
+    "liquid_body": "Le langage de modèles Liquid est l'épine dorsale des thèmes Shopify et sert à charger du contenu dynamique. Étendez les objets Liquid avec les méta-champs.",
+    "liquid_link": "Voir la référence Liquid",
+    "best_practices_title": "Bonnes pratiques",
+    "best_practices_body": "Pour optimiser votre expérience de développement, Shopify a établi des bonnes pratiques à suivre pour développer votre thème et configurer vos outils.",
+    "best_practices_link": "Suivre les bonnes pratiques",
+    "liquid_tips_title": "Astuces Liquid",
+    "liquid_tips_refresh": "Afficher une autre astuce",
+    "liquid_tips_1": "Préférez le contrôle des espaces avec {%- -%} pour un HTML propre",
+    "liquid_tips_2": "Utilisez la balise render plutôt que include pour isoler chaque extrait",
+    "liquid_tips_3": "Assignez les recherches coûteuses à une variable et réutilisez-la"
+  },
+  "password": {
+    "title": "Cette boutique est privée",
+    "password": "Mot de passe",
+    "enter": "Entrer"
+  },
+  "search": {
+    "title": "Recherche",
+    "placeholder": "Rechercher articles, pages ou produits",
+    "submit": "Rechercher",
+    "no_results_html": "Aucun résultat pour {{ terms }}",
+    "results_for_html": "{{ count }} résultats pour {{ terms }}"
+  },
+  "rifano": {
+    "announcement": "Paiement à la livraison · Livraison gratuite partout au Maroc",
+    "tagline_1": "Be different.",
+    "tagline_2": "Be RIFANO.",
+    "welcome": "Mrehba bik",
+    "skip_to_content": "Aller au contenu"
+  }
+}
