@@ -1,9 +1,11 @@
 :root {
-  /* colour: tinted near-black ground, never #000 */
-  --c-bg: #0d0e10;          /* page */
-  --c-surface: #15161a;     /* cards, drawers */
-  --c-surface-2: #1d1f24;   /* hover, inputs */
-  --c-line: #2a2d33;        /* hairlines: decorative dividers only */
+  /* colour: neutral true-black ground, never #000. Header, bars and footer share the page
+     black; regions are separated by 1px hairlines, not by grey bands, so the surfaces stay
+     only a few steps above --c-bg. */
+  --c-bg: #050505;          /* page */
+  --c-surface: #0d0d0d;     /* cards, drawers — 1 hairline above --c-bg */
+  --c-surface-2: #151515;   /* hover, inputs */
+  --c-line: #2a2a2a;        /* hairlines: decorative dividers only */
   --c-line-strong: #666c75; /* component boundaries (inputs, ghost buttons); >= 3:1 on --c-bg, --c-surface, --c-surface-2 */
   --c-text: #ecebe8;        /* primary text (warm) */
   --c-text-2: #a7a9ae;      /* secondary text (tinted, ≥ 4.5:1 on --c-bg) */

@@ -228,3 +228,43 @@ Checks: (1) theme check — **41 files, 0 errors**, 2 warnings (the known `Orpha
 Open: visual eyeball at 375px/1440px (sticky header + sentinel hairline, centred monogram, drawer open/close/focus-return, footer accordions); `blocks/` is an empty dir — delete it or keep for future theme blocks (spec 06+ will repopulate); throwaway `rifano-smoke` themes from R1 (#185968918751, #185968951519) plus spec-05/skeleton/QA throwaways still on the store to delete; owner admin actions unchanged (money format MAD, "Aide" menu for `menu_help`, policies).
 Next: spec 02 (brand assets). Do not start until told.
 
+### Cleanup after spec 00 — docs, header hotfix, true black
+
+Date: 2026-10-10. Commit `chore: docs cleanup, header hotfix, #050505 black`. **No spec started.** Not a spec
+session, so it is allowed to edit files outside a spec's list; everything else stayed untouched.
+
+**A — stop OpenCode confusion (docs).**
+1. `AGENTS.md` — workflow step 3's push smoke is now `theme push --path theme --store fexgzv-pq --theme 185969639647 --no-input`, with the rule that it always updates the same unpublished preview theme (`rifano-smoke`), that `--unpublished` and new themes are forbidden, and that a missing theme `185969639647` means stop and tell the owner. New **Stores** entry: preview/test `fexgzv-pq` (password in `QA-REPORT.md`), owner preview link, launch store TBD, never touch `xpziwn-tw`.
+2. `theme/AGENTS.md` — new non-negotiable: never put a Liquid tag inside a `{% # %}` inline comment (the first `%}` ends the comment and the rest prints); use `{% comment %}`.
+3. `PROMPTS.md` — BUILD prompt now demands theme check 0 errors **and** push smoke 0 errors; REVIEW item 2 rewritten for the OS 2.0 tag ban, new item 6b (paste the push smoke result) and item 9 (files touched vs the spec's file list — anything extra is BLOCKING); extra lines: 02 drops "include the PM's updated specs/13 and specs/14" and makes the `--gutter` fix conditional, 09 → "OS 2.0 @app block rules", 10 → "Section Rendering API pattern"; VISUAL CHECK uses the fixed preview link instead of `theme dev`; order line is now `00 ✅ 01 ✅ 03 ✅ 04 ✅ 05 ✅ → 02 → 06 …`.
+4. `specs/02-brand-assets.md` — Files now lists `sections/header.liquid`, `sections/menu-drawer.liquid`, `sections/footer.liquid`; new step 5 swaps the specs-03/04 placeholders (`{% render 'logo', variant: 'monogram' %}` in the header, `{% render 'icon' %}` for every inline SVG) and only then deletes `icon-account.svg` / `icon-cart.svg`.
+5. `PRODUCT.md:31`, `specs/16-launch.md:4,27` — launch store is **TBD (owner decides before spec 16; `xpziwn-tw` not accessible)**; `PRODUCT.md:79` "Skeleton base theme" → "OS 2.0 theme".
+
+**B — header hotfix.** `theme/sections/header.liquid:21` held `{% # TODO spec-02: replace with {% render 'logo', variant: 'monogram' %} once snippets/logo.liquid lands. %}` — the classic trap now banned in `theme/AGENTS.md`: the comment ended at the first `%}` (after "replace with"), so `{% render 'logo', … %} once snippets/logo.liquid lands.` printed above the header on every page. The line is deleted. Nothing else in the file changed: the `RF` text fallback stays until spec 02 (its `aria-label` "RF is not a substring of RIFANO" SC 2.5.3 issue, noted since spec 04, is still open). `grep -rn "once snippets" theme/` → **empty**.
+
+**C — true black (owner decision).** `theme/assets/tokens.css` colour block re-derived; every consumer reads the tokens, so `header.css` (`color-mix(--c-bg 85%)`), `footer.css` and `critical.css` follow automatically.
+
+| Token | Old | New | Note |
+|---|---|---|---|
+| `--c-bg` | `#0d0e10` | **`#050505`** | neutral, no blue tint; never `#000` |
+| `--c-surface` | `#15161a` | **`#0d0d0d`** | same 8-step ladder above the ground (1.05:1 on `--c-bg`) |
+| `--c-surface-2` | `#1d1f24` | **`#151515`** | 1.12:1 on `--c-bg` |
+| `--c-line` | `#2a2d33` | **`#2a2a2a`** | same lightness, tint removed (1.42:1 on the new ground) |
+| `--c-line-strong` | `#666c75` | `#666c75` | unchanged: 3.85 / 3.67 / 3.45:1 on bg / surface / surface-2, still ≥ 3:1 |
+| `--c-text`, `--c-text-2`, `--c-silver-*` | — | unchanged | owner: text and silver stay |
+
+Contrast re-measured on the new ground (WCAG 2.2 AA): `--c-text` 17.10:1, `--c-text-2` 8.67:1 (was 8.21:1 — the blacker ground slightly *improves* body-text contrast), `--c-silver-3` 5.41:1, `--c-danger` 6.91:1, `--c-success` 10.35:1. **AA holds for every text token.** Regions are now separated by the 1px `--c-line` hairline (1.42:1) rather than by a grey band: the announcement bar (`--c-surface` + hairline), the drawer (`--c-surface`) and the footer (`--c-bg` + `border-top`) all read as the same black.
+
+Docs that state the palette: `PLAN.md` §2 Colour row, `PRODUCT.md` Brand Commitments, `DESIGN.md` colour section + "Brand commitments are intentional" — all now read "neutral near-black `#050505` (never `#000`); header, bars and footer share the page black, separated by 1px hairlines".
+
+**Checks.** (1) `theme check --path theme` — **41 files, 0 errors**, 2 warnings (the known `OrphanedSnippet` pair on `snippets/price.liquid` + `snippets/product-card.liquid`; no consumer until specs 07/08/09/12). (2) Push smoke, new command — **0 errors**, theme `rifano-smoke` **#185969639647** updated in place, no new theme created. (3) `grep -rn "once snippets" theme/` → empty. Preview: https://fexgzv-pq.myshopify.com/?preview_theme_id=185969639647
+
+**Open / for the owner.**
+- `specs/13-hero-assets.md:62,79` and `specs/01-foundations.md:51,128` still hard-code `#0d0e10`; the hero spec lifts frame blacks to 13/14/16 so the frames will now read 8 steps lighter than the page. Those specs are **not** in this session's editable list, so they were left alone — spec 13 (or the specs-14 hero) must re-derive the lift to `#050505` before the hero is cut. `specs/02`'s trace check referenced the old ground too; the PROMPTS.md 02 line now says "page black".
+- The `.rf` monogram fallback still needs the spec-02 `{% render 'logo' %}` swap (step 5 of that spec now covers it).
+- Visual check of the new black still owed by the owner at 375px and 1440px on the preview link: the three-step surface ladder is subtler than before, so the card media boxes and the drawer edge are worth one look.
+- Store hygiene unchanged: throwaway themes (`rifano-smoke` #185968918751, #185968951519, `rifano-spec05-review` #185966887135, `rifano-spec05-verify` #185966919903, `skeleton-upstream-test` #185968001247, `rifano-qa-check` #185968394463) are still on `fexgzv-pq` for the owner to delete.
+- Nothing staged from `skills-lock.json`, `.agents/`, `.claude/` or `HANDOFF-rifano-pm.md` (all still dirty in the working tree).
+
+Next: spec 02 (brand assets). Do not start until told.
+

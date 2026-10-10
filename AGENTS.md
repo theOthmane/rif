@@ -28,11 +28,20 @@ You are building the RIFANO Shopify theme. You get **one spec per session**.
 - Shopify CLI: `npx @shopify/cli@latest …` (the global `shopify` binary is broken).
 - Shopify Dev MCP: use it to look up Liquid objects, filters and tags **before** using one you are not 100% sure of, and to validate. This theme uses OS 2.0 tags (`section`, `sections`, `content_for`, `render`, `doc`). Check them, don't guess.
 - Impeccable: `/impeccable <command>`. Use the command the spec names. Treat `PRODUCT.md` "Brand Commitments" (near-black, Bodoni Moda + Manrope) as intentional, never as anti-patterns.
+- **Stores**: preview/test store `fexgzv-pq` (storefront password in `QA-REPORT.md`). Owner preview link: https://fexgzv-pq.myshopify.com/?preview_theme_id=185969639647 . Launch store: **TBD** (owner decides before spec 16; `xpziwn-tw` is not accessible from this login). Never touch `xpziwn-tw`.
 
 ## Workflow for every spec
 1. Read the spec. List the files you will create or edit.
 2. Implement.
-3. Run `npx @shopify/cli@latest theme check --path theme` (or the MCP validator). Fix until **0 errors**. Warnings: fix if in files you touched. Then run `npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --unpublished --theme rifano-smoke --no-input`. theme check cannot see store-side Liquid errors; this can. Report the error count. The required baseline on fexgzv-pq is **0 errors**; any error is a fail you must fix.
+3. Run `npx @shopify/cli@latest theme check --path theme` (or the MCP validator). Fix until **0 errors**. Warnings: fix if in files you touched. Then run the push smoke:
+
+   ```
+   npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --theme 185969639647 --no-input
+   ```
+
+   This always updates the same unpublished preview theme (`rifano-smoke`, id `185969639647`). Never use `--unpublished` and never create new themes. If theme `185969639647` no longer exists, stop and tell the owner.
+
+   theme check cannot see store-side Liquid errors; the push smoke can. Report both error counts. The required baseline on fexgzv-pq is **0 errors** from each; any error is a fail you must fix.
 4. Check every acceptance criterion in the spec. State pass/fail for each.
 5. Update `STATUS.md`: date, spec number, what changed, theme-check result, anything left open.
 6. Stage only the files in the spec's file list plus `STATUS.md`. If `git status` shows anything else, list it in your reply and leave it unstaged. `git add <files> && git commit -m "feat(NN): <short summary>" && git push`.

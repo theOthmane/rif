@@ -19,7 +19,7 @@ Product truth: `PRODUCT.md`. Visual system: `DESIGN.md` (spec 01). Agent rules: 
 | Base | **Online Store 2.0**: sections + JSON templates + section groups. Theme blocks allowed inside sections. No `{% block %}` or `{% partial %}` tags (the store rejects them). See `theme/AGENTS.md` and `specs/00-migration.md` |
 | Language | UI French only (`fr.default.json`). Darija only as brand touches ("Mrehba bik") |
 | Fonts | **Bodoni Moda** (display) + **Manrope** (body), self-hosted variable WOFF2 in `theme/assets/` |
-| Colour | Tinted near-black ground, warm-neutral light text, brushed-silver accent. Never `#000` |
+| Colour | **Neutral near-black `#050505`** (never `#000`); header, bars and footer share the page black, separated by 1px hairlines. Warm-neutral light text, brushed-silver accent |
 | Checkout | Native Shopify checkout with "Paiement à la livraison". The product form must stay compatible with COD-form apps (EasySell…) |
 | Cart | Drawer (`<dialog>`) + `/cart` page share one cart section, refreshed through the Section Rendering API |
 | Home rows | Driven by a **navigation menu** (each link = a collection). Placeholders when empty |

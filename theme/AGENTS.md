@@ -13,6 +13,9 @@ source of truth.
   theme. Composition is sections + JSON templates + section groups.
 - **No Liquid-embedded assets:** no `{% stylesheet %}`, no `{% javascript %}`.
   All CSS and JavaScript live in `assets/`.
+- **Never put a Liquid tag inside a `{% # %}` inline comment:** the first ` %}`
+  ends the comment and the rest prints on the page. Use
+  `{% comment %}…{% endcomment %}` instead.
 - **No static `{% section %}` calls** unless a spec explicitly requires one for
   a stable section ID (spec 10's cart drawer does). Prefer JSON templates and
   section groups, which merchants can edit.

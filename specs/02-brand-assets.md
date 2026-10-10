@@ -14,6 +14,7 @@ a text wordmark, and one small icon set in one consistent style.
 - `theme/snippets/icon.liquid` (new): `{% render 'icon', name: 'cart' %}`
 - delete `theme/assets/icon-account.svg`, `theme/assets/icon-cart.svg` once nothing references them
 - `theme/assets/base.css` (logo/icon classes only)
+- `theme/sections/header.liquid`, `theme/sections/menu-drawer.liquid`, `theme/sections/footer.liquid` (replace the inline-SVG fallbacks the specs 03/04 shipped before this spec existed)
 
 ## Steps
 
@@ -42,6 +43,15 @@ Unknown name → renders nothing (no error).
 
 ### 4. CSS (base.css)
 `.icon { width: 1.5rem; height: 1.5rem; flex: none }`, `.icon--sm` 1.125rem, `.logo` sizing via `--logo-size`.
+
+### 5. Swap the placeholders the earlier specs left behind
+Specs 03 and 04 shipped before this spec existed, so `sections/header.liquid`,
+`sections/menu-drawer.liquid` and `sections/footer.liquid` carry hand-written
+inline SVGs and a text `RF` fallback. Now that the snippets exist:
+- In `sections/header.liquid`, replace the RF text fallback with `{% render 'logo', variant: 'monogram' %}`.
+- In all three sections, replace **every** inline SVG with `{% render 'icon', name: '…' %}` (menu, close, cart, chevron-down, whatsapp, instagram, tiktok, mail, cash, truck, shield — whatever they actually contain).
+- Then delete `theme/assets/icon-account.svg` and `theme/assets/icon-cart.svg` (nothing references them any more).
+- `grep -rn "<svg" theme/sections/` must return nothing after this step.
 
 ## Acceptance
 - [ ] Monogram SVG shows R + F + watch hands, crisp at 32px and 400px, silver gradient on `--c-bg`

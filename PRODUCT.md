@@ -28,7 +28,7 @@ The mechanism that a neighbouring store could not truthfully copy is positioning
 
 ## Operating Context
 
-- Store: Shopify Basic, `xpziwn-tw.myshopify.com`, currency MAD.
+- Store: Shopify Basic, launch store **TBD (owner decides before spec 16; `xpziwn-tw` not accessible from this login)**; preview/test store `fexgzv-pq`. Currency MAD.
 - Launch market: Morocco. Spain is planned later and is explicitly out of scope for v1.
 - Commerce: Cash on Delivery only, free delivery everywhere in Morocco, native Shopify checkout with COD enabled.
 - UI language: French. Darija is permitted only for small brand touches (e.g. "Mrehba bik"). Tagline: "Be different. Be RIFANO."
@@ -64,7 +64,7 @@ Decided: Hero production — Owner generates an original RIFANO watch (RF on dia
 
 These are deliberate brand decisions. They are not anti-patterns to be corrected by later design work.
 
-- Palette: mostly black, but a tinted near-black rather than `#000`, with brushed silver accents.
+- Palette: mostly black, but a **neutral near-black `#050505` rather than `#000`** — the header, bars and footer share the page black and are separated by 1px hairlines, not grey bands — with brushed silver accents.
 - Typography: Bodoni Moda for display, Manrope for body.
 - Tone: simple, prestige, premium, trusted. Realistic 3D, subtle animation, subtle scroll. Never flashy or gimmicky.
 
@@ -76,7 +76,7 @@ Reference studied: maisonduhype.com. Keep its persistent COD announcement bar an
 
 ## Evidence on Hand
 
-What exists: the brand logo and four watch renders listed above; the Skeleton base theme in `theme/` with its shipped templates; repo setup state in `STATUS.md`.
+What exists: the brand logo and four watch renders listed above; the OS 2.0 theme in `theme/` (sections + JSON templates + section groups) with its shipped templates; repo setup state in `STATUS.md`.
 
 What does not exist and must never be fabricated: product photography and product data beyond the four watch renders, customer testimonials or reviews, press, benchmarks, delivery or warranty records, or sales figures. No product listings have been confirmed to exist in the store. `brand/watches/*.png` show third-party brands (AP, Emporio Armani, Rolex, Casio). Reference only; never shipped or shown.
 

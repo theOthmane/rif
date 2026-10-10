@@ -1,7 +1,7 @@
 # Spec 16 — Launch checklist
 
 Mostly **owner** tasks in Shopify admin. The agent only does the CLI steps marked 🤖.
-Store: `xpziwn-tw.myshopify.com`
+Store: **TBD (owner decides before spec 16; `xpziwn-tw` not accessible)**. Everything below runs in that store's admin.
 
 ## Store settings (owner)
 - [ ] **Languages**: Settings → Languages → add **French**, set as default, unpublish English.
@@ -24,7 +24,7 @@ Store: `xpziwn-tw.myshopify.com`
 - [ ] **Theme settings → RIFANO**: real WhatsApp (digits, e.g. 2126XXXXXXXX), Instagram, TikTok, email, delivery/warranty/returns texts, `home_rows_menu` = `accueil-rangees`, `hero_poster` = the poster from spec 13.
 
 ## Deploy
-- [ ] 🤖 `npx @shopify/cli@latest theme push --path theme --unpublished --store xpziwn-tw` → share the preview link
+- [ ] 🤖 `npx @shopify/cli@latest theme push --path theme --store <LAUNCH STORE>` → share the preview link
 - [ ] Owner: full test on your phone: home → row → product → add → drawer → Commander → checkout shows **Paiement à la livraison** and **Livraison gratuite** → place a test order → cancel/archive it.
 - [ ] Owner: Online Store → Themes → **Publish** the RIFANO theme.
 - [ ] Owner: when ready, turn password protection **off**.
