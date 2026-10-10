@@ -1,14 +1,10 @@
-{% doc %}
-  Full-height menu drawer: search, navigation, contact. Opened with showModal().
-  Wired by <menu-drawer> in menu-drawer.js. Self-contained: callers must leave the body empty.
-{% enddoc %}
+{% comment %}Full-height menu drawer: search, navigation, contact. Opened with showModal(). Wired by <menu-drawer> in menu-drawer.js.{% endcomment %}
 
 <dialog
   id="menu-drawer"
   class="menu-drawer"
   aria-label="{{ 'rifano.menu' | t }}"
   scroll-lock
-  {{ block.shopify_attributes }}
 >
   <div class="menu-drawer__panel">
     <div class="menu-drawer__top">
@@ -45,7 +41,7 @@
     </form>
 
     {% liquid
-      assign nav_menu = block.settings.menu
+      assign nav_menu = section.settings.menu
       if nav_menu == blank
         assign nav_menu = linklists['main-menu']
       endif
@@ -168,6 +164,7 @@
       "label": "t:labels.menu",
       "default": "main-menu"
     }
-  ]
+  ],
+  "presets": [{ "name": "Menu drawer" }]
 }
 {% endschema %}

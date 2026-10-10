@@ -1,9 +1,6 @@
-{% doc %}
-  RIFANO site header: menu button left, RF monogram centre, cart right.
-  Sticky with a scroll hairline. Self-contained: callers must leave the body empty.
-{% enddoc %}
+{% comment %}RIFANO site header: menu button left, RF monogram centre, cart right. Sticky with a scroll hairline.{% endcomment %}
 
-<header class="site-header" {{ block.shopify_attributes }}>
+<header class="site-header">
   <div class="site-header__inner">
     <div class="site-header__left">
       <button
@@ -37,19 +34,7 @@
           <path d="M6 8h12l1 12H5L6 8z" />
           <path d="M9 8V6a3 3 0 0 1 6 0v2" />
         </svg>
-        {%- comment -%}
-          {% partial %} only renders when the Liquid '26 feature preview is on
-          (shop.features.agentic_editor_enabled?); otherwise the storefront raises
-          "Unknown tag 'partial'". Fall back to plain markup so the header never
-          breaks the site. See theme/AGENTS.md "The partial tag".
-        {%- endcomment -%}
-        {%- if shop.features.agentic_editor_enabled? -%}
-          {% partial 'cart-count' %}
-            <span id="cart-icon-bubble" class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
-          {% endpartial %}
-        {%- else -%}
-          <span id="cart-icon-bubble" class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
-        {%- endif -%}
+        <span id="cart-icon-bubble" class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
       </a>
     </div>
   </div>
@@ -58,6 +43,7 @@
 {% schema %}
 {
   "name": "Header",
-  "settings": []
+  "settings": [],
+  "presets": [{ "name": "Header" }]
 }
 {% endschema %}

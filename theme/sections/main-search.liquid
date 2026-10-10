@@ -1,4 +1,4 @@
-{% block 'container' %}
+<div class="page-width">
   <h1>{{ 'search.title' | t }}</h1>
 
   <form action="{{ routes.search_url }}" method="get" role="search">
@@ -43,4 +43,12 @@
       </div>
     {% endif %}
   {% endif %}
-{% endblock %}
+</div>
+
+{% schema %}
+{
+  "name": "Main search",
+  "settings": [],
+  "presets": [{ "name": "Main search" }]
+}
+{% endschema %}

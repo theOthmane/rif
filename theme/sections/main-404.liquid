@@ -1,4 +1,4 @@
-{% block 'container' %}
+<div class="page-width">
   <h1>{{ '404.title' | t }}</h1>
 
   <p>
@@ -8,4 +8,12 @@
   <a href="{{ routes.all_products_collection_url }}">
     {{ '404.back_to_shopping' | t }}
   </a>
-{% endblock %}
+</div>
+
+{% schema %}
+{
+  "name": "Main 404",
+  "settings": [],
+  "presets": [{ "name": "Main 404" }]
+}
+{% endschema %}

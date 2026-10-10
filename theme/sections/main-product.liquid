@@ -1,4 +1,4 @@
-{% block 'container' %}
+<div class="page-width">
   <div class="product-images">
     {% for image in product.images %}
       {% render 'image', class: 'product-image', image: image %}
@@ -34,4 +34,12 @@
       {{ form | payment_button }}
     {% endform %}
   </div>
-{% endblock %}
+</div>
+
+{% schema %}
+{
+  "name": "Main product",
+  "settings": [],
+  "presets": [{ "name": "Main product" }]
+}
+{% endschema %}

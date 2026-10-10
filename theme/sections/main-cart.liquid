@@ -1,4 +1,4 @@
-{% block 'container' %}
+<div class="page-width">
   <h1>{{ 'cart.title' | t }}</h1>
 
   <form action="{{ routes.cart_url }}" method="post">
@@ -22,4 +22,12 @@
 
     <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
   </form>
-{% endblock %}
+</div>
+
+{% schema %}
+{
+  "name": "Main cart",
+  "settings": [],
+  "presets": [{ "name": "Main cart" }]
+}
+{% endschema %}

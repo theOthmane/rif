@@ -1,4 +1,4 @@
-{% block 'container' %}
+<div class="page-width">
   <h1>{{ collection.title }}</h1>
 
   <div class="collection-products">
@@ -25,4 +25,12 @@
       {{ paginate | default_pagination }}
     {% endpaginate %}
   </div>
-{% endblock %}
+</div>
+
+{% schema %}
+{
+  "name": "Main collection",
+  "settings": [],
+  "presets": [{ "name": "Main collection" }]
+}
+{% endschema %}

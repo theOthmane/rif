@@ -1,4 +1,4 @@
-{% block 'container' %}
+<div class="page-width">
   <h1>{{ 'collections.title' | t }}</h1>
 
   <div class="collections collections--full" style="--grid-gap: 10px">
@@ -24,4 +24,12 @@
       </a>
     {% endfor %}
   </div>
-{% endblock %}
+</div>
+
+{% schema %}
+{
+  "name": "Main list collections",
+  "settings": [],
+  "presets": [{ "name": "Main list collections" }]
+}
+{% endschema %}

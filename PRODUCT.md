@@ -32,8 +32,8 @@ The mechanism that a neighbouring store could not truthfully copy is positioning
 - Launch market: Morocco. Spain is planned later and is explicitly out of scope for v1.
 - Commerce: Cash on Delivery only, free delivery everywhere in Morocco, native Shopify checkout with COD enabled.
 - UI language: French. Darija is permitted only for small brand touches (e.g. "Mrehba bik"). Tagline: "Be different. Be RIFANO."
-- Storefront code: a Skeleton-based Shopify theme in `theme/`, liquid-only with Skeleton's section/block architecture.
-- Verification gate: `theme check` must pass with 0 errors before every commit.
+- Storefront code: Online Store 2.0: sections + JSON templates + section groups in `theme/`, liquid-only.
+- Verification gate: theme check 0 errors + push smoke 0 errors on fexgzv-pq before every commit.
 
 ## Capabilities and Constraints
 

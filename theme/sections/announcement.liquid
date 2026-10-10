@@ -1,8 +1,6 @@
-{% doc %}
-  Persistent COD announcement bar. Self-contained: callers must leave the body empty.
-{% enddoc %}
+{% comment %}Persistent COD announcement bar.{% endcomment %}
 
-<div class="announcement t-label" {{ block.shopify_attributes }}>
+<div class="announcement t-label">
   <p class="announcement__text">
     {% if settings.announcement_text != blank %}
       {{ settings.announcement_text }}
@@ -15,6 +13,7 @@
 {% schema %}
 {
   "name": "Announcement",
-  "settings": []
+  "settings": [],
+  "presets": [{ "name": "Announcement" }]
 }
 {% endschema %}

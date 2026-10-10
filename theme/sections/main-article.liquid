@@ -1,4 +1,4 @@
-{% block 'container' %}
+<div class="page-width">
   {% if article.image %}
     {{ article.image | image_url: width: 1000 | image_tag }}
   {% endif %}
@@ -52,4 +52,12 @@
       <input type="submit" value="{{ 'blog.comment_form_submit' | t }}">
     {% endform %}
   {% endif %}
-{% endblock %}
+</div>
+
+{% schema %}
+{
+  "name": "Main article",
+  "settings": [],
+  "presets": [{ "name": "Main article" }]
+}
+{% endschema %}
