@@ -37,6 +37,13 @@
   --card-min-compact: 10rem;
   --card-min-full: 17.5rem;
 
+  /* brand mark sizes. The monogram is the rarest asset on the site, so its size
+     is a decision, not a default: the header mark sits at the same optical weight
+     as the menu and cart glyphs either side of it, and the footer lockup stays
+     quiet — small and low, never the loudest thing in the footer. */
+  --logo-header: 2rem;
+  --logo-footer: 3rem;
+
   /* shape and depth */
   --radius-sm: 2px; --radius-md: 4px; --radius-pill: 999px;
   /* The 1px hairline IS the separator: header, announcement bar and footer share the
@@ -53,3 +60,11 @@
   --z-header: 50; --z-drawer: 100; --z-toast: 150;
 }
 @media (prefers-reduced-motion: reduce) { :root { --dur-1: 0ms; --dur-2: 0ms; --dur-3: 0ms; } }
+
+@media (min-width: 1200px) {
+  :root {
+    /* The header grows by one step with the taller bar, so the mark keeps its
+       ratio to the glyphs instead of shrinking inside a bigger row. */
+    --logo-header: 2.5rem;
+  }
+}

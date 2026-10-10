@@ -10,16 +10,14 @@
         aria-controls="menu-drawer"
         aria-expanded="false"
       >
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
+        {% render 'icon', name: 'menu' %}
         <span class="visually-hidden">{{ 'rifano.menu' | t }}</span>
       </button>
     </div>
 
     <div class="site-header__logo">
-      <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name }}">
-        <span class="header__monogram" aria-hidden="true">RF</span>
+      <a href="{{ routes.root_url }}" class="header__logo">
+        {% render 'logo', variant: 'monogram' %}
       </a>
     </div>
 
@@ -33,10 +31,7 @@
           aria-label="{{ 'rifano.cart_with_count' | t: count: cart.item_count }}"
         {%- endif -%}
       >
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <path d="M6 8h12l1 12H5L6 8z" />
-          <path d="M9 8V6a3 3 0 0 1 6 0v2" />
-        </svg>
+        {% render 'icon', name: 'cart' %}
         <span id="cart-icon-bubble" class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
       </a>
     </div>

@@ -1,0 +1,111 @@
+{% doc %}
+  RIFANO icon set — one grid, one stroke, one optical weight.
+
+  Every icon is stroked geometry on `viewBox="0 0 24 24"` with
+  `stroke="currentColor"`, `stroke-width="1.25"`, round caps and round joins, so
+  the whole set reads as the same weight at 24px and at 18px. Nothing is filled
+  except the single Instagram corner dot, which is how that mark reads.
+
+  Size comes from CSS (`.icon` / `.icon--sm` in base.css); colour is inherited.
+  Icons are decorative: every one carries `aria-hidden="true"`, so the control
+  that wraps it must own the accessible name.
+
+  The set (20 keys): menu, close, cart, search, arrow-right, arrow-left, plus,
+  minus, chevron-down, whatsapp, instagram, tiktok, mail, truck, cash, shield,
+  return, watch, necklace, pouch.
+
+  @param {string} name - Icon key. An unknown key renders nothing and raises no error.
+  @param {string} [class] - Extra class appended to the root `<svg>`.
+
+  @example Menu button glyph
+    {% render 'icon', name: 'menu' %}
+
+  @example Small chevron, with a component class for the rotation
+    {% render 'icon', name: 'chevron-down', class: 'menu-drawer__chevron' %}
+{% enddoc %}
+
+{%- liquid
+  assign icon_class = 'icon icon--' | append: name
+  if class != blank
+    assign icon_class = icon_class | append: ' ' | append: class
+  endif
+
+  assign icon_body = ''
+  case name
+    when 'menu'
+      assign icon_body = '<path d="M4 7h16M4 12h16M4 17h16" />'
+
+    when 'close'
+      assign icon_body = '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />'
+
+    when 'cart'
+      assign icon_body = '<path d="M6 8h12l1 12H5L6 8z" /><path d="M9.5 8V6a2.5 2.5 0 0 1 5 0v2" />'
+
+    when 'search'
+      assign icon_body = '<circle cx="11" cy="11" r="7" /><path d="M16.2 16.2L21 21" />'
+
+    when 'arrow-right'
+      assign icon_body = '<path d="M4 12h15M13 6l6 6-6 6" />'
+
+    when 'arrow-left'
+      assign icon_body = '<path d="M20 12H5M11 18l-6-6 6-6" />'
+
+    when 'plus'
+      assign icon_body = '<path d="M12 5v14M5 12h14" />'
+
+    when 'minus'
+      assign icon_body = '<path d="M5 12h14" />'
+
+    when 'chevron-down'
+      assign icon_body = '<path d="M6 9.5l6 6 6-6" />'
+
+    when 'whatsapp'
+      assign icon_body = '<path d="M20 12a7.5 7.5 0 0 1-10.9 6.7L4.5 20l1.3-4.6A7.5 7.5 0 1 1 20 12z" />'
+
+    when 'instagram'
+      assign icon_body = '<rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />'
+
+    when 'tiktok'
+      assign icon_body = '<path d="M13.75 3.5v9.75a3.25 3.25 0 1 1-3.25-3.25" /><path d="M13.75 3.5c.4 2.6 2.3 4.15 5.25 4.15" />'
+
+    when 'mail'
+      assign icon_body = '<rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3.5 6.5l8.5 6 8.5-6" />'
+
+    when 'truck'
+      assign icon_body = '<path d="M3 7h11v8H3z" /><path d="M14 10h4l3 3v2h-7z" /><circle cx="7" cy="17" r="1.5" /><circle cx="17" cy="17" r="1.5" />'
+
+    when 'cash'
+      assign icon_body = '<rect x="3" y="6" width="18" height="12" rx="2" /><circle cx="12" cy="12" r="2.5" /><path d="M6.5 12h.01M17.5 12h.01" />'
+
+    when 'shield'
+      assign icon_body = '<path d="M12 3l7 3v5.5c0 4.4-2.9 7.4-7 8.9-4.1-1.5-7-4.5-7-8.9V6z" />'
+
+    when 'return'
+      assign icon_body = '<path d="M4 9h11a5 5 0 0 1 0 10h-6" /><path d="M8 5l-4 4 4 4" />'
+
+    when 'watch'
+      assign icon_body = '<rect x="7" y="6.5" width="10" height="11" rx="3" /><path d="M9.5 6.5L9 3.5h6L14.5 6.5M9.5 17.5L9 20.5h6l-.5-3" /><path d="M12 10v2.2l1.6 1.1" />'
+
+    when 'necklace'
+      assign icon_body = '<path d="M7 3.5c0 6 2.2 8.4 5 10 2.8-1.6 5-4 5-10" /><path d="M12 13.5v1.3" /><circle cx="12" cy="17.6" r="2.4" />'
+
+    when 'pouch'
+      assign icon_body = '<path d="M6.5 8.5V6.8A1.8 1.8 0 0 1 8.3 5h7.4a1.8 1.8 0 0 1 1.8 1.8v1.7" /><rect x="4" y="8.5" width="16" height="10.5" rx="2.5" /><path d="M4 12.5h16" />'
+  endcase
+-%}
+
+{%- if icon_body != blank -%}
+  <svg
+    class="{{ icon_class }}"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.25"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    {{- icon_body -}}
+  </svg>
+{%- endif -%}

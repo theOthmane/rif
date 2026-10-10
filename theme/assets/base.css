@@ -33,9 +33,9 @@
 
 /* Logo */
 
-/* Size is driven by --logo-size so a caller can override it without a parameter.
-   The default lives on the fallback, not here, so an ancestor's --logo-size is
-   not shadowed by this element. */
+/* Default size comes from --logo-size, so a caller can override it without a
+   parameter; the default lives on the fallback, not here, so an ancestor's
+   --logo-size is not shadowed by this element. */
 .logo {
   display: inline-flex;
   flex-direction: column;
@@ -50,17 +50,58 @@
   width: auto;
 }
 
-/* Silver gradient text: the logo is one of the three permitted uses of --c-silver. */
+/* Silver gradient text: the logo is one of the three permitted uses of --c-silver.
+   `letter-spacing` adds a trailing space after the last glyph, which parks the
+   ink half a step left of its box; a negative right margin takes that step back
+   so the wordmark sits dead-centre under the monogram. Measured: 1.92px of
+   drift at --logo-footer / 4, i.e. a visible lean on a 74px lockup. */
 .logo__wordmark {
   font-weight: 500;
   font-size: var(--fs-sm);
   text-transform: uppercase;
   letter-spacing: 0.32em;
-  text-indent: 0.32em;
+  margin-right: -0.32em;
   background: var(--c-silver);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Brand-mark sizes. The shell binds each of its two marks to a token from
+   tokens.css rather than to a local guess, so the header mark and the footer
+   lockup can be re-judged from one place.
+
+   The doubled descendant selector is deliberate: header.css carries its own
+   `.header__logo svg { height: var(--s-6) }`, and a single class here would be
+   out-ranked by it and quietly drag the header mark back to 2rem forever. */
+.header__logo .logo__monogram {
+  height: var(--logo-header);
+  width: auto;
+}
+
+.footer__logo .logo__monogram {
+  height: var(--logo-footer);
+  width: auto;
+}
+
+/* The wordmark scales with the lockup it sits under, so the pair keeps one ratio
+   whatever the monogram is set to. A quarter of the mark reads as a mark. */
+.footer__logo .logo__wordmark {
+  font-size: calc(var(--logo-footer) / 4);
+}
+
+/* Icons — one size for the set, one smaller step for glyphs that sit beside text.
+   `.icon.icon--sm` is doubled for the same reason as the logo: header.css also
+   defines `.icon--sm` and loads after this file. */
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+}
+
+.icon.icon--sm {
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 /* Buttons */

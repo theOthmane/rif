@@ -449,3 +449,117 @@ introduced. (4) The detector was **not** re-run after these edits — see the ca
 
 Next: spec 02 (brand assets), which now also owns the header monogram swap. Do not start until told.
 
+### Spec 02 — RF monogram, logo sizing, icon set (this session)
+
+Date: 2026-10-10. Commit `feat(02): RF monogram, logo sizing, icon set`.
+
+Files: new `theme/snippets/icon.liquid`; `theme/assets/base.css` (logo + icon classes only);
+`theme/assets/tokens.css` (`--logo-header`, `--logo-footer` — owner-authorised addition to the token file);
+`theme/sections/header.liquid`, `theme/sections/menu-drawer.liquid`, `theme/sections/footer.liquid`;
+**deleted** `theme/assets/icon-account.svg` and `theme/assets/icon-cart.svg`. Nothing else in `theme/` changed —
+`snippets/logo.liquid` and `brand/rf-monogram.svg` already existed (landed inside the mislabelled `feat(04)`
+commit) and were left byte-identical; the owner approved the trace, so step 1 of the spec was not re-run and no
+`tools/trace/` work was repeated. `theme/snippets/css-variables.liquid` was **not** touched: the PROMPTS.md extra
+line for spec 02 asks for `--gutter: max(min_page_margin, clamp(…))` and that fix is **already in place** at
+`css-variables.liquid:29` from the `fix(01)` pass — verified, not re-applied.
+
+**Icon set.** `snippets/icon.liquid` renders stroked geometry on `viewBox="0 0 24 24"`,
+`stroke="currentColor"`, `stroke-width="1.25"`, round caps/joins, `aria-hidden="true"`,
+`class="icon icon--{{ name }}"`. All 20 keys are there: menu, close, cart, search, arrow-right, arrow-left,
+plus, minus, chevron-down, whatsapp, instagram, tiktok, mail, truck, cash, shield, return, and the three
+category icons watch / necklace / pouch. An unknown key assigns an empty body and the `{% if %}` renders
+nothing — verified live with `name: 'nope-not-an-icon'` in the temporary grid. An extra `class` param lets a
+caller keep a component hook (`menu-drawer__chevron`, `footer__chevron`).
+
+**Logo.** The header's `<span class="header__monogram">RF</span>` text fallback and its
+`aria-label="{{ shop.name }}"` are gone; `header.liquid:20` is now `{% render 'logo', variant: 'monogram' %}`.
+Dropping the label also **closes the SC 2.5.3 defect STATUS has carried since spec 03**: the link's accessible
+name now computes from the monogram's own `aria-label="{{ shop.name }}"`, and there is no visible text to
+disagree with it. Sizing moved to tokens — `--logo-header: 2rem` (`2.5rem` at ≥1200px) and `--logo-footer: 3rem`
+at every width — bound in `base.css`. Both shell-specific bindings use a doubled descendant selector because
+`header.css` carries its own `.header__logo svg { height: var(--s-6) }` and loads after `base.css`; a single
+class would be out-ranked and quietly pin the header mark at 2rem forever. Same reason for
+`.icon.icon--sm` vs `header.css`'s `.icon--sm`.
+
+**Inline-SVG migration.** All 18 hand-written SVGs in the three sections are gone;
+`grep -rn "<svg" theme/sections/ theme/layout/ theme/templates/` now returns **nothing**. The two dead asset
+files were deleted and `grep -rn "icon-account\|icon-cart" theme/` returns nothing. The shell therefore draws
+one icon family instead of three one-off sets.
+
+**Verification — first time anything built since spec 00 has been seen rendered.** `agent-browser` (Chrome
+155 installed via `agent-browser install`) against
+`https://fexgzv-pq.myshopify.com/?preview_theme_id=185969639647`, storefront password `rahste`.
+
+- 375 / 768 / 1440px: `scrollWidth == clientWidth` at all three (**no horizontal overflow**); no stray "RF"
+  text in the header; header monogram **32px at 375 and 768, 40px at 1440**; footer monogram **48px at all
+  three**; the monogram's centre-y equals the menu icon's centre-y to the pixel at all three.
+- Two monograms on one page carry **two distinct gradient ids**, each path pointing at its own
+  (`rf-mono-1791668465907853278`, `rf-mono-1791668465910501825`) — acceptance criterion 2, verified live.
+- axe-core scoped to `.site-chrome, .site-footer`, tags `wcag2a,wcag2aa`: **0 violations**, 17 passes, 1
+  `incomplete` — `.logo__wordmark` colour-contrast, which axe cannot evaluate at all because the class uses
+  `background-clip: text; color: transparent`. Hand-checked: the darkest gradient stop is `--c-silver-3` at
+  5.41:1 on `--c-bg`, and it is `aria-hidden` brand text inside a labelled link.
+- Detector `impeccable detect --json` over the five changed targets: `[]`, exit 0 — **with the standing caveat
+  that it does not scan `.liquid`** (proved in the brand-design pass above); the CSS half of that run is real.
+
+**Icon weight pass (the temporary grid, since removed).** The first grid render showed three icons out of
+family, all fixed before the final screenshots: `whatsapp` was an 8.5-radius bubble that dominated its cell
+(rebuilt at r 7.5 with a shorter tail), `tiktok` had too little vertical presence (stem lengthened, note head
+enlarged), and `cash` ran 20 units wide against a ~18-unit norm (inset to 18). `theme/sections/main-index.liquid`
+now carries the temporary grid **only while it is being screenshotted**; `git diff HEAD -- theme/sections/main-index.liquid`
+is empty and the file is byte-identical to its spec-00 state.
+
+**One real defect found by the `/impeccable polish` pass, and fixed.** `.logo__wordmark` used
+`text-indent: 0.32em` next to `letter-spacing: 0.32em`. Both add width at the front of the line, so the ink
+sat ~1.92px left of the lockup's axis — a third of a letter-space of lean, visible on a 74px lockup. The
+trailing letter-space is what actually needs cancelling, so `text-indent` became `margin-right: -0.32em`.
+Proved with an A/B probe at 6× (old vs new against a centre rule) rather than a `Range` rect, because a
+`Range.getBoundingClientRect()` includes the trailing letter-space and reports a phantom 1.92px drift in both
+cases. Detector clean; a11y unchanged.
+
+**Gate.** (1) `npx @shopify/cli@latest theme check --path theme` — **42 files inspected, 0 errors, 2 warnings**:
+the same known `OrphanedSnippet` pair on `snippets/product-card.liquid` and `snippets/price.liquid`, untouched by
+this spec. **`icon.liquid` no longer raises an orphan warning** — the shell is its first consumer. (2) Push smoke
+`npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --theme 185969639647 --no-input` — **0 errors**,
+theme `rifano-smoke` (#185969639647) updated in place, no new theme. Run three times during the session
+(after the icon swap, after the grid was added, after the polish fix).
+
+**Deliberate deviations, all recorded rather than silent.**
+
+1. **`.icon` / `.icon--sm` use raw `rem`** (`1.5rem` / `1.125rem`) in `base.css`, exactly as `specs/02` §4
+   prescribes. AGENTS.md wants sizes from `tokens.css`; the spec names these two values and names `base.css`
+   as their home, so the spec won. `--s-5` (1.5rem) already matched the existing `.icon`, so only the small
+   step is new.
+2. **`.footer__icon` (16px) is now unused** — `footer.css:73` still declares it and that file is not in this
+   spec's list. Its rules were doing nothing for the header anyway (it is out-ranked by `header.css`) but they
+   were pinning the footer glyphs at 16px, i.e. ~0.83px effective stroke, which the brand-design critique
+   flagged as muddy. The footer now uses `.icon` (24px) and `.icon--sm` (18px) with the rest of the set. The
+   dead rule should be deleted in a spec that lists `footer.css`.
+3. **The 1200px `--logo-header` step lives in `tokens.css`** as a `@media` override rather than as a second
+   declaration in `base.css`, so the value stays where DESIGN.md says token values live.
+4. **`cart` is a shopping bag, not a trolley.** It is the shape the shell has shipped since spec 03 and the
+   owner has seen it on every page since; renaming the drawing was not worth a regression. `watch` is drawn
+   face-on with straps rather than the "side-view" the spec's parenthetical describes — a profile reads as a
+   blob at 18px, which is the size spec 07's category rows will use. Spec 07 owns those rows and can redraw it.
+
+**Still open, deliberately.**
+
+- **The silver ramp is steep at glyph size.** DESIGN.md's silver rule records this as needing a second token
+  (`--c-silver-mark`) for small marks. At 32px in the 4× capture the monogram reads as brushed metal rather
+  than as a rendering artefact, so it is not fixed here — and a gradient change is colour, which was outside
+  the polish scope the owner set. It is still spec-02 territory and still needs an owner call.
+- `footer.css` self-loads from inside `<body>` (`footer.liquid:3`) and will FOUC — needs `layout/theme.liquid`,
+  which no spec has listed. Open since spec 04.
+- Both footer `link_list` settings still share the label `t:labels.menu`; `settings.returns_text` is still
+  rendered nowhere; the COD promise still appears three times (announcement bar, footer strip, drawer note).
+  All pre-existing, all owned by later specs.
+- The monogram's traced edge shows a faint stair-step along the R's bowl at 400px. Inherent to the approved
+  potrace output; visible only at sizes the theme does not use. Owner-approved asset, so not re-traced.
+
+**Screenshots** (untracked scratch, `tools/shots/`, not staged): `02-grid.png` (the 20-icon set at 24px and
+18px plus the unknown-key case), `02-final-375-home.png`, `02-final-375-full.png`, `02-final-375-drawer.png`,
+`02-final-1440-home.png`, `02-final-1440-full.png`, `02-detail-header-375-4x.png`,
+`02-detail-header-1440-2x.png`, `02-detail-footer-lockup-375-4x.png`, `02-detail-monogram-400px.png`.
+
+Next: spec 06 (home intro + hero poster). Do not start until told.
+

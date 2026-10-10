@@ -12,20 +12,11 @@
     {%- endcomment -%}
     <ul class="footer__promises">
       <li class="footer__promise">
-        <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <rect x="2" y="6" width="20" height="12" rx="2" />
-          <circle cx="12" cy="12" r="2.5" />
-          <path d="M6 12h.01M18 12h.01" />
-        </svg>
+        {% render 'icon', name: 'cash' %}
         <span>{{ 'rifano.footer_cod' | t }}</span>
       </li>
       <li class="footer__promise">
-        <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <path d="M3 7h11v8H3z" />
-          <path d="M14 10h4l3 3v2h-7z" />
-          <circle cx="7" cy="17" r="1.5" />
-          <circle cx="17" cy="17" r="1.5" />
-        </svg>
+        {% render 'icon', name: 'truck' %}
         <span>
           {%- if settings.delivery_text != blank -%}
             {{ settings.delivery_text }} · {{ 'rifano.footer_free' | t }}
@@ -35,9 +26,7 @@
         </span>
       </li>
       <li class="footer__promise">
-        <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
-        </svg>
+        {% render 'icon', name: 'shield' %}
         <span>
           {%- if settings.warranty_text != blank -%}
             {{ settings.warranty_text }}
@@ -66,9 +55,7 @@
           <details class="footer__accordion">
             <summary class="footer__summary t-label">
               <span>{{ 'rifano.footer_shop' | t }}</span>
-              <svg class="footer__icon footer__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
+              {% render 'icon', name: 'chevron-down', class: 'footer__chevron' %}
             </summary>
             <ul class="footer__links">
               {% for link in menu_shop.links %}
@@ -109,9 +96,7 @@
           <details class="footer__accordion">
             <summary class="footer__summary t-label">
               <span>{{ 'rifano.footer_help' | t }}</span>
-              <svg class="footer__icon footer__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
+              {% render 'icon', name: 'chevron-down', class: 'footer__chevron' %}
             </summary>
             <ul class="footer__links">
               {% for link in menu_help.links %}
@@ -157,9 +142,7 @@
           {% if settings.whatsapp_number != blank %}
             <li>
               <a class="footer__contact-link" href="https://wa.me/{{ settings.whatsapp_number }}">
-                <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 21l2-5.4A8.5 8.5 0 1 1 21 11.5z" />
-                </svg>
+                {% render 'icon', name: 'whatsapp' %}
                 <span>{{ 'rifano.whatsapp' | t }}</span>
               </a>
             </li>
@@ -167,10 +150,7 @@
           {% if settings.support_email != blank %}
             <li>
               <a class="footer__contact-link" href="mailto:{{ settings.support_email }}">
-                <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <path d="M3 7l9 6 9-6" />
-                </svg>
+                {% render 'icon', name: 'mail' %}
                 <span>{{ settings.support_email }}</span>
               </a>
             </li>
@@ -178,11 +158,7 @@
           {% if settings.instagram_url != blank %}
             <li>
               <a class="footer__contact-link" href="{{ settings.instagram_url }}">
-                <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <rect x="3" y="3" width="18" height="18" rx="5" />
-                  <circle cx="12" cy="12" r="4" />
-                  <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" />
-                </svg>
+                {% render 'icon', name: 'instagram' %}
                 <span>{{ 'rifano.instagram' | t }}</span>
               </a>
             </li>
@@ -190,10 +166,7 @@
           {% if settings.tiktok_url != blank %}
             <li>
               <a class="footer__contact-link" href="{{ settings.tiktok_url }}">
-                <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <path d="M9 8v8a3 3 0 1 0 3 3V4" />
-                  <path d="M12 8c.5 2.5 2.5 4 5.5 4" />
-                </svg>
+                {% render 'icon', name: 'tiktok' %}
                 <span>{{ 'rifano.tiktok' | t }}</span>
               </a>
             </li>
