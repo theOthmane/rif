@@ -59,20 +59,23 @@
               {% if link.links != blank %}
                 <details class="menu-drawer__details">
                   <summary class="menu-drawer__summary">
-                    <a
-                      href="{{ link.url }}"
-                      class="menu-drawer__link"
-                      {% if link.current %}
-                        aria-current="page"
-                      {% endif %}
-                    >
-                      {{ link.title }}
-                    </a>
+                    <span class="menu-drawer__label">{{ link.title }}</span>
                     <svg class="icon icon--sm menu-drawer__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                       <path d="M6 9l6 6 6-6" />
                     </svg>
                   </summary>
                   <ul class="menu-drawer__sublist">
+                    <li class="menu-drawer__subitem">
+                      <a
+                        href="{{ link.url }}"
+                        class="menu-drawer__sublink"
+                        {% if link.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ 'rifano.menu_all' | t }} {{ link.title }}
+                      </a>
+                    </li>
                     {% for child in link.links %}
                       <li class="menu-drawer__subitem">
                         <a

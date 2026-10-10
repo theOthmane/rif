@@ -22,20 +22,32 @@
   <body>
     <a href="#main-content" class="skip-link">{{ 'rifano.skip_to_content' | t }}</a>
 
-    {% block 'container', tag: 'div' %}
-      {% block 'announcement' -%}{%- endblock %}
-      <menu-drawer>
-        {% block 'header' -%}{%- endblock %}
-        {% block 'menu-drawer' -%}{%- endblock %}
-      </menu-drawer>
-    {% endblock %}
+    {% comment %}
+      `.page` spans the whole document, so `.site-chrome` — which is sticky —
+      has a page-spanning containing block. The sentinel deliberately sits
+      outside `.site-chrome` so it still scrolls away (menu-drawer.js toggles
+      `.is-scrolled` from its IntersectionObserver).
+    {% endcomment %}
+    <div class="page">
+      <div class="header__sentinel" aria-hidden="true"></div>
 
-    <main id="main-content">
-      {{ content_for_layout }}
-    </main>
+      <div class="site-chrome">
+        {% block 'container', tag: 'div' %}
+          {% block 'announcement' -%}{%- endblock %}
+          {% block 'header' -%}{%- endblock %}
+          <menu-drawer>
+            {% block 'menu-drawer' -%}{%- endblock %}
+          </menu-drawer>
+        {% endblock %}
+      </div>
 
-    {% block 'container', tag: 'div' %}
-      {% block 'footer' -%}{%- endblock %}
-    {% endblock %}
+      <main id="main-content">
+        {{ content_for_layout }}
+      </main>
+
+      {% block 'container', tag: 'div' %}
+        {% block 'footer' -%}{%- endblock %}
+      {% endblock %}
+    </div>
   </body>
 </html>

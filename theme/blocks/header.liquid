@@ -3,9 +3,6 @@
   Sticky with a scroll hairline. Self-contained: callers must leave the body empty.
 {% enddoc %}
 
-{% # Sentinel for the scroll hairline. Observed by menu-drawer.js via IntersectionObserver (no scroll listener). %}
-<div class="header__sentinel" aria-hidden="true"></div>
-
 <header class="site-header" {{ block.shopify_attributes }}>
   <div class="site-header__inner">
     <div class="site-header__left">
@@ -40,17 +37,19 @@
           <path d="M6 8h12l1 12H5L6 8z" />
           <path d="M9 8V6a3 3 0 0 1 6 0v2" />
         </svg>
-        {% partial 'cart-count' %}
-          <span
-            id="cart-icon-bubble"
-            class="cart-count"
-            {% if cart.item_count == 0 %}
-              hidden
-            {% endif %}
-          >
-            {{ cart.item_count }}
-          </span>
-        {% endpartial %}
+        {%- comment -%}
+          {% partial %} only renders when the Liquid '26 feature preview is on
+          (shop.features.agentic_editor_enabled?); otherwise the storefront raises
+          "Unknown tag 'partial'". Fall back to plain markup so the header never
+          breaks the site. See theme/AGENTS.md "The partial tag".
+        {%- endcomment -%}
+        {%- if shop.features.agentic_editor_enabled? -%}
+          {% partial 'cart-count' %}
+            <span id="cart-icon-bubble" class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+          {% endpartial %}
+        {%- else -%}
+          <span id="cart-icon-bubble" class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+        {%- endif -%}
       </a>
     </div>
   </div>

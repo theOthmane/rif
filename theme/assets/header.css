@@ -27,16 +27,26 @@
   inline-size: 100%;
 }
 
-/* Header: sticky, 3-column grid, logo always centred. Overrides base.css `header` flex. */
-.site-header {
-  display: block;
+/* Page wrapper: spans the whole document so the sticky chrome below is not clamped. */
+.page {
+  display: flow-root;
+}
+
+/* Chrome: announcement + header. Sticky, and a direct child of `.page`, so it has a
+   page-spanning containing block and actually pins. */
+.site-chrome {
   position: sticky;
   top: 0;
   z-index: var(--z-header);
+}
+
+/* Header: 3-column grid, logo always centred. Overrides base.css `header` flex. */
+.site-header {
+  display: block;
   min-height: var(--s-8);
   background: color-mix(in srgb, var(--c-bg) 85%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(var(--s-3));
+  -webkit-backdrop-filter: blur(var(--s-3));
   border-bottom: 1px solid transparent;
   transition: border-color var(--dur-2) var(--ease-out);
 }
@@ -236,14 +246,22 @@
   gap: var(--s-2);
 }
 
-.menu-drawer__link {
-  display: inline-flex;
+/* Display type for drawer nav rows. `.menu-drawer__link` is the row's link;
+   `.menu-drawer__label` is the non-interactive label inside a `<summary>` toggle. */
+.menu-drawer__link,
+.menu-drawer__label {
+  display: flex;
   align-items: center;
+  min-width: 0;
   min-height: var(--s-7);
   font-family: var(--font-display);
   font-size: var(--fs-xl);
   line-height: var(--lh-snug);
   color: var(--c-text);
+}
+
+.menu-drawer__link {
+  inline-size: 100%;
   text-decoration: none;
 }
 
@@ -287,8 +305,10 @@
 }
 
 .menu-drawer__sublink {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  inline-size: 100%;
+  min-width: 0;
   min-height: var(--s-7);
   font-family: var(--font-body);
   font-size: var(--fs-md);
