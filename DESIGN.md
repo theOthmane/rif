@@ -3,6 +3,43 @@
 Source of truth for tokens: `theme/assets/tokens.css`. This file describes
 them; edit values only in `tokens.css`.
 
+## Direction — what "the 1%" looks like here
+
+RIFANO sells to "the ambitious one on his way to the 1%". The site has to feel
+like it belongs to someone already there — never loud, never eager, never
+selling. Premium is not a colour or a bevel; it is what is *withheld*.
+
+Five levers, in priority order. When two of them disagree, the earlier wins.
+
+1. **Restraint.** Every screen must survive the question "what can I remove
+   without losing anything a buyer needs?". If the answer is "nothing", the
+   screen is not restrained yet. The shell is three marks on one line and a
+   thin band at the bottom; that is the standard the rest of the theme is
+   measured against.
+2. **Space.** Air is the cheapest prestige signal and the hardest to fake.
+   Sections get more air above them than below them. Bands inside a region
+   share one rhythm with a single deliberate pause at the one moment that
+   matters (the RF lockup in the footer). Never pack, never justify to fill.
+3. **Precise type.** Bodoni Moda does the speaking, Manrope does the work.
+   Optical alignment matters more than alignment: glyph edges, label baselines
+   and the cart count all sit on the same axis as the body text, so the page
+   reads as one ruled object.
+4. **Few words.** The shell says almost nothing. "Be different. Be RIFANO." is
+   two lines. A promise is one sentence. If a line is doing two jobs, it is
+   too long.
+5. **One accent.** Brushed silver is the only accent, it is rare, and it is
+   earned. Two silver moments in a viewport is already a lot. Everything else
+   is black, hairline and grey text.
+
+**Tone check before shipping.** Simple, prestige, premium, trusted. Realistic
+3D, subtle animation, subtle scroll. Nothing flashy, nothing that loops.
+
+**What "trusted" means concretely**, because it is the easiest one to lose by
+accident: the promise the store actually makes — cash on delivery, free
+delivery everywhere in Morocco — is never truncated, never shrunk into
+micro-type, never covered by an effect, and never restated so often it reads as
+a template. Show it clearly once or twice. Three times is boilerplate.
+
 ## Tokens and roles
 
 ### Colour
@@ -52,6 +89,10 @@ Component sizes are not spacing tokens and live in their own block:
 ### Shape, depth, motion, layers
 
 - `--radius-sm 2px`, `--radius-md 4px`, `--radius-pill 999px`.
+- `--hairline: 1px solid var(--c-line)` — **the separator.** Header, announcement
+  bar, menu drawer and footer share the page black and are divided by this one
+  line. Never a grey band, never a shadow, never a fill step standing in for a
+  border. One token so the shell cannot drift apart.
 - `--shadow-lift` — single restrained lift shadow.
 - `--ease-out: cubic-bezier(0.2, 0.7, 0.2, 1)`;
   `--dur-1 160ms`, `--dur-2 280ms`, `--dur-3 600ms`.
@@ -64,6 +105,11 @@ Component sizes are not spacing tokens and live in their own block:
 - **Manrope for everything else**: body, labels, buttons, inputs, navigation.
   Helpers: `.t-body`, `.t-muted`, `.t-label` (Manrope 500, `--fs-xs`,
   uppercase, `--tracking-label`, `--c-text-2`).
+- **`.t-label` is for labels, not for sentences.** Column headings ("Boutique",
+  "Aide"), eyebrow-style field names: yes. A promise the store makes — the COD
+  and free-delivery line in the announcement bar and the footer strip — is a
+  sentence and is set in sentence case at `--fs-sm` in `--c-text-2`. Micro-type
+  makes the most trust-critical line on the site read like shipping boilerplate.
 - Tagline "Be different. Be RIFANO." stays English by brand choice.
   Storefront voice is otherwise French; Darija only as seasoning
   (e.g. "Mrehba bik"), never for policy or price.
@@ -79,12 +125,72 @@ The `--c-silver` gradient is used **only** for:
 Never for large fills, surfaces, or body text. Text on silver is always
 `--c-bg`. Ghost buttons use a 1px `--c-line` border with `--c-text`.
 
-## Motion rules
+**Counts and states are numerals, never silver fills.** A cart badge in a
+filled silver pill makes the cart the brightest object on the page and pulls the
+eye off the monogram — that is badge spam, an explicit anti-reference. Render
+counts as `--c-text` numerals positioned beside the glyph. Reserve silver fills
+for `.btn` and nothing else.
 
-Subtle, ease-out, ≤ 600ms, no bounce. Hover = gentle brightness shift over
-`--dur-1`. `prefers-reduced-motion: reduce` zeroes all durations
-(`--dur-1/2/3: 0ms`). The 3D hero (specs 13–14) scrubs; on reduced-motion or
-save-data it shows the poster.
+## Motion principles
+
+Subtle, ease-out, ≤ 600ms, no bounce. `prefers-reduced-motion: reduce` zeroes
+all durations (`--dur-1/2/3: 0ms`). The 3D hero (specs 13–14) scrubs; on
+reduced-motion or save-data it shows the poster.
+
+Four rules on top of that:
+
+1. **Subtle.** If a flourish needs attention to be noticed, it does not ship.
+   Nothing loops. Nothing pulses. Nothing announces itself. Motion is
+   information — where you are, what changed, what opened — and never
+   entertainment.
+2. **Realistic.** Things move the way the physical thing would. A drawer slides,
+   a panel eases, an object settles. No springs, no overshoot, no elastic
+   easing, no scale-and-bounce entrances.
+3. **Scroll-linked, never scroll-driven decoration.** Scroll may reveal
+   (the hairline arriving under the header, the hero scrubbing). It may not
+   re-trigger an entrance every time a section re-enters the viewport. A
+   section that animates in once and then resets when you scroll back up reads
+   as a template.
+4. **One authored moment per screen, not scattered effects.** One thing on the
+   page moves with intent; everything else is still. It is worse to add
+   animation to every section than to add none.
+
+**Reduced motion is not a downgrade.** Under `prefers-reduced-motion` the page
+must still read completely: the hero shows its poster, accordions still open,
+the drawer still slides (instantly), and no information is only ever delivered
+by movement.
+
+**Hover is a gentle brightness shift** on `--dur-1`, never a plate. A grey
+square behind a small glyph is louder on near-black than the glyph itself.
+
+## Do / Don't
+
+**Do**
+
+- Let a section breathe: more space above a heading than below it.
+- Align glyph edges, label baselines and text edges to the same gutter axis.
+- Say one thing per surface, in one sentence, at a readable size.
+- Separate regions with `--hairline` on a shared `--c-bg`.
+- Let silver appear once, in one place, with a reason.
+- Earn the accent on hover with colour, not with a background plate.
+- Design at 375px first, then add at 768px and 1200px.
+
+**Don't**
+
+- Don't grey-band a region. One black, one hairline.
+- Don't blur or fade the chrome. Translucency makes the monogram's silver
+  composite over moving content, so the brand's rarest asset changes brightness
+  on scroll.
+- Don't fill a badge, a pill or a chip with silver to make it noticeable.
+- Don't set a sentence in `.t-label` micro-type. Uppercase 0.14em-tracked 12px
+  is for labels ("Boutique", "Aide"), not for a promise.
+- Don't truncate a promise. Wrapping to a second line is always better than an
+  ellipsis on the thing that builds trust.
+- Don't let a layout change axis between breakpoints — a rule that exists at
+  375px and vanishes at 768px is an accident, not restraint.
+- Don't repeat the same claim in three places. Twice is confidence.
+- Don't add a badge, a claim, a testimonial or a statistic to fill space.
+- Don't animate something on every scroll pass.
 
 ## Imagery
 
@@ -111,3 +217,9 @@ PRODUCT.md "Brand Commitments": these are deliberate brand decisions, never
 anti-patterns to be "corrected" by later design work.
 Priority on conflict: PRODUCT.md > DESIGN.md > Impeccable > scroll-craft >
 taste-skill.
+
+**The shell is the reference implementation.** When a later spec is unsure how
+much air something needs or whether a flourish is allowed, open
+`assets/header.css` and `assets/footer.css` and match them. Those files are
+the brief made into CSS: one black, one hairline token, one accent, no plates,
+no fills that are not buttons.

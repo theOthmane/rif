@@ -268,3 +268,184 @@ Docs that state the palette: `PLAN.md` §2 Colour row, `PRODUCT.md` Brand Commit
 
 Next: spec 02 (brand assets). Do not start until told.
 
+### Brand design pass — critique of the shell (this session)
+
+Date: 2026-10-10. `/impeccable critique` on the announcement bar, header and footer, against the owner's new
+brand brief and `brand/sketch-home.jpeg`. **Not a spec session** — no spec 02 or 06 was started, no new
+section or feature was added.
+
+**Method.** Dual-agent: Assessment A (design review) and Assessment B (detector evidence) ran as two isolated
+sub-agents. Browser inspection was **unavailable** — no Chrome binary, no Playwright browsers, and `theme dev`
+needs an interactive device-code login against a password-protected storefront — so the whole critique is static
+reasoning. **Nothing below has been seen rendered.**
+
+**Detector caveat worth keeping.** `impeccable detect` does **not** scan `.liquid`. Proven with a control: a file
+containing raw hex + `z-index:99999` + `outline:none` returns `[]` exit 0 as `.liquid`, and a finding exit 2 as
+`.html` with byte-identical content; `strings` over the engine binary contains no "liquid". The "clean" result
+on the three section files is therefore a **false negative**. A salvage pass (Liquid → HTML) also returned
+`[]` exit 0, and *that* negative is trustworthy — the scanner was proven to read the converted files by injecting
+one inline style and watching it fire. So the shell markup is genuinely clean for the rules this engine
+implements, but **the detector is not a Liquid gate**. It was not re-run after this pass's edits.
+
+**Score: 23/28** (heuristics 7 and 10 `n/a` — a fixed brand shell has no accelerator surface, and its help is
+content sections rather than this pass). Band: Good. The two heuristics that map most directly onto the brief
+scored worst: **Consistency and Standards 2/4** and **Aesthetic and Minimalist Design 2/4**. Cognitive load:
+4 of 8 checklist items failed (reading order, competing attention, chunking, consistency of rules and alignment).
+
+**Strengths kept untouched**, because they are already correct restraint:
+
+- The header's 3-column `1fr auto 1fr` grid with `justify-self: start / center / end` is a disciplined, literal
+  transcription of the owner's sketch. Nothing else competes with it.
+- The scroll hairline (transparent 1px border gaining `--c-line` from an IntersectionObserver, `--dur-2`,
+  zeroed under reduced motion) is the best-built code in the shell and *is* the brief's "subtle scroll".
+- The colour system is honest: `#050505` never `#000`, `--c-line` reserved for decorative rules and
+  `--c-line-strong` for boundaries a user must see to identify a control. WCAG 1.4.11 handled correctly.
+
+#### Findings kept — the ones that made it feel less "simple, prestige, trusted"
+
+| # | Sev | Finding | Disposition |
+|---|-----|---------|-------------|
+| 1 | P0 | **The COD promise was ellipsized away on the primary device.** `rifano.announcement` is 61 characters; in `.t-label` (12px uppercase, 0.14em tracking) that is ~586px of text into the 343px available at 375px, and `text-overflow: ellipsis` cut it around character 36 — losing the entire "Livraison gratuite partout au Maroc" half, which is the half that does the work. | **Fixed** |
+| 2 | P1 | **The shell did not share one black.** The announcement was `--c-surface`, the header was `color-mix(--c-bg 85%, transparent)` + `blur(12px)`, the footer was `--c-bg` — three optical values reading as three stacked components instead of one ground, against a brief that says "header, bars and footer share it, separated by 1px hairlines only". | **Fixed** |
+| 3 | P1 | **The blur animated the logo.** `.header__monogram` and `.logo__wordmark` use `background-clip: text`, so the silver gradient composited over a moving, blurred backdrop — the brand's rarest asset changed brightness on scroll. | **Fixed** |
+| 4 | P1 | **Silver was used a fourth time, as a filled cart badge.** `--c-silver` is permitted for three things only (buttons, monogram, 1px hairlines) and never for a filled surface. The pill made the cart the most saturated object on the black header and pulled the eye off the monogram — badge spam, an explicit anti-reference in PRODUCT.md. | **Fixed** |
+| 5 | P1 | **The most trust-critical copy was set as a micro-label.** The announcement and the footer promise strip both carried `.t-label` — Manrope 500, 12px, uppercase, 0.14em, grey. Legible but anonymous: it reads as shipping boilerplate, not a brand making a commitment. | **Fixed** |
+| 6 | P1 | **The footer was five bands at equal weight.** One `gap: var(--s-6)` between all five regions, 64px promise rows (192px of stack on a 667px phone), two link columns marooned in the far halves of a `1fr 1fr` grid under a centred lockup, then a legal bar that flipped to `space-between` at 768px while everything above stayed centred. The sketch drew a thin band. | **Fixed** |
+| 7 | P1 | **Hairline discipline broke at 768px.** `.footer__menus` lost its only rule while the accordions were hidden, so the desktop footer silently dropped a hairline the mobile footer has. A rule that appears at 375px and vanishes at 768px is an accident, not restraint. | **Fixed** |
+| 8 | P2 | **The header glyphs sat off the shell's axis.** The 24px icon was centred inside a 64px button, landing at x=36px while every text edge in the footer sat at x=16px (`--gutter`). | **Fixed** |
+| 9 | P2 | **Grey hover plates.** `.icon-button:hover` painted a 64×64px `--c-surface-2` square behind a 24px glyph — the loudest thing on a near-black header, where DESIGN.md's stated rule is "a gentle brightness shift". | **Fixed** |
+| 10 | P2 | **`aria-label` reported "Panier (0 articles)" on an empty cart** — simply wrong. | **Fixed** (branches on the existing `rifano.cart` key; no new copy, no new locale entry) |
+
+#### Findings recorded but deliberately NOT acted on
+
+Raised by the critique, not fixed here, with the reason. None is a reason to reopen this pass; each is handed to
+the spec that owns it.
+
+- **The shell shows two different logos.** `sections/header.liquid` still renders `<span class="header__monogram">RF</span>`,
+  the *text* fallback, while the footer already calls `{% render 'logo', variant: 'lockup' %}`. `snippets/logo.liquid`
+  landed back in spec 04 and `header.css` already styles `.header__logo svg` in anticipation — only the Liquid was missed.
+  **The owner scoped this pass with "do not touch the logo or icons (spec 02 owns them)", so it was left alone.**
+  → **spec 02**, which already carries this swap as its step 5. This is the highest-value open item from the critique.
+- **The silver ramp is too steep at glyph size.** `--c-silver` runs `#e7e9ec → #7f848b` across 135°. Convincing
+  brushed metal across the 56px footer lockup; across an 18px "RF" the R and the F land on visibly different
+  brightnesses and the mark reads as a rendering artifact. It needs a second gradient token (e.g. `--c-silver-mark`)
+  for small glyphs. **Logo territory — spec 02.** Recorded in DESIGN.md's silver rule instead.
+- **`footer.css` self-loads from inside `<body>`** (`sections/footer.liquid`) while `header.css` is global
+  (`layout/theme.liquid`), so the footer FOUCs and is asymmetric with the rest of the shell. The fix is one line
+  in the layout, which this pass may not touch. **Open since spec 04.**
+- **`footer__icon` renders 16px with `stroke-width: 1.25` on a 24 viewBox ≈ 0.83px effective stroke** — genuinely
+  muddy at that size, on the promise strip especially. Fixing it means changing icon geometry, which the owner
+  scoped to spec 02. **The menu drawer already does this correctly at 24px** — copy that when spec 02 lands the icon set.
+- **The COD/delivery promise appears three times** — announcement bar, footer strip, menu-drawer note. Two is
+  confidence, three is a template. Cutting it to two needs a menu-drawer edit, which is not this pass's file.
+- **`--radius-pill` and `--shadow-lift` now have no consumers** after the badge fill was removed. Both are
+  documented design-system tokens reserved for later specs (toast, quantity stepper, product-card hover lift);
+  deleting them would contradict DESIGN.md's token contract. Left in place deliberately.
+- **Every footer menu is emitted twice in the DOM** (`<details>` for mobile, `<nav>` for desktop). This is
+  spec 04's deliberate CSS-only, no-JS switch; `display: none` keeps the duplicate out of the tab order.
+  A real fix needs JS. Left as-is.
+- **A `.full-width` on the announcement bar was considered and dropped**: `critical.css` scopes that utility to
+  `.block-container > .full-width`, and the shell is not inside a `.block-container`, so it would have been a
+  dead class. The hairline is the separator.
+
+#### Sketch items that belong to a later spec — noted, not built
+
+Read from `brand/sketch-home.jpeg` and deliberately left alone. **Spec 02 and spec 06 were not started.**
+
+- Header: hamburger left, `RF` centre, cart right with a small count badge, one rule beneath → **now the shell's
+  established standard**; spec 02 owns the monogram itself.
+- "Be different / Be RIFANO" as a two-line tagline → **spec 06** (home intro). Note for 06: the critique's spacing
+  findings land twice as hard there — the hero is the biggest space decision in the theme.
+- The "3D thing" centred on the page → **spec 06** poster / **spec 14** scroll-scrubbed canvas. The
+  no-blur/no-translucency rule matters most here: with the header now opaque, the hero's top edge meets a solid
+  black instead of a blurred plate.
+- Category rows with a small icon on the left, products scrolling horizontally → **spec 07**. The sketch's thin
+  vertical silver hairline on the left edge of the rows group belongs to spec 07, not to the shell.
+- The three dots / "More" control under the rows → **spec 07**.
+- A thin bottom band labelled "Footer" with a small mark → **implemented in this pass**; what spec 04 shipped was
+  heavier than what the sketch drew, which was finding 6.
+
+Questions skipped: the owner's brief pre-answers every decision axis a critique would ask about — scope (shell
+only, explicitly), tone (quoted verbatim), features (none), claims (none). There is no open question worth a
+round trip.
+
+### Brand design pass — the shell (this session)
+
+Date: 2026-10-10. Commit `style: brand design pass on shell (1%, prestige, trusted)`. **Docs + CSS pass, no spec.**
+No new features, no new sections, no new settings, no invented claims, no copy meaning changed. Spec 02 and
+spec 06 not started.
+
+Files changed: `DESIGN.md`, `PRODUCT.md` (brand personality paragraph plus the Palette/Tone/Motion/Silver bullets
+inside Brand Commitments — nothing else), `theme/assets/tokens.css`, `theme/assets/header.css`,
+`theme/assets/footer.css`, `theme/sections/announcement.liquid`, `theme/sections/header.liquid`,
+`theme/sections/footer.liquid`, `STATUS.md`. `base.css` and `critical.css` were in the allowed list and turned
+out **not to be needed** — see below. `theme/sections/menu-drawer.liquid` was not touched, though `header.css`
+(which styles the drawer) was — see the risks at the end.
+
+**What changed, in plain terms.**
+
+1. **The promise is no longer cut off.** The announcement bar wraps instead of ellipsizing, and it is set as a
+   sentence — Manrope 500, `--fs-sm`, sentence case — instead of uppercase 12px micro-type. Same words, same
+   French, same store claim. It is the first thing a TikTok visitor reads; it now reads as a promise and it
+   finishes. The footer promise strip got the identical treatment.
+2. **Header, bars and footer are now literally one black.** Announcement `--c-surface` → `--c-bg`; header
+   `color-mix(85%) + blur(12px)` → opaque `--c-bg`. No blur, no translucency, no grey band. Separation is the
+   hairline and nothing else. This also stops the silver monogram from re-brightening as content scrolls beneath it.
+3. **Silver is rare again.** The cart count lost its filled silver pill and is now a plain `--c-text` numeral
+   beside the glyph, so the monogram is the only silver in the header. Also added `--hairline: 1px solid var(--c-line)`
+   to `tokens.css` and routed all 13 shell rules through it, making the shell's single separator device one token
+   that cannot drift.
+4. **More space, one axis.** Footer band gap `--s-6` → `--s-5`, with one deliberate pause (`--s-4` block padding)
+   at the RF lockup. Promise rows 64px → 48px. The two link columns now sit *together* under the centred lockup
+   (`repeat(2, minmax(0, max-content))`, `justify-content: center`) instead of in the far halves of the container.
+   The legal bar stays centred at every width instead of flipping to `space-between` at 768px, and `.footer__menus`
+   keeps a hairline at 768px that it previously dropped.
+5. **The header marks line up.** The 24px glyphs sit flush to `--gutter` with the 64px tap target extending
+   inward, so the three marks and every text edge in the shell share one axis. Hover is now a `--c-silver-2`
+   colour shift instead of a 64×64px grey plate.
+
+**Also fixed, small and inside the shell:** the cart link's `aria-label` now reports "Panier" rather than
+"Panier (0 articles)" when the cart is empty, using the existing `rifano.cart` key — no new copy, no new locale entry.
+
+**Where the brief's "more space" was deliberately not applied.** The announcement bar was **not** moved out of the
+sticky `.site-chrome`, even though a promise you only need once should ideally scroll away — that structure lives
+in `layout/theme.liquid`, outside this pass's file list. The bar was instead made shorter and quieter, so it now
+costs roughly 44px pinned against roughly 72px before (two lines at `--fs-sm`, versus one truncated line at
+12px uppercase). Moving it out of the chrome is left as an owner/spec decision.
+
+**Files allowed but not needed.** `base.css` and `critical.css` were in the allowed list. Nothing in the pass
+required them: the `header` / `footer` element selectors in `base.css` are already overridden by the component
+CSS at higher specificity, and the dead legacy `footer` block in `base.css` is still dead — this pass neither
+added nor removed a consumer of it. Both stay open for a spec that lists them.
+
+**Contrast re-verified (WCAG 2.2 AA) on the shell's actual grounds.** Announcement text `--c-text-2` on `--c-bg`
+**8.67:1**; footer promise strip `--c-text-2` on `--c-bg` **8.67:1**; cart count `--c-text` on `--c-bg`
+**17.10:1**; icon button `--c-text` **17.10:1** and hover `--c-silver-2` **10.80:1**. All clear 4.5:1 by a wide
+margin, and no change put text on a lower-contrast ground than before — the announcement moved *up*, from
+`--c-surface` (8.26:1) to `--c-bg` (8.67:1). `--c-line` (1.42:1) stays decorative-only and `--c-line-strong`
+(3.85:1) stays the control-boundary token; neither is used for text.
+
+**Tokens only.** No raw hex was added to any CSS file. The only px in `header.css` / `footer.css` are `1px`
+underline thicknesses, the 480 / 768 / 1200 breakpoints, and prose inside comments. Mobile-first: the wrapping
+announcement, the flush glyph alignment, the 48px promise rows and the centred legal bar are the 375px state;
+768px and 1200px only add the two-column nav and the taller header bar.
+
+**Known risks — the owner must eyeball these at 375px and 1440px on the preview link.** Nothing here has been
+rendered; there is no Chrome in this environment and `theme dev` cannot complete its device-code login.
+
+1. The announcement now wraps to **two lines** at 375px. Intended, but it makes the pinned chrome ~44px instead of
+   36px. If it reads as too tall, the fix is `--fs-xs` on `.announcement__text` — **not** going back to truncation.
+2. Flush glyph alignment puts the hamburger's left edge exactly on `--gutter`; confirm it does not read as clipped
+   against the screen edge.
+3. The cart count now sits just outside the glyph's top-right rather than on it; confirm it does not crowd the edge.
+4. The drawer's inner hairlines now use `var(--hairline)`. Byte-identical substitution (same 1px, same
+   `--c-line`), but the drawer was not visually verified after it.
+
+**Gate.** (1) `npx @shopify/cli@latest theme check --path theme` — **41 files inspected, 0 errors, 2 warnings**:
+the known `OrphanedSnippet` pair on `snippets/product-card.liquid` and `snippets/price.liquid`, untouched by this
+pass and clearing when specs 07/08/09/12 land a first consumer. Same baseline as before this pass. (2) Push smoke
+per AGENTS.md step 3 — see the reply for the result. (3) `grep` confirms no `{% block %}` / `{% partial %}` was
+introduced. (4) The detector was **not** re-run after these edits — see the caveat above; it is not a Liquid gate.
+
+Next: spec 02 (brand assets), which now also owns the header monogram swap. Do not start until told.
+

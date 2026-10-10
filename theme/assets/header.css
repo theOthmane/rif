@@ -1,23 +1,31 @@
 /** RIFANO header shell — announcement, header, menu drawer. Tokens live in tokens.css. */
 
-/* Announcement bar: single line, centred, truncated. No animation. */
+/* Announcement bar — the one persistent promise.
+   Same ground as the page: a hairline does the separating, never a grey band.
+   The line wraps rather than truncates. The promise is 61 characters and at
+   `--fs-sm` it needs ~400px; a 375px screen has 343px. Ellipsising it cut the
+   whole "partout au Maroc" half off, which is the half that does the work. */
 .announcement {
-  background: var(--c-surface);
-  border-bottom: 1px solid var(--c-line);
-  min-height: calc(var(--s-6) + var(--s-1));
+  background: var(--c-bg);
+  border-bottom: var(--hairline);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-block: var(--s-2);
   padding-inline: var(--gutter);
   text-align: center;
 }
 
 .announcement__text {
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+  max-width: 42rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--c-text-2);
 }
 
 /* Sentinel for the scroll hairline (observed, never scrolled to). */
@@ -40,13 +48,15 @@
   z-index: var(--z-header);
 }
 
-/* Header: 3-column grid, logo always centred. Overrides base.css `header` flex. */
+/* Header: 3-column grid, logo always centred. Overrides base.css `header` flex.
+   Opaque --c-bg, no blur. The brief puts header, bars and footer on one black
+   separated by 1px hairlines; the translucency also made the silver monogram
+   composite over a moving hero, so the brand's rarest asset changed brightness
+   on scroll. The hairline below is the only thing that changes on scroll. */
 .site-header {
   display: block;
   min-height: var(--s-8);
-  background: color-mix(in srgb, var(--c-bg) 85%, transparent);
-  backdrop-filter: blur(var(--s-3));
-  -webkit-backdrop-filter: blur(var(--s-3));
+  background: var(--c-bg);
   border-bottom: 1px solid transparent;
   transition: border-color var(--dur-2) var(--ease-out);
 }
@@ -81,6 +91,19 @@
   min-width: 0;
 }
 
+/* Glyphs sit on the same axis as every text edge in the shell: flush to
+   --gutter, 64px tap target extending inward. One optical edge beats a
+   20px offset between the header marks and the footer copy. */
+.site-header__left .icon-button {
+  justify-content: flex-start;
+  padding-inline: 0;
+}
+
+.site-header__right .icon-button {
+  justify-content: flex-end;
+  padding-inline: 0;
+}
+
 .icon-button {
   display: inline-flex;
   align-items: center;
@@ -94,10 +117,13 @@
   border-radius: var(--radius-sm);
   text-decoration: none;
   cursor: pointer;
+  transition: color var(--dur-1) var(--ease-out);
 }
 
+/* DESIGN.md: hover is a gentle brightness shift, not a plate. A 64px grey
+   square behind a 24px glyph is the loudest thing on a near-black header. */
 .icon-button:hover {
-  background: var(--c-surface-2);
+  color: var(--c-silver-2);
 }
 
 .icon {
@@ -147,23 +173,25 @@
   position: relative;
 }
 
+/* Cart count: a numeral, not a badge. A silver pill made the cart the most
+   saturated object on the black header and pulled the eye off the monogram —
+   DESIGN.md permits --c-silver for three things only (buttons, monogram,
+   1px hairlines) and never for a filled surface. The number reads as a
+   superscript beside the glyph, the way the owner's sketch draws it. */
 .cart-count {
   position: absolute;
-  top: var(--s-1);
-  right: 0;
+  top: var(--s-2);
+  right: var(--s-1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: var(--s-4);
   min-height: var(--s-4);
-  padding-inline: var(--s-1);
   font-family: var(--font-body);
   font-size: var(--fs-xs);
   font-weight: 600;
   line-height: 1;
-  background: var(--c-silver);
-  color: var(--c-bg);
-  border-radius: var(--radius-pill);
+  color: var(--c-text);
 }
 
 .cart-count[hidden] {
@@ -176,7 +204,7 @@
   margin-right: auto;
   padding: 0;
   border: 0;
-  border-right: 1px solid var(--c-line);
+  border-right: var(--hairline);
   width: min(calc(var(--s-9) * 4 + var(--s-6) + var(--s-1)), 100vw);
   max-width: 100vw;
   height: 100dvh;
@@ -213,7 +241,7 @@
   align-items: center;
   gap: var(--s-3);
   padding: var(--s-3) var(--gutter);
-  border-bottom: 1px solid var(--c-line);
+  border-bottom: var(--hairline);
 }
 
 .menu-drawer__welcome {
@@ -224,7 +252,7 @@
   display: flex;
   gap: var(--s-2);
   padding: var(--s-4) var(--gutter);
-  border-bottom: 1px solid var(--c-line);
+  border-bottom: var(--hairline);
 }
 
 .menu-drawer__search input[type="search"] {
@@ -326,7 +354,7 @@
 
 .menu-drawer__bottom {
   padding: var(--s-4) var(--gutter) var(--s-5);
-  border-top: 1px solid var(--c-line);
+  border-top: var(--hairline);
   display: flex;
   flex-direction: column;
   gap: var(--s-3);

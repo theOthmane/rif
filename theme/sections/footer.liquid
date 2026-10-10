@@ -4,7 +4,13 @@
 
 <footer class="site-footer full-width">
   <div class="site-footer__inner">
-    <ul class="footer__promises t-label">
+    {%- comment -%}
+      The promise strip carries a sentence, so it takes the same treatment as the
+      announcement bar — sentence case at `--fs-sm` in header.css terms — rather
+      than the `.t-label` micro-type. `.t-label` stays on the two column headings
+      ("Boutique", "Aide"), which really are labels. No wording changed.
+    {%- endcomment -%}
+    <ul class="footer__promises">
       <li class="footer__promise">
         <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
           <rect x="2" y="6" width="20" height="12" rx="2" />

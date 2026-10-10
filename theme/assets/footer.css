@@ -4,12 +4,14 @@
   display: block;
   margin-top: 0;
   background: var(--c-bg);
-  border-top: 1px solid var(--c-line);
+  border-top: var(--hairline);
   padding-top: var(--section-y);
-  padding-bottom: var(--s-6);
+  padding-bottom: var(--s-5);
   color: var(--c-text-2);
 }
 
+/* One rhythm down the footer, then one deliberate pause at the mark. The 1%
+   reads as a held breath, not as five bands of equal air. */
 .site-footer__inner {
   width: 100%;
   max-width: var(--page-max);
@@ -17,18 +19,25 @@
   padding-inline: var(--gutter);
   display: flex;
   flex-direction: column;
-  gap: var(--s-6);
+  gap: var(--s-5);
 }
 
-/* Promise strip: stacked under 480px, 3 in a row above. */
+/* Promise strip: stacked under 480px, 3 in a row above. Compact rows — this is
+   a promise, not a feature grid, and it does not need 64px a row to be believed.
+   Set like the announcement bar: a sentence the store makes, not a micro-label. */
 .footer__promises {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--c-line);
-  border-bottom: 1px solid var(--c-line);
+  border-top: var(--hairline);
+  border-bottom: var(--hairline);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-text-2);
 }
 
 .footer__promise {
@@ -36,13 +45,13 @@
   align-items: center;
   justify-content: center;
   gap: var(--s-2);
-  min-height: var(--s-8);
-  padding: var(--s-3) var(--s-4);
+  min-height: var(--s-7);
+  padding-block: var(--s-2);
   text-align: center;
 }
 
 .footer__promise + .footer__promise {
-  border-top: 1px solid var(--c-line);
+  border-top: var(--hairline);
 }
 
 @media (min-width: 480px) {
@@ -57,7 +66,7 @@
 
   .footer__promise + .footer__promise {
     border-top: 0;
-    border-left: 1px solid var(--c-line);
+    border-left: var(--hairline);
   }
 }
 
@@ -67,12 +76,13 @@
   flex: none;
 }
 
-/* Brand lockup, centred. */
+/* Brand lockup, centred. The only moment the footer opens up. */
 .footer__brand {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--s-3);
+  padding-block: var(--s-4);
   text-align: center;
 }
 
@@ -100,11 +110,14 @@
 .footer__menus {
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid var(--c-line);
+  border-bottom: var(--hairline);
 }
 
+/* On mobile the accordions carry the top rules themselves; the container adds
+   its own at >=768px, where they are hidden. Never both at once — two adjacent
+   1px borders read as one 2px rule. */
 .footer__accordion {
-  border-top: 1px solid var(--c-line);
+  border-top: var(--hairline);
   margin: 0;
 }
 
@@ -174,11 +187,18 @@
 }
 
 @media (min-width: 768px) {
+  /* Desktop: two columns drawn together under the centred lockup. `1fr 1fr`
+     pushed them into the far halves of the container with a 32px void between,
+     which read as two unrelated lists rather than one menu. The hairline the
+     mobile footer has stays — a rule that appears at 375px and vanishes at 768px
+     is an accident, not restraint. */
   .footer__menus {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--s-6);
-    border-bottom: 0;
+    grid-template-columns: repeat(2, minmax(0, max-content));
+    justify-content: center;
+    column-gap: var(--s-8);
+    row-gap: var(--s-5);
+    border-top: var(--hairline);
   }
 
   .footer__accordion {
@@ -224,14 +244,16 @@
   text-decoration-thickness: 1px;
 }
 
-/* Legal bar. */
+/* Legal bar. Stays centred at every width. It used to flip to
+   space-between at 768px while the four bands above it stayed centred, so the
+   footer changed axis halfway down and stopped reading as one object. */
 .footer__legal {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--s-3);
+  gap: var(--s-1);
   text-align: center;
-  border-top: 1px solid var(--c-line);
+  border-top: var(--hairline);
   padding-top: var(--s-5);
 }
 
@@ -250,7 +272,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--s-2) var(--s-4);
+  gap: 0 var(--s-5);
 }
 
 .footer__link--legal {
@@ -261,8 +283,8 @@
 @media (min-width: 768px) {
   .footer__legal {
     flex-direction: row;
-    justify-content: space-between;
-    text-align: start;
+    justify-content: center;
+    gap: var(--s-5);
   }
 }
 

@@ -39,6 +39,10 @@
 
   /* shape and depth */
   --radius-sm: 2px; --radius-md: 4px; --radius-pill: 999px;
+  /* The 1px hairline IS the separator: header, announcement bar and footer share the
+     page black and are divided by this line only, never by a grey band or a shadow.
+     One token so the shell can never drift apart. */
+  --hairline: 1px solid var(--c-line);
   --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -12px rgb(0 0 0 / 0.6);
 
   /* motion */

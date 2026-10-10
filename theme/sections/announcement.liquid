@@ -1,6 +1,13 @@
 {% comment %}Persistent COD announcement bar.{% endcomment %}
 
-<div class="announcement t-label">
+{%- comment -%}
+  The type lives on `.announcement__text` in header.css, not on `.t-label`.
+  This is a sentence the store makes on every page, not a field label: sentence
+  case at `--fs-sm` reads as a promise, uppercase 12px micro-type reads as a
+  template ticker. Words unchanged.
+{%- endcomment -%}
+
+<div class="announcement">
   <p class="announcement__text">
     {% if settings.announcement_text != blank %}
       {{ settings.announcement_text }}

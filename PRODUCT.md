@@ -64,9 +64,18 @@ Decided: Hero production — Owner generates an original RIFANO watch (RF on dia
 
 These are deliberate brand decisions. They are not anti-patterns to be corrected by later design work.
 
-- Palette: mostly black, but a **neutral near-black `#050505` rather than `#000`** — the header, bars and footer share the page black and are separated by 1px hairlines, not grey bands — with brushed silver accents.
+**Identity.** RIFANO is "the ambitious one on his way to the 1%". The brand sells to people who
+intend to get there, and it treats a watch as a marker of earned status rather than an accessory. Premium
+is expressed by what is withheld, not by what is added: restraint, space, precise type, few words, and a
+single brushed-silver accent that is rare enough to be worth something. The site must feel simple,
+prestige, premium and trusted at the same time — it is a shop, not a showroom, and a visitor arriving
+from Instagram or TikTok has to believe a real merchant stands behind the order within seconds.
+
+- Palette: mostly black, but a **neutral near-black `#050505` rather than `#000`** — the header, bars and footer share the page black and are separated by 1px hairlines, not grey bands — with brushed silver accents. Chrome is opaque: no blur, no translucency.
 - Typography: Bodoni Moda for display, Manrope for body.
-- Tone: simple, prestige, premium, trusted. Realistic 3D, subtle animation, subtle scroll. Never flashy or gimmicky.
+- Tone: simple, prestige, premium, trusted. Realistic 3D, subtle animation, subtle scroll. Never flashy or gimmicky, and nothing loops.
+- Motion: subtle, realistic and scroll-linked; reduced motion is a supported path, never a stripped one.
+- Silver is earned: primary buttons, the RF monogram, and 1px accent hairlines only. Never a filled badge, pill or surface — counts are numerals.
 
 Assets on hand: `brand/rifano-logo.PNG`, and `brand/watches/Watch-1.png` through `Watch-4.png` (moved unmodified).
 
