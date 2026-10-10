@@ -139,3 +139,33 @@ Open (unchanged from the review, still NON-BLOCKING and still not done):
 Owner, Shopify admin: money format (MAD, no decimals) is still to be set — spec 16.
 Next: spec 06 (home intro + hero poster). Do not start until told.
 
+### Store-render check — `{% block %}` rejected by the store (commit `fix(04): invalid footer link_list default`)
+
+**This section is the important one. Read it before starting any further spec.**
+
+Reproduced from the owner's report by pushing to the logged-in store:
+`npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --unpublished --theme rifano-spec05-verify`
+
+Shopify's upload validation returns **13 errors across 13 files**:
+
+| Tag | Files | Count |
+|---|---|---|
+| `Liquid syntax error (line N): Unknown tag 'block'` | `layout/theme.liquid:35`, `templates/404.liquid:1`, `templates/article.liquid:1`, `templates/blog.liquid:1`, `templates/cart.liquid:1`, `templates/collection.liquid:1`, `templates/index.liquid:1`, `templates/list-collections.liquid:1`, `templates/page.liquid:1`, `templates/password.liquid:3`, `templates/product.liquid:1`, `templates/search.liquid:1` | 12 |
+| `Liquid syntax error (line 47): Unknown tag 'partial'` | `blocks/header.liquid:47` | 1 |
+
+**Provenance — none of this came from spec 05.** `git log -S` puts the `{% block %}` calls in `8c04487` (initial Skeleton import) and the `{% partial %}` call in `b40625e fix(03)`. The `feat(05)` and `fix(05)` commits touched only `product-card.liquid`, `product-card.js`, `STATUS.md`, and none of them appear in the list.
+
+**The gate in AGENTS.md does not catch this.** `npx @shopify/cli@latest theme check --path theme` reports **0 errors** on these exact files — it parses `{% block %}`, `{% doc %}` and `{% partial %}` happily. So "theme check 0 errors" has been passing while the theme is un-uploadable. **`theme push` is the only tool that surfaces it.** Any future spec that adds a `{% block %}` call cannot rely on theme check alone.
+
+**Fixed here:** `blocks/footer.liquid` no longer passes `"default": "footer-help"` to the `menu_help` `link_list` setting. Shopify's [input-settings docs](https://shopify.dev/docs/storefronts/themes/architecture/settings/input-settings) state: *"Accepted values for the `default` attribute are `main-menu` and `footer`."* `footer-help` was therefore `Invalid schema: setting with id="menu_help" default is invalid`. Removing the attribute (rather than pointing it at `footer`, which would duplicate `menu_shop`) leaves the setting blank until the merchant picks a menu; the `{% if menu_help.links != blank %}` guards at `footer.liquid:60,105,132` already handle blank. Re-pushed: **0 schema errors.** The owner must create a "Aide" navigation menu in admin and select it, or the Aide column stays hidden — that is a merchant action, not a code one.
+
+**NOT fixed, and not fixable in Liquid:** the 13 `Unknown tag` errors. `{% block %}` is the architecture this project mandated — `AGENTS.md:14`, `PLAN.md` §2, `theme/AGENTS.md:9-10`. There is no code change that keeps the architecture and satisfies the store's parser. Two things must be established by the owner before any further spec work:
+1. **Is `fexgzv-pq` even the right store?** `PRODUCT.md:31` names `xpziwn-tw`, and this login has no access to it (`theme list --store xpziwn-tw` → "you don't have access to this dev store"). `fexgzv-pq` runs Horizon (sections-based) as its live theme and has two pre-existing development themes.
+2. **Does the store have the blocks/Skeleton Liquid environment?** Shopify's own [skeleton-theme README](https://github.com/Shopify/skeleton-theme) documents only `partial` as gated ("requires `shop.features.agentic_editor_enabled?` and StorefrontRenderer"), not `block` — yet this store rejects both. If the environment cannot be enabled for the store, then `{% block %}` cannot render there and **the whole Skeleton approach in PLAN.md §2 has to be reopened**. That is a PLAN/PRODUCT-level decision, not a spec fix, and it is not mine to make.
+
+**Also recorded: the `{% partial %}` guard added in `fix(03)` does not work.** `blocks/header.liquid:46` wraps `{% partial 'cart-count' %}` in `{% if shop.features.agentic_editor_enabled? %}`, and `STATUS.md:68` records this as the P0 fix for "The storefront raises `Unknown tag 'partial'`". It cannot work: `Unknown tag` is a **parse-time** error, so the enclosing `{% if %}` is never evaluated. The proof is `blocks/header.liquid:47` in the error list above. The guard was left in place deliberately — once the feature *is* enabled, `{% partial %}` parses and the guard then correctly chooses between the partial and the plain-markup fallback, so it is the right code for a working environment. It is simply not a safety net for a broken one.
+
+**Blocker for visual verification:** `theme dev` cannot get past the storefront password prompt in this environment (`Failed to prompt: Enter your store password`). The store is password-protected ("Opening soon"), and fetching the preview URL returns that password page. Nothing spec 05 built has been seen rendered — criterion 1 stays **unverified**. To unblock, the owner must either supply the storefront password for `--store-password`, or disable the password page in admin.
+
+Two throwaway themes were pushed to `fexgzv-pq` while reproducing this: `rifano-spec05-review` (#185966887135) and `rifano-spec05-verify` (#185966919903). Both carry the errors above. Delete them from admin when done.
+
