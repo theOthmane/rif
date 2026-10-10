@@ -10,7 +10,7 @@ three-quarter to front view while "Be RIFANO." resolves. It should feel realisti
 - Spec 06 markup (class names are fixed).
 
 ## Files
-- `theme/blocks/home-hero.liquid` (extend), `theme/assets/home-hero.css` (extend), `theme/assets/hero-scrub.js` (new)
+- `theme/sections/home-hero.liquid` (extend), `theme/assets/home-hero.css` (extend), `theme/assets/hero-scrub.js` (new)
 - `theme/config/settings_schema.json` (RIFANO group: `hero_scrub_enabled` checkbox default true, `hero_frames_desktop` number default 96, `hero_frames_mobile` number default 72)
 
 ## Markup additions

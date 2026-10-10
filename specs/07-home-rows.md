@@ -4,7 +4,7 @@
 The middle of the sketch: rows of products per category (**Montres, Colliers, Pochettes & Sacs**), each with a small
 line icon and its title, products scrolling horizontally. Under them, a **"Plus"** control reveals more rows.
 
-## Data model (no sections, so menu-driven)
+## Data model (menu-driven)
 - `settings.home_rows_menu` (link_list, from spec 01). Each **link pointing to a collection** = one row, in menu order. Non-collection links are skipped.
 - Row title = link title. Products = `link.object.products` (first 10).
 - Icon chosen by collection handle: contains `montre` or `watch` → `watch`; `collier` or `necklace` → `necklace`; `pochette`, `sac` or `bag` → `pouch`; else no icon.
@@ -12,8 +12,8 @@ line icon and its title, products scrolling horizontally. Under them, a **"Plus"
 - Collection with 0 products → the row shows 4 placeholder cards.
 
 ## Files
-- `theme/blocks/home-rows.liquid` (new), `theme/assets/home-rows.css`, `theme/assets/home-rows.js` (new)
-- `theme/templates/index.liquid` (add a container after the hero), `theme/locales/fr.default.json`
+- `theme/sections/home-rows.liquid` (new), `theme/assets/home-rows.css`, `theme/assets/home-rows.js` (new)
+- `theme/templates/index.json` (add the `home-rows` section after the hero section), `theme/locales/fr.default.json`
 
 ## Layout
 - Each row: `<section class="row" aria-labelledby="row-title-N">`.

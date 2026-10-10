@@ -1,8 +1,9 @@
 # Spec 12 — Search, 404, Password "Bientôt", policies, gift card
 
 ## Files
-- `theme/templates/search.liquid`, `theme/templates/404.liquid`, `theme/templates/password.liquid`, `theme/layout/password.liquid`, `theme/templates/gift_card.liquid`
-- delete `theme/templates/blog.liquid`, `theme/templates/article.liquid` **only if** theme check allows it (blog is out of scope). If they're required, restyle them minimally instead.
+- `theme/sections/main-search.liquid`, `theme/sections/main-404.liquid`, `theme/sections/main-password.liquid` (rewrite the spec-00 stubs; `theme/templates/search.json`, `404.json` and `password.json` already compose them)
+- `theme/layout/password.liquid`, `theme/templates/gift_card.liquid`
+- delete `theme/templates/blog.json`, `theme/templates/article.json` and their `theme/sections/main-blog.liquid` / `main-article.liquid` **only if** theme check allows it (blog is out of scope). If they're required, restyle them minimally instead.
 - `theme/assets/system.css`, `theme/locales/fr.default.json`
 
 ## Search

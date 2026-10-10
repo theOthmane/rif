@@ -6,8 +6,8 @@ This spec ships a **static, still-premium poster version**. Spec 14 later swaps 
 **inside the same markup**, so build the structure now as described.
 
 ## Files
-- `theme/blocks/home-hero.liquid` (new), `theme/assets/home-hero.css` (new)
-- `theme/templates/index.liquid`, `theme/locales/fr.default.json`
+- `theme/sections/home-hero.liquid` (new), `theme/assets/home-hero.css` (new)
+- `theme/templates/index.json` (add the `home-hero` section; drop the spec-00 `main-index` stub and delete `theme/sections/main-index.liquid`), `theme/locales/fr.default.json`
 - `theme/config/settings_schema.json` (add `hero_poster` image_picker to the RIFANO group)
 
 ## Before coding
@@ -30,7 +30,7 @@ Run `/impeccable shape home hero` with this brief and follow its output where it
   </div>
 </section>
 ```
-(Strings via translation keys. This is the page's only `<h1>`. Remove the visually-hidden h1 from spec 01.)
+(Strings via translation keys. This is the page's only `<h1>`; the spec-00 `main-index` stub is removed when the hero lands.)
 
 ## Requirements
 - Height: `min-height: 100svh` minus header. Spec 14 will make `.hero` taller (scroll runway) and `.hero__sticky` sticky. For now `.hero` = one screen.

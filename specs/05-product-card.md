@@ -22,7 +22,7 @@ Params: `product` or `variant`. Shows `price | money` in **Bodoni Moda** (allowe
 Hover (pointer: fine only): image scale 1.03 over `--dur-3 --ease-out`, card lift none. Focus-visible ring on the link.
 
 ## Acceptance
-- [ ] A temporary test grid on the home page renders 4 placeholder cards + any real products (remove the test grid before commit)
+- [ ] A temporary test grid in `theme/sections/main-index.liquid` renders 4 placeholder cards + any real products (remove the test grid before commit)
 - [ ] No layout shift when images load (aspect-ratio reserved)
 - [ ] Sold-out and on-sale states correct (test with a product in admin if one exists; otherwise review the code path)
 - [ ] theme check 0 errors

@@ -4,14 +4,14 @@ You are building the RIFANO Shopify theme. You get **one spec per session**.
 
 ## Read first, in this order
 1. This file
-2. `theme/AGENTS.md`: Skeleton architecture rules. **They override your Shopify habits.**
+2. `theme/AGENTS.md`: the theme architecture rules. **They override your Shopify habits.**
 3. `PRODUCT.md`: product truth. Never contradict it, never invent facts.
 4. `DESIGN.md` + `theme/assets/tokens.css`: once spec 01 has created them
 5. `PLAN.md` §2: fixed decisions
 6. The spec you were given (`specs/NN-*.md`)
 
 ## Non-negotiables
-- **No `sections/` folder, no `{% section %}`, no JSON templates, no `{% stylesheet %}` / `{% javascript %}`.** Templates are `.liquid` and compose `{% block %}` calls. Executable `{% block %}` tags only in `layout/` and `templates/`.
+- **Online Store 2.0: sections + JSON templates + section groups.** Theme blocks inside sections (`blocks/` + `{% content_for 'blocks' %}`) are allowed. **No `{% block %}` or `{% partial %}` tags** — the store rejects them at upload. No `{% stylesheet %}` / `{% javascript %}` either: every component keeps one CSS file in `theme/assets/` and one JS module per behaviour.
 - Every visible string is a translation key: `{{ 'rifano.key' | t }}` in `theme/locales/fr.default.json`. French only.
 - Routes only via `routes.*` (`routes.cart_url`, `routes.search_url`, `routes.collections_url`, `routes.cart_add_url`…). Never hard-code `/cart`.
 - Colours, sizes, spacing, radii, durations come **only** from CSS custom properties in `tokens.css`. No raw hex or px values in component CSS (exceptions: `0`, `1px` hairlines, `100%`).
@@ -26,13 +26,13 @@ You are building the RIFANO Shopify theme. You get **one spec per session**.
 
 ## Tools
 - Shopify CLI: `npx @shopify/cli@latest …` (the global `shopify` binary is broken).
-- Shopify Dev MCP: use it to look up Liquid objects, filters and tags **before** using one you are not 100% sure of, and to validate. This Skeleton uses new tags (`block`, `partial`, `doc`). Check them, don't guess.
+- Shopify Dev MCP: use it to look up Liquid objects, filters and tags **before** using one you are not 100% sure of, and to validate. This theme uses OS 2.0 tags (`section`, `sections`, `content_for`, `render`, `doc`). Check them, don't guess.
 - Impeccable: `/impeccable <command>`. Use the command the spec names. Treat `PRODUCT.md` "Brand Commitments" (near-black, Bodoni Moda + Manrope) as intentional, never as anti-patterns.
 
 ## Workflow for every spec
 1. Read the spec. List the files you will create or edit.
 2. Implement.
-3. Run `npx @shopify/cli@latest theme check --path theme` (or the MCP validator). Fix until **0 errors**. Warnings: fix if in files you touched. Then run `npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --unpublished --theme rifano-smoke --no-input`. theme check cannot see store-side Liquid errors; this can. Report the error count. Until the store decision in STATUS.md is resolved, the known baseline is 13 errors (12 `Unknown tag 'block'`, 1 `Unknown tag 'partial'`). Any error beyond that baseline is a fail you must fix.
+3. Run `npx @shopify/cli@latest theme check --path theme` (or the MCP validator). Fix until **0 errors**. Warnings: fix if in files you touched. Then run `npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --unpublished --theme rifano-smoke --no-input`. theme check cannot see store-side Liquid errors; this can. Report the error count. The required baseline on fexgzv-pq is **0 errors**; any error is a fail you must fix.
 4. Check every acceptance criterion in the spec. State pass/fail for each.
 5. Update `STATUS.md`: date, spec number, what changed, theme-check result, anything left open.
 6. Stage only the files in the spec's file list plus `STATUS.md`. If `git status` shows anything else, list it in your reply and leave it unstaged. `git add <files> && git commit -m "feat(NN): <short summary>" && git push`.

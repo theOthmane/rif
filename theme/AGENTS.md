@@ -1,166 +1,159 @@
-# Skeleton Theme Agent Guide
+# RIFANO Theme Agent Guide
 
-A minimal Shopify theme that defines page structure directly in Liquid. This
-file lists the repository conventions that aren't obvious from an individual
-file. The code is the source of truth.
+A standard **Online Store 2.0** theme. Pages are built from **sections**, the
+layout composes **section groups**, and templates are **JSON**. Theme **blocks**
+nest inside sections through `{% content_for 'blocks' %}`. The code is the
+source of truth.
 
 ## Non-negotiables when editing this theme
 
-- **No sections:** no `sections/` folder, no `{% section %}`/`{% sections %}`
-  tags, no JSON templates, no schema `presets`.
+- **No `{% block %}` / `{% partial %}` tags** (nor `{% endblock %}` /
+  `{% endpartial %}`). The preview/test store (`fexgzv-pq`) rejects them at
+  upload with `Unknown tag`, exactly as it rejects Shopify's own skeleton
+  theme. Composition is sections + JSON templates + section groups.
 - **No Liquid-embedded assets:** no `{% stylesheet %}`, no `{% javascript %}`.
   All CSS and JavaScript live in `assets/`.
-- **Direct Liquid templates:** templates render page content from blocks,
-  snippets, and inline markup. Don't introduce a section for markup that is
-  used by only one page.
-- **Template-owned containers:** each `templates/*.liquid` file is the
-  composition root and wraps its page content in one or more `container`
-  blocks — one per vertical slice. `layout/theme.liquid` wraps only the
-  `header` and `footer` blocks in their own `container` blocks and renders
-  `content_for_layout` in a plain `<main>`; `layout/password.liquid` renders
-  `content_for_layout` in a plain `<main>`, and its template owns the
-  container. The exception is `gift_card.liquid` (`{% layout none %}`): it
-  manages its own document structure.
+- **No static `{% section %}` calls** unless a spec explicitly requires one for
+  a stable section ID (spec 10's cart drawer does). Prefer JSON templates and
+  section groups, which merchants can edit.
 - **Whitespace matters:** include whitespace between an HTML tag name and a
   following Liquid delimiter (`<li {% ... %}`, not `<li{% ... %}`).
 - **Translated UI only:** every user-facing string uses a literal
   `{{ 'key' | t }}` call.
 - **Shopify routes for storefront URLs:** use Liquid `routes.*` for every
   storefront path; never hardcode `/cart`, `/search`, or `/collections`.
+- `.theme-check.yml` stays a pristine `extends: theme-check:recommended` with
+  **zero overrides**. Fix Theme Check findings in the Liquid, never in config.
 
 ## Page structure
 
 ```
-layout/theme.liquid    → {% block 'container' %} (header) + <main> content_for_layout + {% block 'container' %} (footer)
-layout/password.liquid → <main> content_for_layout
-templates/*.liquid     → {% block 'container' %} → blocks / snippets / inline HTML
+layout/theme.liquid    → {% sections 'header-group' %} + <main>content_for_layout</main> + {% sections 'footer-group' %}
+layout/password.liquid → <main>content_for_layout</main> (the password page gets no header/footer groups)
+sections/*.liquid      → page regions and layout sections
+sections/header-group.json, sections/footer-group.json → the layout's merchant-editable section lists
+blocks/*.liquid        → theme blocks, nested inside sections
+templates/*.json       → which sections compose each page, in which order
+templates/gift_card.liquid → the only Liquid template ({% layout none %})
 ```
 
-Neither layout wraps `content_for_layout` in a `container` block; each renders
-it in a plain `<main>`. In `theme.liquid` the `header` and `footer` blocks each
-get their own `container` block. Every template is the composition root and
-wraps its page content in one or more `container` blocks — a template may hold
-any number of containers, one per vertical slice.
+A page is composed like this:
 
-## The block tag
+1. `templates/<page>.json` lists its sections (`sections` + `order`). Every page
+   template points at a `main-*` section; specs add and rebuild the rest.
+2. `layout/theme.liquid` renders `content_for_layout` inside
+   `<main id="main-content">`, with the header and footer groups around it.
+3. A section renders one region. Parts that merchants should add, remove or
+   rearrange become theme blocks inside that section.
+4. Layout width comes from CSS (`.page-width`, `--page-max`, `--gutter`); there
+   is no width-wrapper block any more.
 
-```liquid
-{% block 'name', named_parameter: value %}
-  Body content
-{% endblock %}
-```
+## Sections
 
-The tag works like `{% render %}`, but renders `blocks/name.liquid`. Every
-named parameter is available as a plain variable inside the block. If its name
-matches a setting declared in the block's schema, it also sets
-`block.settings.<id>`. A parameter with no matching schema setting is only a
-variable.
+- One section per file in `sections/`; one region per section.
+- Every section has a `{% schema %}` with `name`, `settings` and — for sections
+  a merchant should be able to add — `presets`. **Presets are allowed on
+  sections** (they were banned under the old `{% block %}` architecture).
+- Give every setting a sensible default so the theme editor works (for example
+  `menu`: `main-menu`).
+- A section that merchants fill with nestable content declares
+  `"blocks": [{ "type": "@theme" }]` (add `{ "type": "@app" }` when app blocks
+  are wanted) and renders `{% content_for 'blocks' %}` where the blocks go.
+- Global settings stay in the RIFANO settings group
+  (`config/settings_schema.json`); per-section behaviour goes in the section
+  schema.
+- `link_list` settings accept only `main-menu` and `footer` as defaults.
 
-For example, the container schema declares `alignment`, but not `tag`:
+## Section groups
 
-```liquid
-{% block 'container', alignment: 'center', tag: 'div' %}
-  {{ page.content }}
-{% endblock %}
-```
+- The header and footer areas are section groups:
+  `sections/header-group.json` and `sections/footer-group.json`.
+- The file shape is `type` (`header` or `footer`), `name`, `sections`, `order`.
+- `layout/theme.liquid` renders them with `{% sections 'header-group' %}` and
+  `{% sections 'footer-group' %}`. Order inside a group is merchant-editable, so
+  never hardcode header/footer sections anywhere else.
+- Current groups: `header-group` = announcement → header → menu-drawer;
+  `footer-group` = footer.
 
-Inside the container, both `alignment` and `block.settings.alignment` return
-`center`; `tag` returns `div` and does not create `block.settings.tag`. Continue
-to use `block.settings.<id>` for schema-backed controls in block implementations.
-`class` is an ordinary parameter with no special platform behavior.
+## JSON templates
 
-`{% doc %}` documents parameters; it does not declare, validate, or bind them.
-A parameter documented only in LiquidDoc is read as a plain variable and does
-not become a schema setting. Use `{% schema %}` for merchant-editable controls.
-Inline literal arrays are supported in `{% block %}` arguments, as shown by
-`tips` in `templates/index.liquid`; `{% render %}` and `{% partial %}` do not
-accept inline literal arrays.
+- Page composition lives in `templates/*.json`. Section keys in `sections` are
+  stable ids; `order` lists the render order. Duplicate ids are not allowed.
+- A JSON template can render up to 25 sections, and each section up to 50
+  blocks.
+- `templates/password.json` sets `"layout": "password"` so the password shell
+  keeps rendering it. `templates/gift_card.liquid` is the only Liquid template.
 
-The content between `{% block %}` and `{% endblock %}` is available inside the
-block as `{{ content }}`. Always include the closing `{% endblock %}` tag,
-even when the call has no body content. The body is rendered in the caller's
-scope; it cannot read the callee's settings or local assignments. Prefer body
-content for display-only text and markup instead of adding `title`, `body`, or
-`heading` parameters. Add parameters when the block needs data or must change
-how it renders.
+## Theme blocks
 
-Executable `{% block %}` tags are allowed only in `layout/` and `templates/`.
-Keep child calls in the caller-owned body, never in block or snippet
-implementations. LiquidDoc examples may show block calls, but must be authored
-in a layout or template when used.
+- `blocks/*.liquid` are theme blocks, never pages. Sections render them with
+  `{% content_for 'blocks' %}` (all configured blocks, in the JSON template or
+  section group) or — rarely — with
+  `{% content_for 'block', type: 'name', id: 'static-id' %}` (one static block).
+- Every theme block starts with a `{% doc %}` header (LiquidDoc is for snippets
+  and theme blocks, not sections) and has a `{% schema %}`.
+- Keep `{{ block.shopify_attributes }}` on the block's root element so the theme
+  editor can identify it.
+- Theme blocks can nest other theme/app blocks by declaring `blocks` and
+  rendering `{% content_for 'blocks' %}`.
+- App blocks (`@app`) only work inside sections that are part of a JSON template
+  or section group — never in statically rendered sections.
 
-theme check parses this tag, but stores without the new Liquid environment
-reject it at upload (`Unknown tag`); validate with `theme push`. Wrapping it in
-`{% if %}` does not help, because it is a parse-time error.
+## Static sections
 
-## The partial tag
+`{% section 'name' %}` renders a section statically at that spot, with the
+filename as its ID (`{% section 'cart-drawer' %}` → id `cart-drawer`). Its
+settings cannot be changed from the editor because it is not in a template or
+group. Use it only when a spec explicitly needs a stable section ID; otherwise
+prefer JSON templates and section groups.
 
-```liquid
-{% partial 'name' %}...{% endpartial %}
-```
+## The Section Rendering API
 
-Partials name inline regions of server-rendered HTML. JavaScript can request a
-region by name and replace the matching region in the DOM. The name in the
-Liquid template and the name in JavaScript must match.
+There is no `{% partial %}`. When a region must be re-rendered from the server,
+use the Section Rendering API:
 
-Skeleton shipped a `liquid-tips` block plus `assets/liquid-tips.js` as its
-canonical partial-refresh example. Spec 01 deleted both; the pattern they
-demonstrated is: the tip sentence lives in a `{% partial 'liquid-tip' %}`
-region, and a module calls `partials.refresh("liquid-tip")` to swap in a
-fresh server-rendered tip. Recover the original at
-`git show 8c04487:theme/assets/liquid-tips.js`. Import `partials` from
-`@shopify/partial-rendering`. Use `refresh()` to fetch and apply regions from
-the current page URL, or `fetch()` followed by `apply()` when you need control
-over the request URL, method, body, or when the update appears. Fetch related
-regions together so one response keeps them synchronized. Build request URLs
-from the current page URL or Liquid `routes.*` to preserve locale and market
-routing.
+- **Section IDs:** a statically rendered section's ID is its filename (`cart-drawer`
+  → `cart-drawer`). Sections inside JSON templates and section groups get a
+  dynamic ID (`template--123__product-info`, `sections--123__header`); read it
+  from `{{ section.id }}` or the section wrapper, never hardcode it. Requesting a
+  template or group section by filename does not return the configured section.
+- **Requesting:** `?sections=id1,id2` returns JSON (up to five sections per
+  request); `?section_id=id` returns that section's HTML directly (404 when the
+  section does not exist). Cart mutations can bundle several sections in one
+  Cart API response (`fetch(routes.cart_change_url + '.js', { …, sections:
+  'cart-contents,cart-count' })`) so the regions stay synchronized.
+- **URLs stay locale-aware:** build them from `routes.*` or the current page URL
+  (`window.Shopify.routes.root`), not from hardcoded paths.
+- **Scripts in returned HTML don't run** when inserted with `innerHTML`,
+  `DOMParser` or `replaceWith`. Bind behaviour from an ancestor that is never
+  replaced, or re-initialize in `connectedCallback()`.
+- **UX rules (carried over from the old `{% partial %}` tag):** apply the
+  returned HTML without losing focus, text selection, form values or scroll
+  position; explicitly update server-adjusted controls (e.g. a quantity
+  corrected by inventory validation); cancel stale requests with an
+  `AbortSignal`; set `aria-busy` while loading; announce meaningful results in a
+  live region; restore transient DOM state such as open disclosures; read URL
+  state from `window.location.search` so shared links and browser navigation
+  behave the same.
 
-`apply()` preserves focus, text selection, form values, and scroll position.
-It also preserves input, textarea, and select values when returned markup
-changes them: explicitly update server-adjusted controls after applying the
-partial (for example, a cart quantity corrected by inventory validation).
-Cancel stale requests with an `AbortSignal`, use `aria-busy` while loading,
-announce meaningful results in a live region, and restore transient DOM state
-such as open disclosures. Read URL state from `window.location.search` so
-shared links and browser navigation produce the same result.
+## Schemas and theme check
 
-The `{% partial %}` tag renders on the storefront only when
-`shop.features.agentic_editor_enabled?` is on and the page is served by
-StorefrontRenderer; otherwise the storefront raises `Unknown tag 'partial'`.
-
-theme check parses this tag, but stores without the new Liquid environment
-reject it at upload (`Unknown tag`); validate with `theme push`. Wrapping it in
-`{% if %}` does not help, because it is a parse-time error.
-
-## Blocks
-
-Every block must:
-
-- Start with a `{% doc %}` header with typed params.
-- Include a `{% schema %}` tag without `presets`.
-- Document each named parameter that the block reads, such as `tag` or `class`.
-- Document `content` in LiquidDoc and indicate whether it is required or
-  optional: `@param {string} content` or `@param {string} [content]`. For
-  self-contained blocks, describe that callers must leave the body empty.
-- Render `{{ content }}` where caller-supplied body content belongs.
-  Self-contained blocks may omit the outlet and use an empty caller body.
-- Keep executable child block calls in layouts or templates.
-- Keep `{{ block.shopify_attributes }}` on the root element so the theme editor
-  can identify the block.
-
-Skeleton keeps `.theme-check.yml` as a pristine
-`extends: theme-check:recommended` with **zero overrides**. Fix Theme Check
-errors in the Liquid instead of adding configuration exceptions.
-
-Current blocks: `container`, `header`, `footer`.
+- Section and block schemas are strict JSON inside `{% schema %}` — one tag per
+  file, never nested inside another tag.
+- `.theme-check.yml` stays untouched (see Non-negotiables).
+- theme check cannot see store-side upload errors. The `theme push` smoke in
+  `AGENTS.md` step 3 is the gate; the required baseline on `fexgzv-pq` is
+  **0 errors**.
 
 ## Theme map
 
 ```
-blocks/               container, header, footer
-templates/            *.liquid page structure (no JSON templates)
-layout/               theme.liquid document shell: header/footer container blocks + <main>
-snippets/             internal utilities (css-variables, image, meta-tags)
-assets/               CSS, JavaScript, and other static assets
+blocks/               theme blocks (nested in sections)
+sections/             page regions + header-group.json / footer-group.json
+templates/            *.json page composition; gift_card.liquid only Liquid
+layout/               theme.liquid shell + password.liquid
+snippets/             render-only utilities (logo, price, product-card, image, meta-tags, css-variables)
+assets/               CSS, JavaScript, fonts, images
+locales/              fr.default.json (storefront), en.default.schema.json (editor labels)
+config/               settings_schema.json (RIFANO group), settings_data.json
 ```

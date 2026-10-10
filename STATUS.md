@@ -203,3 +203,20 @@ Gate hardened (docs only): `AGENTS.md` workflow step 3 now runs the `theme push 
 
 R1 gate results: `npx @shopify/cli@latest theme check --path theme` — 0 errors, 2 `OrphanedSnippet` warnings (`snippets/price.liquid`, `snippets/product-card.liquid`; expected until spec 07/08/09/12 lands a consumer). `npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --unpublished --theme rifano-smoke --no-input` — exactly the 13-error baseline (12 `Unknown tag 'block'`, 1 `Unknown tag 'partial'`), no new Liquid errors. Store hygiene: the smoke left two unpublished `rifano-smoke` themes (#185968918751, #185968951519) to delete with the other throwaways.
 
+### QA recovery — R3b session A (PLAN only)
+
+Date: 2026-10-10. Docs session; `theme/` untouched. Owner decision recorded: `fexgzv-pq` (the only accessible store) rejects `{% block %}`/`{% partial %}` at upload — the same 13 errors Shopify's own `skeleton-theme` gets — and the owner has no access to `xpziwn-tw`. `PLAN.md` §2 is therefore reopened: the theme moves to **standard Online Store 2.0 — sections + JSON templates + section groups**; theme blocks inside sections (`{% content_for 'blocks' %}`) stay allowed because they do not use the `{% block %}` tag. Every other §2 decision is unchanged. `fexgzv-pq` is the preview/test store from now on.
+
+Files edited (every file this session):
+
+- `specs/00-migration.md` (new) — the migration spec: `layout/theme.liquid` renders `{% sections 'header-group' %}` + `content_for_layout` inside `<main>` + `{% sections 'footer-group' %}`; announcement/header/menu-drawer/footer move to `sections/` (`sections/header-group.json`, `sections/footer-group.json`); `blocks/container.liquid` deleted; every `templates/*.liquid` becomes `templates/*.json` + one `main-*` section (`gift_card.liquid` stays Liquid); `{% partial 'cart-count' %}` becomes plain `#cart-icon-bubble` markup; acceptance = theme check 0 errors, push smoke 0 errors, `theme dev` on `fexgzv-pq` at 375/1440, no `{% block %}`/`{% partial %}` left.
+- `PLAN.md` — §2 reopened: Base row → OS 2.0 sections + JSON templates + section groups; Cart row → drawer + `/cart` share one cart section refreshed through the Section Rendering API; Gate row → push-smoke baseline 0 errors on `fexgzv-pq`; §3 adds spec 00 first (02 runs after it); §4 preview command → `fexgzv-pq`.
+- `AGENTS.md` — non-negotiable replaced with the OS 2.0 rule (no `{% block %}`/`{% partial %}`, no `{% stylesheet %}`/`{% javascript %}`); workflow step 3 baseline → 0 errors; MCP tag list updated.
+- `theme/AGENTS.md` — rewritten for the new architecture: where files live, page composition, sections/section groups/theme blocks, schema rules (presets allowed on sections), static-section limits, and the Section Rendering API (IDs, `?sections=`/`?section_id=`, Cart API bundles, scripts-do-not-run, UX rules). `.theme-check.yml` stays untouched.
+- `specs/02-brand-assets.md`, `specs/03-header-menu.md`, `specs/04-footer.md`, `specs/05-product-card.md`, `specs/06-home-intro.md`, `specs/07-home-rows.md`, `specs/08-collection-boutique.md`, `specs/09-product.md`, `specs/10-cart.md`, `specs/11-content-pages.md`, `specs/12-system-pages.md`, `specs/14-hero-scroll.md` — paths and page composition migrated (blocks→sections, templates→JSON, partial→Section Rendering API). No design, copy or acceptance change. Specs 01/13/15/16 needed no path change.
+- `STATUS.md` — this entry.
+
+Session gate: `npx @shopify/cli@latest theme check --path theme` — **0 errors**, 2 expected `OrphanedSnippet` warnings (`snippets/price.liquid`, `snippets/product-card.liquid`). No push this session (`theme/` untouched; the old 13-error baseline is unchanged). Syntax check: Shopify Dev MCP `validate_theme` on a throwaway copy (`/tmp/opencode/r3b-validate/theme`, not in the repo) — section-group JSON, JSON templates, the `{% sections %}` layout, a section with `presets`, and `{% content_for 'blocks' %}` with `@theme`/`@app` blocks all returned VALID.
+
+Next: execute `specs/00-migration.md` (session B), then spec 02.
+

@@ -46,7 +46,7 @@ Unknown name → renders nothing (no error).
 ## Acceptance
 - [ ] Monogram SVG shows R + F + watch hands, crisp at 32px and 400px, silver gradient on `--c-bg`
 - [ ] Two monograms on the same page don't share a gradient id
-- [ ] All 20 icons render at the same visual weight. Put a temporary grid in `index.liquid` for the screenshot, then remove it before commit
+- [ ] All 20 icons render at the same visual weight. Put a temporary grid in `theme/sections/main-index.liquid` for the screenshot, then remove it before commit
 - [ ] No PNG logo shipped in `theme/assets/`
 - [ ] theme check 0 errors
 
