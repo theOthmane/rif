@@ -169,3 +169,29 @@ Shopify's upload validation returns **13 errors across 13 files**:
 
 Two throwaway themes were pushed to `fexgzv-pq` while reproducing this: `rifano-spec05-review` (#185966887135) and `rifano-spec05-verify` (#185966919903). Both carry the errors above. Delete them from admin when done.
 
+#### Decisive test: Shopify's own reference theme fails identically (owner decision: chase the store first)
+
+To separate "our repo diverged" from "this store cannot render the architecture", the **unmodified upstream `Shopify/skeleton-theme`** was downloaded and pushed to the same store:
+
+```
+curl -sL https://github.com/Shopify/skeleton-theme/archive/refs/heads/main.tar.gz | tar xz --strip-components=1
+npx @shopify/cli@latest theme push --path /tmp/opencode/skeleton-upstream --store fexgzv-pq \
+  --unpublished --theme skeleton-upstream-test --no-input
+```
+
+| Push | `Unknown tag 'block'` | `Unknown tag 'partial'` | Total |
+|---|---|---|---|
+| Upstream `Shopify/skeleton-theme` (untouched) | 12 | 1 | **13** |
+| This repo (`fix(05)` + `fix(04)`) | 12 | 1 | **13** |
+
+The failing files in the upstream push are `layout/theme.liquid:35`, `templates/{404,article,blog,cart,collection,index,list-collections,page,password,product,search}.liquid` and `blocks/liquid-tips.liquid:1` — the same twelve roles as ours, with `blocks/liquid-tips.liquid` taking the `{% partial %}` slot that `blocks/header.liquid` takes in this repo because spec 01 deleted the upstream tips block.
+
+**Conclusion: this is an environment limitation of store `fexgzv-pq`, not a defect in this repository and not caused by any spec.** Shopify's own reference theme for this architecture fails on that store in exactly the same way. No amount of Liquid editing in this repo changes the outcome.
+
+**Therefore, per the owner's decision, spec work is paused.** No further spec may be started until one of these is resolved:
+1. **Confirm the store.** `PRODUCT.md:31` names `xpziwn-tw`; this login cannot access it. If `xpziwn-tw` is the real target, the CLI must be authenticated to it and the push re-run there — that is a one-command test and may end the matter.
+2. **Ask Shopify whether the blocks / new-Liquid environment can be enabled on the store.** The strongest evidence to hand them is the upstream-theme push above: their own `skeleton-theme` is rejected by the same store. Theme `skeleton-upstream-test` (#185968001247) was deliberately left on the store so this can be demonstrated in the admin.
+3. **If it cannot be enabled, reopen `PLAN.md` §2.** The Skeleton/`{% block %}` base would have to be replaced with the sections + JSON templates model, which invalidates `AGENTS.md`, `theme/AGENTS.md` and everything built on block-first composition so far. That is a PLAN/PRODUCT-level decision for the owner, not a spec-level fix.
+
+Nothing in `theme/` was changed to pursue this. The only change in this commit is this STATUS.md entry.
+
