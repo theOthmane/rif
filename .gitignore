@@ -1,4 +1,5 @@
 node_modules/
+tools/trace/node_modules/
 .env
 tools/scroll-craft/
 scrollcraft/builds/

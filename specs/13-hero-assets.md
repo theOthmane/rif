@@ -38,7 +38,27 @@ If the RF warps in every take: accept a take where the dial is briefly soft mid-
 - `theme/assets/hero-d-001.webp … hero-d-096.webp` (desktop), `theme/assets/hero-m-001.webp … hero-m-072.webp` (mobile)
 - `brand/hero/` (source, committed), `scripts/make-hero-frames.sh` (new; documents the exact commands)
 
-### Commands (put them in the script)
+### ⚠️ Actual source (measured by PM, overrides the generic commands below)
+`brand/hero/hero.mp4`: **1280×720 landscape**, 24 fps, 8.0 s, 192 frames, has an audio track (drop it), background pure black (0,0,0).
+The clip turns **from near-front to side view**, so it must be **reversed**: the sequence has to END on the front view (matches `poster.png`).
+Do **not** upscale (1080×1350 from a 720p source would be soft). Use these instead:
+```bash
+LIFT="lutrgb=r='val*242/255+13':g='val*241/255+14':b='val*239/255+16'"
+# 1) find the watch's horizontal centre (union of cropdetect boxes); note the x centre
+ffmpeg -i brand/hero/hero.mp4 -vf "cropdetect=limit=24:round=2:reset=0" -f null - 2>&1 | grep -o "crop=[0-9:]*" | tail -1
+#    crop=W:H:X:Y → centre CX = X + W/2 ; mobile crop X0 = clamp(CX - 288, 0, 1280-576)
+# 2) desktop: 96 frames, native 1280x720 landscape, reversed
+ffmpeg -i brand/hero/hero.mp4 -an -vf "fps=12,reverse,$LIFT" -frames:v 96 -c:v libwebp -quality 72 -compression_level 6 theme/assets/hero-d-%03d.webp
+# 3) mobile: 72 frames, 576x720 (4:5) crop centred on the watch, reversed
+ffmpeg -i brand/hero/hero.mp4 -an -vf "fps=9,reverse,crop=576:720:X0:0,$LIFT" -frames:v 72 -c:v libwebp -quality 68 -compression_level 6 theme/assets/hero-m-%03d.webp
+# 4) poster (front view) for the theme setting / reduced-motion fallback
+ffmpeg -i brand/hero/poster.png -vf "$LIFT" -c:v libwebp -quality 82 brand/hero/hero-poster.webp
+```
+Check after extraction: `hero-d-096.webp` / `hero-m-072.webp` must be the **front** view; `-001` the turned view.
+Delete the PM's check files `brand/hero/_contact.png` and `brand/hero/_poster_small.png`. Commit `brand/hero/hero.mp4` + `poster.png` (they're small).
+Budgets below still apply (they will be easily met at this size).
+
+### Generic commands (reference only; superseded by the block above)
 Background must match `--c-bg` (#0d0e10), not pure black, so the frames blend into the page. The `lutrgb` filter lifts the blacks to 13/14/16:
 ```bash
 LIFT="lutrgb=r='val*242/255+13':g='val*241/255+14':b='val*239/255+16'"

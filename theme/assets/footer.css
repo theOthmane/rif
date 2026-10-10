@@ -1,0 +1,292 @@
+/** RIFANO footer — promise strip, brand, link columns, contact, legal bar. Tokens live in tokens.css. */
+
+.site-footer {
+  display: block;
+  margin-top: 0;
+  background: var(--c-bg);
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--section-y);
+  padding-bottom: var(--s-6);
+  color: var(--c-text-2);
+}
+
+.site-footer__inner {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+
+/* Promise strip: stacked under 480px, 3 in a row above. */
+.footer__promises {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.footer__promise {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--s-8);
+  padding: var(--s-3) var(--s-4);
+  text-align: center;
+}
+
+.footer__promise + .footer__promise {
+  border-top: 1px solid var(--c-line);
+}
+
+@media (min-width: 480px) {
+  .footer__promises {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .footer__promise {
+    flex: 1;
+  }
+
+  .footer__promise + .footer__promise {
+    border-top: 0;
+    border-left: 1px solid var(--c-line);
+  }
+}
+
+.footer__icon {
+  width: var(--s-4);
+  height: var(--s-4);
+  flex: none;
+}
+
+/* Brand lockup, centred. */
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  text-align: center;
+}
+
+.footer__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--s-8);
+  min-height: var(--s-8);
+  padding: var(--s-2);
+  text-decoration: none;
+}
+
+/* Inline RF fallback until spec-02 snippets/logo.liquid lands. Silver gradient text: logo is an allowed silver use. */
+.footer__monogram {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: calc(var(--s-7) + var(--s-2));
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  text-transform: uppercase;
+  line-height: 1;
+  background: var(--c-silver);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.footer__logo svg {
+  height: calc(var(--s-7) + var(--s-2));
+  width: auto;
+}
+
+.footer__tagline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  color: var(--c-text-2);
+}
+
+/* Link columns: accordions on mobile, side-by-side columns on desktop. */
+.footer__menus {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.footer__accordion {
+  border-top: 1px solid var(--c-line);
+  margin: 0;
+}
+
+.footer__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-height: var(--s-7);
+  margin: 0;
+  padding-block: var(--s-2);
+  cursor: pointer;
+  list-style: none;
+}
+
+.footer__summary::-webkit-details-marker {
+  display: none;
+}
+
+.footer__chevron {
+  transition: transform var(--dur-1) var(--ease-out);
+}
+
+.footer__accordion[open] .footer__chevron {
+  transform: rotate(180deg);
+}
+
+.footer__column {
+  display: none;
+}
+
+.footer__column h2 {
+  margin: 0;
+}
+
+.footer__links {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.footer__column .footer__links {
+  padding: 0;
+}
+
+.footer__link {
+  display: flex;
+  align-items: center;
+  min-height: var(--s-7);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--c-text-2);
+  text-decoration: none;
+}
+
+.footer__link:hover {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+  text-decoration-thickness: 1px;
+}
+
+@media (min-width: 768px) {
+  .footer__menus {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-6);
+    border-bottom: 0;
+  }
+
+  .footer__accordion {
+    display: none;
+  }
+
+  .footer__column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+}
+
+/* Contact channels. */
+.footer__contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-2);
+}
+
+.footer__contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: var(--s-7);
+  padding: var(--s-2) var(--s-3);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--c-text-2);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.footer__contact-link:hover {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+  text-decoration-thickness: 1px;
+}
+
+/* Legal bar. */
+.footer__legal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  text-align: center;
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--s-5);
+}
+
+.footer__copy {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--c-text-2);
+}
+
+.footer__policies {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-2) var(--s-4);
+}
+
+.footer__link--legal {
+  min-height: var(--s-7);
+  font-size: var(--fs-sm);
+}
+
+@media (min-width: 768px) {
+  .footer__legal {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__chevron {
+    transition: none;
+  }
+}

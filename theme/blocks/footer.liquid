@@ -1,28 +1,232 @@
 {% doc %}
-  Renders the theme's storefront footer: copyright line, footer menu,
-  and optional payment icons. Composed directly in layout/theme.liquid
-  so it appears on every page.
+  RIFANO footer: promise strip, brand lockup, link accordions, contact, legal bar.
+  Self-contained: callers must leave the body empty.
 {% enddoc %}
 
-<footer {{ block.shopify_attributes }}>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
-  </div>
+{{ 'footer.css' | asset_url | stylesheet_tag }}
 
-  <div class="footer__links">
-    {% for link in block.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+<footer class="site-footer" {{ block.shopify_attributes }}>
+  <div class="site-footer__inner">
+    <ul class="footer__promises t-label">
+      <li class="footer__promise">
+        <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <rect x="2" y="6" width="20" height="12" rx="2" />
+          <circle cx="12" cy="12" r="2.5" />
+          <path d="M6 12h.01M18 12h.01" />
+        </svg>
+        <span>{{ 'rifano.footer_cod' | t }}</span>
+      </li>
+      <li class="footer__promise">
+        <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M3 7h11v8H3z" />
+          <path d="M14 10h4l3 3v2h-7z" />
+          <circle cx="7" cy="17" r="1.5" />
+          <circle cx="17" cy="17" r="1.5" />
+        </svg>
+        <span>
+          {%- if settings.delivery_text != blank -%}
+            {{ settings.delivery_text }} · {{ 'rifano.footer_free' | t }}
+          {%- else -%}
+            {{ 'rifano.footer_delivery_default' | t }}
+          {%- endif -%}
+        </span>
+      </li>
+      <li class="footer__promise">
+        <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
+        </svg>
+        <span>
+          {%- if settings.warranty_text != blank -%}
+            {{ settings.warranty_text }}
+          {%- else -%}
+            {{ 'rifano.footer_warranty_default' | t }}
+          {%- endif -%}
+        </span>
+      </li>
+    </ul>
 
-  <div class="footer__payment">
-    {% if block.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
+    <div class="footer__brand">
+      {% comment %}TODO spec-02: replace with {% render 'logo', variant: 'lockup' %} once snippets/logo.liquid lands.{% endcomment %}
+      <a href="{{ routes.root_url }}" class="footer__logo" aria-label="{{ shop.name }}">
+        <span class="footer__monogram" aria-hidden="true">RF</span>
+      </a>
+      <p class="footer__tagline">{{ 'rifano.tagline_1' | t }} {{ 'rifano.tagline_2' | t }}</p>
+    </div>
+
+    {% liquid
+      assign menu_shop = block.settings.menu_shop
+      assign menu_help = block.settings.menu_help
+    %}
+
+    {% if menu_shop.links != blank or menu_help.links != blank %}
+      <div class="footer__menus">
+        {% if menu_shop.links != blank %}
+          <details class="footer__accordion">
+            <summary class="footer__summary t-label">
+              <span>{{ 'rifano.footer_shop' | t }}</span>
+              <svg class="footer__icon footer__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </summary>
+            <ul class="footer__links">
+              {% for link in menu_shop.links %}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    class="footer__link"
+                    {% if link.current %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </details>
+          <nav class="footer__column" aria-label="{{ 'rifano.footer_shop' | t }}">
+            <h2 class="t-label">{{ 'rifano.footer_shop' | t }}</h2>
+            <ul class="footer__links">
+              {% for link in menu_shop.links %}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    class="footer__link"
+                    {% if link.current %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
+        {% if menu_help.links != blank %}
+          <details class="footer__accordion">
+            <summary class="footer__summary t-label">
+              <span>{{ 'rifano.footer_help' | t }}</span>
+              <svg class="footer__icon footer__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </summary>
+            <ul class="footer__links">
+              {% for link in menu_help.links %}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    class="footer__link"
+                    {% if link.current %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </details>
+          <nav class="footer__column" aria-label="{{ 'rifano.footer_help' | t }}">
+            <h2 class="t-label">{{ 'rifano.footer_help' | t }}</h2>
+            <ul class="footer__links">
+              {% for link in menu_help.links %}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    class="footer__link"
+                    {% if link.current %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
+      </div>
     {% endif %}
+
+    {% if settings.whatsapp_number != blank or settings.support_email != blank or settings.instagram_url != blank or settings.tiktok_url != blank %}
+      <div class="footer__contact">
+        <ul class="footer__contact-list">
+          {% if settings.whatsapp_number != blank %}
+            <li>
+              <a class="footer__contact-link" href="https://wa.me/{{ settings.whatsapp_number }}">
+                <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 21l2-5.4A8.5 8.5 0 1 1 21 11.5z" />
+                </svg>
+                <span>{{ 'rifano.whatsapp' | t }}</span>
+              </a>
+            </li>
+          {% endif %}
+          {% if settings.support_email != blank %}
+            <li>
+              <a class="footer__contact-link" href="mailto:{{ settings.support_email }}">
+                <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="M3 7l9 6 9-6" />
+                </svg>
+                <span>{{ settings.support_email }}</span>
+              </a>
+            </li>
+          {% endif %}
+          {% if settings.instagram_url != blank %}
+            <li>
+              <a class="footer__contact-link" href="{{ settings.instagram_url }}">
+                <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" />
+                </svg>
+                <span>{{ 'rifano.instagram' | t }}</span>
+              </a>
+            </li>
+          {% endif %}
+          {% if settings.tiktok_url != blank %}
+            <li>
+              <a class="footer__contact-link" href="{{ settings.tiktok_url }}">
+                <svg class="footer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M9 8v8a3 3 0 1 0 3 3V4" />
+                  <path d="M12 8c.5 2.5 2.5 4 5.5 4" />
+                </svg>
+                <span>{{ 'rifano.tiktok' | t }}</span>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="footer__legal">
+      <p class="footer__copy">&copy; {{ 'now' | date: '%Y' }} RIFANO</p>
+      {% if shop.privacy_policy != blank or shop.refund_policy != blank or shop.shipping_policy != blank or shop.terms_of_service != blank %}
+        <ul class="footer__policies">
+          {% if shop.privacy_policy != blank %}
+            <li>
+              <a class="footer__link footer__link--legal" href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title }}</a>
+            </li>
+          {% endif %}
+          {% if shop.refund_policy != blank %}
+            <li>
+              <a class="footer__link footer__link--legal" href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title }}</a>
+            </li>
+          {% endif %}
+          {% if shop.shipping_policy != blank %}
+            <li>
+              <a class="footer__link footer__link--legal" href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title }}</a>
+            </li>
+          {% endif %}
+          {% if shop.terms_of_service != blank %}
+            <li>
+              <a class="footer__link footer__link--legal" href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title }}</a>
+            </li>
+          {% endif %}
+        </ul>
+      {% endif %}
+    </div>
   </div>
 </footer>
 
@@ -32,14 +236,15 @@
   "settings": [
     {
       "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
+      "id": "menu_shop",
+      "label": "t:labels.menu",
+      "default": "footer"
     },
     {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
-      "default": true
+      "type": "link_list",
+      "id": "menu_help",
+      "label": "t:labels.menu",
+      "default": "footer-help"
     }
   ]
 }

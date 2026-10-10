@@ -86,6 +86,12 @@
     "instagram": "Instagram",
     "tiktok": "TikTok",
     "email_label": "E-mail",
+    "footer_cod": "Paiement à la livraison",
+    "footer_free": "gratuite",
+    "footer_delivery_default": "Livraison 24–72h · gratuite",
+    "footer_warranty_default": "Garantie 12 mois",
+    "footer_shop": "Boutique",
+    "footer_help": "Aide",
     "cod_delivery": "Paiement à la livraison · Livraison gratuite partout au Maroc"
   }
 }
