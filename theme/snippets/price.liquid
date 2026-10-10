@@ -1,0 +1,40 @@
+{% doc %}
+  Renders a price in the display face, with the compare-at price struck
+  through and a "from" qualifier when the price varies between variants.
+
+  The money format itself is configured in the Shopify admin (settings →
+  Store details → Formats), not here.
+
+  Styles live in `product-card.css`, which the `product-card` snippet loads.
+
+  @param {object} [product] - Product to read `price`, `compare_at_price` and `price_varies` from
+  @param {object} [variant] - Variant to read the same values from; used in preference to `product`
+
+  @example
+  {% render 'price', product: product %}
+  {% render 'price', variant: product.selected_or_first_available_variant %}
+{% enddoc %}
+
+{%- liquid
+  if variant
+    assign price = variant.price
+    assign compare_at_price = variant.compare_at_price
+    assign price_varies = variant.price_varies
+  else
+    assign price = product.price
+    assign compare_at_price = product.compare_at_price
+    assign price_varies = product.price_varies
+  endif
+-%}
+
+{%- if price > 0 -%}
+  <div class="price">
+    {%- if price_varies -%}
+      <span class="price__from">{{ 'rifano.price_from' | t }}</span>
+    {%- endif -%}
+    <span class="price__current">{{ price | money }}</span>
+    {%- if compare_at_price > price -%}
+      <s class="price__compare">{{ compare_at_price | money }}</s>
+    {%- endif -%}
+  </div>
+{%- endif -%}

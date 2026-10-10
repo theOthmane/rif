@@ -1,0 +1,139 @@
+/** RIFANO product card — media, badges, title, price. Tokens live in tokens.css. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.card__link:focus-visible {
+  outline-offset: var(--s-2);
+}
+
+/* Media: the 4:5 box is reserved before the image loads, so nothing shifts.
+   `contain` keeps a watch whole on its dark background instead of cropping it. */
+.card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+}
+
+.card__image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+/* The second image sits on top, invisible until the pointer is a fine one. */
+.card__image--alt {
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+
+/* The placeholder SVG paths carry no fill of their own, so the tint comes from
+   here. Inset like an image so the illustration is centred in the 4:5 box. */
+.card__placeholder {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: var(--s-6);
+  fill: var(--c-silver-3);
+}
+
+.card__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding-block-start: var(--s-3);
+}
+
+/* Badges: a silver hairline outline only, never a filled colour. */
+.card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.card__badge {
+  padding: var(--s-1) var(--s-2);
+  border: 1px solid var(--c-silver-2);
+  border-radius: var(--radius-sm);
+}
+
+.card__title {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Price. Prices are one of the two allowed display-font uses (DESIGN.md). */
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+
+.price__current {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-md);
+  letter-spacing: var(--tracking-display);
+  color: var(--c-text);
+}
+
+.price__compare {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+  text-decoration-thickness: 1px;
+}
+
+.price__from {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  color: var(--c-text-2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card__link:hover .card__image {
+    transform: scale(1.03);
+  }
+
+  .card__link:hover .card__media--swap .card__image--base {
+    opacity: 0;
+  }
+
+  .card__link:hover .card__media--swap .card__image--alt {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card__title {
+    font-size: var(--fs-md);
+  }
+
+  .price__current {
+    font-size: var(--fs-lg);
+  }
+}

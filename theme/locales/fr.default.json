@@ -92,6 +92,10 @@
     "footer_warranty_default": "Garantie 12 mois",
     "footer_shop": "Boutique",
     "footer_help": "Aide",
-    "cod_delivery": "Paiement à la livraison · Livraison gratuite partout au Maroc"
+    "cod_delivery": "Paiement à la livraison · Livraison gratuite partout au Maroc",
+    "product_coming_soon": "Produit à venir",
+    "sold_out": "Épuisé",
+    "percent_off": "-{{ percent }} %",
+    "price_from": "À partir de"
   }
 }
