@@ -591,3 +591,51 @@ Historical `specs/01-foundations.md` is outside this part's file list; its origi
 wording remains a historical spec and does not override the current owner decision.
 
 Next: spec 08 — collection page + Boutique.
+
+### Adversary + QA fixes (this session)
+
+Date: 2026-10-11. Fixer session per `FIX-PLAN.md` (merged A1–A14 + Q1–Q8).
+
+**Reverts: none.** Adversary verdict on `3fe1a96` is KEEP (code) · PARTIAL (docs only) ·
+REVERT not applicable — reverting would undo the explicit owner palette decision. The two
+docs commits are reports. No revert, reset or force-push was run.
+
+**Built spec 08 (F1–F4, F13).** New `sections/collection-header.liquid` (breadcrumb
+`Accueil / Boutique / title`, Bodoni `t-page-title` h1, 60ch description, `N pièces` count),
+`sections/product-grid.liquid` (sort `<select>` from `collection.sort_options`, `{% paginate … by 24 %}`
+2/3/4-col grid of `product-card` with first 4 eager, pagination snippet, monogram-48px empty state
+→ `routes.collections_url`), `sections/collection-tiles.liquid` (Boutique title + tagline subtitle,
+tiles skipping `frontpage`/empty-handle, image → first-product image → `collection-1..6` placeholder,
+4/5 media with `--c-bg` gradient title + count; zero-collections empty text), new
+`snippets/pagination.liquid`, `assets/collection.css`, `assets/collection-sort.js` (Section Rendering
+API `?section_id=` refresh, URL push + popstate restore, abort/aria-busy/live region, JS-measured
+sticky-toolbar offset, noscript submit fallback). Templates repointed; spec-00
+`main-collection`/`main-list-collections` stubs deleted. 12 new `rifano.*` locale keys (French only).
+Note on stale figures: spec-02's `5.41:1` silver note (STATUS:500) was true on `#050505`; on the
+current `#000000` ground the darkest silver stop is **5.57:1** — the old entry is left as history.
+
+**Also fixed alongside (same files):** global `a` colour safety net in `base.css` (F2 — no UA blue
+can ever render again); `.t-page-title` helper (F4); `::placeholder: --c-text-2` (F11, 8.26:1);
+input horizontal padding `--s-4` → `--s-3` plus prescribed shorter `search_placeholder`
+("Rechercher un article…", meaning unchanged — padding alone still cut 23px at 375) (F12).
+Docs: `DESIGN.md` surface ratios → `1.05`/`1.08` (F8); `specs/13` re-derived to the `#000000`
+ground with the 13/14/16 lift dropped, `specs/16` checkout colour → `#000000` (F5).
+
+**NOT fixed (owner/admin or deferred):** F6 `[PH]` delivery/warranty values, F7 French store data
++ menus + policies + store name, F17 COD 3× (all owner calls, spec-16 owns); F9 historical note;
+F10 announcement landmark, F14 dead code, F15 drawer-label/focus-ring/cart-count (files untouched
+this pass — spec 15 owns); F16 home body (spec 06 owns).
+
+**Gates.** `theme check`: **44 files, 0 errors, 0 warnings** (the 2 `OrphanedSnippet` warnings
+cleared — every snippet has a consumer). Push smoke to `fexgzv-pq` theme `185969639647`: **0 errors**.
+Browser (375/768/1440): Boutique + `/collections/all` empty states, Bodoni titles, no overflow,
+sort→URL→Back cycle, CTA → `/collections`, placeholder fit, 0 console errors. Impeccable detector
+on changed CSS: `[]` clean; polish: nothing still off. Screenshots: `tools/shots/fix-*.png`
+(gitignored scratch).
+
+**Open / can't verify live:** grid-with-products, tiles-with-many, pagination (store has 0 products;
+only `frontpage` exists and is skipped per spec) — code paths theme-check clean, sort AJAX proven.
+Sort option names ("Featured"…) are Shopify-platform strings; they follow the store language (F7).
+Cart count > 0 still untestable (0 products).
+
+Next: spec 06 (home intro + hero poster). Do not start until told.
