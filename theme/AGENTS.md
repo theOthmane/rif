@@ -99,10 +99,12 @@ Partials name inline regions of server-rendered HTML. JavaScript can request a
 region by name and replace the matching region in the DOM. The name in the
 Liquid template and the name in JavaScript must match.
 
-The `liquid-tips` block is the theme's canonical partial-refresh example: its
-tip sentence lives in a `{% partial 'liquid-tip' %}` region, and
-`assets/liquid-tips.js` calls `partials.refresh("liquid-tip")` to swap in a
-fresh server-rendered tip. Import `partials` from
+Skeleton shipped a `liquid-tips` block plus `assets/liquid-tips.js` as its
+canonical partial-refresh example. Spec 01 deleted both; the pattern they
+demonstrated is: the tip sentence lives in a `{% partial 'liquid-tip' %}`
+region, and a module calls `partials.refresh("liquid-tip")` to swap in a
+fresh server-rendered tip. Recover the original at
+`git show HEAD~1:theme/assets/liquid-tips.js`. Import `partials` from
 `@shopify/partial-rendering`. Use `refresh()` to fetch and apply regions from
 the current page URL, or `fetch()` followed by `apply()` when you need control
 over the request URL, method, body, or when the update appears. Fetch related
@@ -143,13 +145,12 @@ Skeleton keeps `.theme-check.yml` as a pristine
 `extends: theme-check:recommended` with **zero overrides**. Fix Theme Check
 errors in the Liquid instead of adding configuration exceptions.
 
-Current blocks: `container`, `hello-world`, `header`, `footer`,
-`liquid-tips`.
+Current blocks: `container`, `header`, `footer`.
 
 ## Theme map
 
 ```
-blocks/               container, hello-world, header, footer, liquid-tips
+blocks/               container, header, footer
 templates/            *.liquid page structure (no JSON templates)
 layout/               theme.liquid document shell: header/footer container blocks + <main>
 snippets/             internal utilities (css-variables, image, meta-tags)

@@ -10,7 +10,11 @@ them; edit values only in `tokens.css`.
 - `--c-bg: #0d0e10` — page ground. Tinted near-black, never `#000`.
 - `--c-surface: #15161a` — cards, drawers.
 - `--c-surface-2: #1d1f24` — hover states, inputs.
-- `--c-line: #2a2d33` — 1px hairlines only.
+- `--c-line: #2a2d33` — decorative 1px hairlines and dividers only.
+- `--c-line-strong: #666c75` — component boundaries (input borders, ghost
+  buttons). Kept ≥ 3:1 against `--c-bg`, `--c-surface` and `--c-surface-2`
+  for WCAG 1.4.11. Never use `--c-line` for a border a user must see to
+  identify a control.
 - `--c-text: #ecebe8` — primary text (warm-neutral).
 - `--c-text-2: #a7a9ae` — secondary text. Tinted, ≥ 4.5:1 on `--c-bg`.
 - `--c-silver-1: #e7e9ec`, `--c-silver-2: #b9bdc3`, `--c-silver-3: #7f848b`.
@@ -34,7 +38,12 @@ them; edit values only in `tokens.css`.
 4px base. `--s-1` … `--s-9` (0.25rem … 6rem).
 `--section-y` (fluid section rhythm), `--gutter` (fluid page gutter),
 `--page-max: 90rem` (merchant-overridable via `max_page_width` /
-`min_page_margin` settings, mapped onto `--page-max` / `--gutter` only if set).
+`min_page_margin` settings, mapped onto `--page-max` / `--gutter` only if set;
+`css-variables.liquid` must render **after** `tokens.css` so the override wins).
+
+Component sizes are not spacing tokens and live in their own block:
+`--card-min: 15rem` (product / search grid track), `--card-min-compact: 10rem`,
+`--card-min-full: 17.5rem` (collections grid).
 
 ### Shape, depth, motion, layers
 

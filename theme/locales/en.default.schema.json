@@ -35,11 +35,8 @@
   },
   "labels": {
     "alignment": "Alignment",
-    "background": "Background",
-    "foreground": "Foreground",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
-    "input_corner_radius": "Input corner radius",
     "layout_direction": "Layout direction",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",

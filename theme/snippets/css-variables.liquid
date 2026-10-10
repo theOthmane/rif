@@ -26,7 +26,7 @@
       --page-max: {{ settings.max_page_width }};
     {% endif %}
     {% if settings.min_page_margin != blank %}
-      --gutter: {{ settings.min_page_margin }}px;
+      --gutter: max({{ settings.min_page_margin }}px, clamp(1rem, 0.6rem + 1.6vw, 2rem));
     {% endif %}
   }
 {% endstyle %}

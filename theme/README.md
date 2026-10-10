@@ -1,6 +1,6 @@
 <h1 align="center" style="position: relative;">
   <br>
-    <img src="./assets/shoppy-x-ray.svg" alt="logo" width="200">
+    <img src="./assets/tokens.css" alt="" width="200">
   <br>
   Shopify Skeleton Theme
 </h1>
@@ -78,14 +78,12 @@ slice — and composes blocks, snippets, and inline markup inside them. The layo
 renders `content_for_layout` in a plain `<main>` and reserves the `container`
 block for the header and footer only.
 
-For example, `templates/index.liquid` wraps the `hello-world` block in a
-container:
+For example, `templates/index.liquid` opens with an empty container that later
+specs fill:
 
 ```liquid
 {% block 'container' %}
-  {% block 'hello-world' %}
-    {% block 'liquid-tips', tips: ['hello_world.liquid_tips_1', 'hello_world.liquid_tips_2', 'hello_world.liquid_tips_3'] %}{% endblock %}
-  {% endblock %}
+  <h1 class="visually-hidden">{{ shop.name }}</h1>
 {% endblock %}
 ```
 
@@ -129,8 +127,7 @@ block tag; render and partial tags do not accept inline literal arrays.
 The `container` block owns a page region's outer layout element. Each template
 wraps its content in one or more `container` blocks, and `layout/theme.liquid`
 wraps the `header` and `footer` blocks in their own containers while rendering
-`content_for_layout` in a plain `<main>`. `blocks/hello-world.liquid` is the
-theme's starter demo block.
+`content_for_layout` in a plain `<main>`.
 
 ## Non-negotiables
 
@@ -156,10 +153,11 @@ assets to live in a single file.
 ## Partial updates
 
 Partials mark named regions of server-rendered HTML that JavaScript can update
-without a full page reload. Wrap only the content that changes. In this theme,
-`blocks/liquid-tips.liquid` wraps the tip sentence in
-`{% partial 'liquid-tip' %}...{% endpartial %}`, and
-`assets/liquid-tips.js` updates it with:
+without a full page reload. Wrap only the content that changes. Skeleton's
+original `liquid-tips` block and `assets/liquid-tips.js` demonstrated the
+pattern and were removed in spec 01; recover them with
+`git show HEAD~1:theme/assets/liquid-tips.js`. The shape is a
+`{% partial 'liquid-tip' %}...{% endpartial %}` region updated with:
 
 ```js
 import { partials } from '@shopify/partial-rendering';

@@ -3,7 +3,8 @@
   --c-bg: #0d0e10;          /* page */
   --c-surface: #15161a;     /* cards, drawers */
   --c-surface-2: #1d1f24;   /* hover, inputs */
-  --c-line: #2a2d33;        /* hairlines */
+  --c-line: #2a2d33;        /* hairlines: decorative dividers only */
+  --c-line-strong: #666c75; /* component boundaries (inputs, ghost buttons); >= 3:1 on --c-bg, --c-surface, --c-surface-2 */
   --c-text: #ecebe8;        /* primary text (warm) */
   --c-text-2: #a7a9ae;      /* secondary text (tinted, ≥ 4.5:1 on --c-bg) */
   --c-silver-1: #e7e9ec; --c-silver-2: #b9bdc3; --c-silver-3: #7f848b;
@@ -28,6 +29,11 @@
   --section-y: clamp(3rem, 2rem + 4vw, 6rem);
   --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
   --page-max: 90rem;
+
+  /* component sizes (grid track minimums — not spacing) */
+  --card-min: 15rem;
+  --card-min-compact: 10rem;
+  --card-min-full: 17.5rem;
 
   /* shape and depth */
   --radius-sm: 2px; --radius-md: 4px; --radius-pill: 999px;
