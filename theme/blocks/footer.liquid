@@ -5,7 +5,7 @@
 
 {{ 'footer.css' | asset_url | stylesheet_tag }}
 
-<footer class="site-footer" {{ block.shopify_attributes }}>
+<footer class="site-footer full-width" {{ block.shopify_attributes }}>
   <div class="site-footer__inner">
     <ul class="footer__promises t-label">
       <li class="footer__promise">
@@ -46,9 +46,8 @@
     </ul>
 
     <div class="footer__brand">
-      {% comment %}TODO spec-02: replace with {% render 'logo', variant: 'lockup' %} once snippets/logo.liquid lands.{% endcomment %}
-      <a href="{{ routes.root_url }}" class="footer__logo" aria-label="{{ shop.name }}">
-        <span class="footer__monogram" aria-hidden="true">RF</span>
+      <a href="{{ routes.root_url }}" class="footer__logo" aria-label="RF — {{ shop.name }}">
+        {% render 'logo', variant: 'lockup' %}
       </a>
       <p class="footer__tagline">{{ 'rifano.tagline_1' | t }} {{ 'rifano.tagline_2' | t }}</p>
     </div>

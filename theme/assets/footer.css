@@ -84,28 +84,7 @@
   min-height: var(--s-8);
   padding: var(--s-2);
   text-decoration: none;
-}
-
-/* Inline RF fallback until spec-02 snippets/logo.liquid lands. Silver gradient text: logo is an allowed silver use. */
-.footer__monogram {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: calc(var(--s-7) + var(--s-2));
-  letter-spacing: 0.32em;
-  text-indent: 0.32em;
-  text-transform: uppercase;
-  line-height: 1;
-  background: var(--c-silver);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.footer__logo svg {
-  height: calc(var(--s-7) + var(--s-2));
-  width: auto;
+  --logo-size: calc(var(--s-7) + var(--s-2));
 }
 
 .footer__tagline {
@@ -161,16 +140,18 @@
   margin: 0;
 }
 
-.footer__links {
+/* Scoped to beat the legacy `footer .footer__links` rule in base.css (0,2,0 vs 0,1,1). */
+.site-footer .footer__links {
   list-style: none;
   margin: 0;
   padding: 0 0 var(--s-4);
   display: flex;
   flex-direction: column;
+  flex-wrap: nowrap;
   gap: var(--s-1);
 }
 
-.footer__column .footer__links {
+.site-footer .footer__column .footer__links {
   padding: 0;
 }
 
