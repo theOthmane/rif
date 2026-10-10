@@ -8,7 +8,7 @@ Store: **TBD (owner decides before spec 16; `xpziwn-tw` not accessible)**. Every
 - [ ] **Currency format**: Settings → General → Store defaults → Currency display → format `{{amount_no_decimals}} DH` (both "with" and "without currency" fields), or keep decimals if you prefer.
 - [ ] **Payments**: Settings → Payments → Manual payment methods → **Cash on Delivery (COD)**. Rename it to "Paiement à la livraison". Add instructions: "Vous payez en espèces au livreur à la réception."
 - [ ] **Shipping**: Settings → Shipping and delivery → General profile → zone **Maroc** → rate "Livraison gratuite (24–72h)", price **0 MAD**. Remove other zones you don't serve.
-- [ ] **Checkout**: Settings → Checkout → customer contact = **phone or email**, shipping address phone = **required**, company = hidden, address line 2 = optional. Checkout editor: upload the RF logo, set background/button colours close to `#0d0e10` / silver.
+- [ ] **Checkout**: Settings → Checkout → customer contact = **phone or email**, shipping address phone = **required**, company = hidden, address line 2 = optional. Checkout editor: upload the RF logo, set background/button colours close to `#000000` / silver.
 - [ ] **Policies** (Settings → Policies): refund (7 days [PH]), shipping, privacy, terms, written in French. Contact information.
 - [ ] **Preferences**: homepage title + meta description (French), social sharing image (poster), password protection ON until launch.
 

@@ -46,10 +46,10 @@ a template. Show it clearly once or twice. Three times is boilerplate.
 
 - `--c-bg: #000000` — pure-black page ground; header, announcement bar and
   footer share it and are separated by 1px hairlines, not grey bands.
-- `--c-surface: #080808` — void essence for cards, drawers and dialogs (1.06:1
+- `--c-surface: #080808` — void essence for cards, drawers and dialogs (1.05:1
   against `--c-bg`); separation is the border, not the fill.
 - `--c-surface-2: #0d0d0d` — the next barely raised, neutral step for inputs and
-  hover states (1.12:1 against `--c-bg`).
+  hover states (1.08:1 against `--c-bg`).
 - `--c-line: #2a2a2a` — neutral dark-grey decorative 1px hairlines and dividers only (1.46:1 on
   `--c-bg`; not a text-contrast token).
 - `--c-line-strong: #666666` — neutral component boundaries (input borders, ghost

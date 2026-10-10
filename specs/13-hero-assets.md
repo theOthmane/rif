@@ -41,42 +41,40 @@ If the RF warps in every take: accept a take where the dial is briefly soft mid-
 ### ⚠️ Actual source (measured by PM, overrides the generic commands below)
 `brand/hero/hero.mp4`: **1280×720 landscape**, 24 fps, 8.0 s, 192 frames, has an audio track (drop it), background pure black (0,0,0).
 The clip turns **from near-front to side view**, so it must be **reversed**: the sequence has to END on the front view (matches `poster.png`).
-Do **not** upscale (1080×1350 from a 720p source would be soft). Use these instead:
+Do **not** upscale (1080×1350 from a 720p source would be soft). The page ground is `--c-bg` (`#000000`), so the frames stay pure black — **no lift filter** (the old 13/14/16 lift belonged to the retired `#0d0e10` ground). Use these instead:
 ```bash
-LIFT="lutrgb=r='val*242/255+13':g='val*241/255+14':b='val*239/255+16'"
 # 1) find the watch's horizontal centre (union of cropdetect boxes); note the x centre
 ffmpeg -i brand/hero/hero.mp4 -vf "cropdetect=limit=24:round=2:reset=0" -f null - 2>&1 | grep -o "crop=[0-9:]*" | tail -1
 #    crop=W:H:X:Y → centre CX = X + W/2 ; mobile crop X0 = clamp(CX - 288, 0, 1280-576)
 # 2) desktop: 96 frames, native 1280x720 landscape, reversed
-ffmpeg -i brand/hero/hero.mp4 -an -vf "fps=12,reverse,$LIFT" -frames:v 96 -c:v libwebp -quality 72 -compression_level 6 theme/assets/hero-d-%03d.webp
+ffmpeg -i brand/hero/hero.mp4 -an -vf "fps=12,reverse" -frames:v 96 -c:v libwebp -quality 72 -compression_level 6 theme/assets/hero-d-%03d.webp
 # 3) mobile: 72 frames, 576x720 (4:5) crop centred on the watch, reversed
-ffmpeg -i brand/hero/hero.mp4 -an -vf "fps=9,reverse,crop=576:720:X0:0,$LIFT" -frames:v 72 -c:v libwebp -quality 68 -compression_level 6 theme/assets/hero-m-%03d.webp
+ffmpeg -i brand/hero/hero.mp4 -an -vf "fps=9,reverse,crop=576:720:X0:0" -frames:v 72 -c:v libwebp -quality 68 -compression_level 6 theme/assets/hero-m-%03d.webp
 # 4) poster (front view) for the theme setting / reduced-motion fallback
-ffmpeg -i brand/hero/poster.png -vf "$LIFT" -c:v libwebp -quality 82 brand/hero/hero-poster.webp
+ffmpeg -i brand/hero/poster.png -c:v libwebp -quality 82 brand/hero/hero-poster.webp
 ```
 Check after extraction: `hero-d-096.webp` / `hero-m-072.webp` must be the **front** view; `-001` the turned view.
 Delete the PM's check files `brand/hero/_contact.png` and `brand/hero/_poster_small.png`. Commit `brand/hero/hero.mp4` + `poster.png` (they're small).
 Budgets below still apply (they will be easily met at this size).
 
 ### Generic commands (reference only; superseded by the block above)
-Background must match `--c-bg` (#0d0e10), not pure black, so the frames blend into the page. The `lutrgb` filter lifts the blacks to 13/14/16:
+Background must match `--c-bg` (#000000), so the frames blend into the page. The page is pure black: no lift filter — frames stay (0,0,0). (The old `lutrgb` 13/14/16 lift belonged to the retired `#0d0e10` ground.)
 ```bash
-LIFT="lutrgb=r='val*242/255+13':g='val*241/255+14':b='val*239/255+16'"
 # count source frames first: ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of csv=p=0 brand/hero/hero.mp4
 # desktop: 96 frames, 1080x1350
-ffmpeg -i brand/hero/hero.mp4 -vf "fps=96/5,scale=1080:1350:force_original_aspect_ratio=decrease,pad=1080:1350:(ow-iw)/2:(oh-ih)/2:color=black,$LIFT" \
+ffmpeg -i brand/hero/hero.mp4 -vf "fps=96/5,scale=1080:1350:force_original_aspect_ratio=decrease,pad=1080:1350:(ow-iw)/2:(oh-ih)/2:color=black" \
   -frames:v 96 -c:v libwebp -quality 72 -compression_level 6 theme/assets/hero-d-%03d.webp
 # mobile: 72 frames, 720x900
-ffmpeg -i brand/hero/hero.mp4 -vf "fps=72/5,scale=720:900:force_original_aspect_ratio=decrease,pad=720:900:(ow-iw)/2:(oh-ih)/2:color=black,$LIFT" \
+ffmpeg -i brand/hero/hero.mp4 -vf "fps=72/5,scale=720:900:force_original_aspect_ratio=decrease,pad=720:900:(ow-iw)/2:(oh-ih)/2:color=black" \
   -frames:v 72 -c:v libwebp -quality 68 -compression_level 6 theme/assets/hero-m-%03d.webp
 # poster (upload this one in theme settings → RIFANO → hero_poster)
-ffmpeg -i brand/hero/poster.png -vf "scale=1600:-2,$LIFT" -c:v libwebp -quality 82 brand/hero/hero-poster.webp
+ffmpeg -i brand/hero/poster.png -vf "scale=1600:-2" -c:v libwebp -quality 82 brand/hero/hero-poster.webp
 ```
 Adjust `fps=N/duration` to the real clip duration (from ffprobe).
 
 ### Budgets (check with `du -ch theme/assets/hero-d-* | tail -1`)
 - Desktop set ≤ **4 MB** total, mobile set ≤ **1.8 MB**. Over budget → lower `-quality` by 6 and retry; never go below 55; if still over, reduce desktop to 80 frames.
-- Spot-check frames 001, 048, 096: background colour must read `#0d0e10 ±1` (sample a corner pixel with ffmpeg or sharp).
+- Spot-check frames 001, 048, 096: background colour must read `#000000 ±1` (sample a corner pixel with ffmpeg or sharp).
 
 ## Acceptance
 - [ ] Owner approved the generated watch (no third-party marks)
