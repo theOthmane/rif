@@ -2,8 +2,8 @@
   The RIFANO product card: one link wrapping the media and the info (badge,
   title, price). With no product it renders a placeholder card instead.
 
-  Loads `product-card.css` itself, so a card is styled wherever it is used
-  without the layout having to know about it.
+  Loads `product-card.css` and `product-card.js` itself, so a card is styled
+  and behaves wherever it is used without the layout having to know about it.
 
   @param {object} [product] - The product to render. When nil the card renders in placeholder mode.
   @param {number} [placeholder_index] - Which Shopify placeholder illustration to draw in placeholder mode (1-6)
@@ -17,6 +17,7 @@
 {% enddoc %}
 
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-card.js' | asset_url }}" type="module" defer></script>
 
 {%- liquid
   assign loading = loading | default: 'lazy'
@@ -30,11 +31,36 @@
     assign media = product.featured_image
     assign second_media = product.images[1]
 
+    # `product.price` and `product.compare_at_price` are each the minimum over
+    # ALL variants, so comparing them can pair the cheapest variant with
+    # another variant's compare-at and print a discount that does not exist.
+    # Read both from one variant instead.
+    assign card_variant = product.selected_or_first_available_variant
+
     if product.available == false
       assign badge = 'rifano.sold_out' | t
-    elsif product.compare_at_price > product.price
-      assign percent_off = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round
+    elsif card_variant.compare_at_price > card_variant.price
+      assign percent_off = card_variant.compare_at_price | minus: card_variant.price | times: 100.0 | divided_by: card_variant.compare_at_price | round
       assign badge = 'rifano.percent_off' | t: percent: percent_off
+    endif
+
+    # The hover-swap image ships as `data-src`/`data-srcset` and carries no
+    # `src`, so a touch device never requests it: the crossfade behind
+    # `(hover: hover) and (pointer: fine)` can never run there.
+    # product-card.js promotes these attributes only on a hover-capable pointer.
+    if second_media
+      assign card_widths_list = card_widths | split: ', '
+      assign second_srcset = ''
+      for candidate_width in card_widths_list
+        assign candidate_width = candidate_width | plus: 0
+        assign candidate_url = second_media | image_url: width: candidate_width
+        assign candidate = candidate_width | append: 'w ' | append: candidate_url
+        if second_srcset == blank
+          assign second_srcset = candidate
+        else
+          assign second_srcset = second_srcset | append: ', ' | append: candidate
+        endif
+      endfor
     endif
   else
     assign card_tag = 'div'
@@ -42,12 +68,12 @@
 -%}
 
 <article class="card">
-  <{{ card_tag }} class="card__link"{% if product %} href="{{ product.url }}" aria-label="{{ product.title | escape }}"{% endif %}>
+  <{{ card_tag }} class="card__link"{% if product %} href="{{ product.url }}"{% endif %}>
     {%- comment -%}
       `media` is only assigned when there is a product, so a product without a
       photo falls back to the placeholder illustration. Both images are
-      decorative: the link already carries the product title as its accessible
-      name, so an alt would only duplicate it.
+      decorative: the link takes its accessible name from the text inside it
+      (badge, title, price), so an alt would only duplicate the title.
     {% endcomment %}
     <div
       class="card__media{% if second_media %} card__media--swap{% endif %}"
@@ -55,8 +81,17 @@
     >
       {%- if media -%}
         {{ media | image_url: width: 960 | image_tag: widths: card_widths, sizes: sizes, loading: loading, alt: '', class: 'card__image card__image--base' }}
-        {%- if second_media -%}
-          {{ second_media | image_url: width: 960 | image_tag: widths: card_widths, sizes: sizes, loading: loading, alt: '', class: 'card__image card__image--alt' }}
+        {%- if second_srcset != blank -%}
+          <img
+            class="card__image card__image--alt"
+            data-src="{{ second_media | image_url: width: 960 }}"
+            data-srcset="{{ second_srcset }}"
+            data-sizes="{{ sizes }}"
+            alt=""
+            width="{{ second_media.width }}"
+            height="{{ second_media.height }}"
+            aria-hidden="true"
+          >
         {%- endif -%}
       {%- else -%}
         {{ 'product-' | append: placeholder_index | placeholder_svg_tag: 'card__placeholder' }}
@@ -72,7 +107,7 @@
 
       {%- if product -%}
         <h3 class="card__title">{{ product.title }}</h3>
-        {% render 'price', product: product %}
+        {% render 'price', variant: card_variant %}
       {%- else -%}
         <h3 class="card__title">{{ 'rifano.product_coming_soon' | t }}</h3>
       {%- endif -%}
