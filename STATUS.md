@@ -246,7 +246,7 @@ session, so it is allowed to edit files outside a spec's list; everything else s
 
 | Token | Old | New | Note |
 |---|---|---|---|
-| `--c-bg` | `#0d0e10` | **`#050505`** | neutral, no blue tint; never `#000` |
+| `--c-bg` | `#0d0e10` | **`#050505`** | neutral, no blue tint; the then-current owner choice, superseded by the palette decision below |
 | `--c-surface` | `#15161a` | **`#0d0d0d`** | same 8-step ladder above the ground (1.05:1 on `--c-bg`) |
 | `--c-surface-2` | `#1d1f24` | **`#151515`** | 1.12:1 on `--c-bg` |
 | `--c-line` | `#2a2d33` | **`#2a2a2a`** | same lightness, tint removed (1.42:1 on the new ground) |
@@ -255,7 +255,7 @@ session, so it is allowed to edit files outside a spec's list; everything else s
 
 Contrast re-measured on the new ground (WCAG 2.2 AA): `--c-text` 17.10:1, `--c-text-2` 8.67:1 (was 8.21:1 — the blacker ground slightly *improves* body-text contrast), `--c-silver-3` 5.41:1, `--c-danger` 6.91:1, `--c-success` 10.35:1. **AA holds for every text token.** Regions are now separated by the 1px `--c-line` hairline (1.42:1) rather than by a grey band: the announcement bar (`--c-surface` + hairline), the drawer (`--c-surface`) and the footer (`--c-bg` + `border-top`) all read as the same black.
 
-Docs that state the palette: `PLAN.md` §2 Colour row, `PRODUCT.md` Brand Commitments, `DESIGN.md` colour section + "Brand commitments are intentional" — all now read "neutral near-black `#050505` (never `#000`); header, bars and footer share the page black, separated by 1px hairlines".
+At that time, `PLAN.md` §2 Colour row, `PRODUCT.md` Brand Commitments and `DESIGN.md` described the neutral `#050505` palette; the later owner decision below replaces it.
 
 **Checks.** (1) `theme check --path theme` — **41 files, 0 errors**, 2 warnings (the known `OrphanedSnippet` pair on `snippets/price.liquid` + `snippets/product-card.liquid`; no consumer until specs 07/08/09/12). (2) Push smoke, new command — **0 errors**, theme `rifano-smoke` **#185969639647** updated in place, no new theme created. (3) `grep -rn "once snippets" theme/` → empty. Preview: https://fexgzv-pq.myshopify.com/?preview_theme_id=185969639647
 
@@ -298,8 +298,8 @@ scored worst: **Consistency and Standards 2/4** and **Aesthetic and Minimalist D
   transcription of the owner's sketch. Nothing else competes with it.
 - The scroll hairline (transparent 1px border gaining `--c-line` from an IntersectionObserver, `--dur-2`,
   zeroed under reduced motion) is the best-built code in the shell and *is* the brief's "subtle scroll".
-- The colour system is honest: `#050505` never `#000`, `--c-line` reserved for decorative rules and
-  `--c-line-strong` for boundaries a user must see to identify a control. WCAG 1.4.11 handled correctly.
+- The prior `#050505` colour system reserved `--c-line` for decorative rules and `--c-line-strong` for
+  boundaries a user must see to identify a control. WCAG 1.4.11 was handled correctly.
 
 #### Findings kept — the ones that made it feel less "simple, prestige, trusted"
 
@@ -563,3 +563,31 @@ theme `rifano-smoke` (#185969639647) updated in place, no new theme. Run three t
 
 Next: spec 06 (home intro + hero poster). Do not start until told.
 
+### Part 1 — owner palette decision + spec 02 shell leftovers
+
+Date: 2026-10-10. Commit: `style: black + void essence + silver palette`.
+
+Files: `theme/assets/tokens.css`, `DESIGN.md`, `PRODUCT.md`, `PLAN.md`, `AGENTS.md`,
+`theme/layout/theme.liquid`, `theme/sections/footer.liquid`, `theme/assets/footer.css`,
+`.gitignore`, and this file.
+
+- Palette now uses pure black `#000000` for the page, announcement bar, header and footer;
+  `--c-surface: #080808` for void-essence raised surfaces; `--c-surface-2: #0d0d0d` as the
+  next neutral step; and neutral `#2a2a2a` / `#666666` hairline and control-border tokens.
+  Silver and text token values are unchanged. Primary text contrast is 17.62:1 on black and
+  16.80:1 on `#080808`; secondary text is 8.93:1 and 8.52:1 respectively (all exceed WCAG AA).
+- Updated the four current palette descriptions in `PRODUCT.md`, `DESIGN.md`, `PLAN.md` §2 and
+  the root `AGENTS.md` Impeccable rule. Moved `footer.css` loading into the layout `<head>`,
+  removed the unused `.footer__icon` rule, and ignored `tools/shots/`.
+- `theme check`: 42 files inspected, 0 errors; 2 pre-existing `OrphanedSnippet` warnings for
+  `price.liquid` and `product-card.liquid` (spec 08 is their first consumer).
+- Push smoke to `fexgzv-pq`, theme `185969639647`: successful, 0 upload errors.
+- Browser at 375px and 1440px: body, announcement, header and footer computed to `rgb(0, 0, 0)`;
+  no horizontal overflow. Open drawer computed to `rgb(8, 8, 8)`. The preview shows no grey bands.
+- Screenshots (ignored scratch files): `tools/shots/part1-home-375.png`,
+  `tools/shots/part1-home-1440.png`, `tools/shots/part1-menu-drawer-375.png`.
+
+Historical `specs/01-foundations.md` is outside this part's file list; its original palette
+wording remains a historical spec and does not override the current owner decision.
+
+Next: spec 08 — collection page + Boutique.

@@ -2,6 +2,7 @@ node_modules/
 tools/trace/node_modules/
 .env
 tools/scroll-craft/
+tools/shots/
 scrollcraft/builds/
 .shopify/
 # impeccable-ignore-start

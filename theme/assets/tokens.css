@@ -1,14 +1,13 @@
 :root {
-  /* colour: neutral true-black ground, never #000. Header, bars and footer share the page
-     black; regions are separated by 1px hairlines, not by grey bands, so the surfaces stay
-     only a few steps above --c-bg. */
-  --c-bg: #050505;          /* page */
-  --c-surface: #0d0d0d;     /* cards, drawers — 1 hairline above --c-bg */
-  --c-surface-2: #151515;   /* hover, inputs */
+  /* Palette: pure black ground, void-essence raised surfaces, and brushed silver.
+     Header, bars and footer share the page black; hairlines separate regions. */
+  --c-bg: #000000;          /* page, header, announcement bar, footer */
+  --c-surface: #080808;     /* cards, drawers, dialogs */
+  --c-surface-2: #0d0d0d;   /* inputs and the next neutral surface step */
   --c-line: #2a2a2a;        /* hairlines: decorative dividers only */
-  --c-line-strong: #666c75; /* component boundaries (inputs, ghost buttons); >= 3:1 on --c-bg, --c-surface, --c-surface-2 */
+  --c-line-strong: #666666; /* neutral component boundaries; >= 3:1 on all surfaces */
   --c-text: #ecebe8;        /* primary text (warm) */
-  --c-text-2: #a7a9ae;      /* secondary text (tinted, ≥ 4.5:1 on --c-bg) */
+  --c-text-2: #a7a9ae;      /* secondary text (8.93:1 on --c-bg; 8.52:1 on --c-surface) */
   --c-silver-1: #e7e9ec; --c-silver-2: #b9bdc3; --c-silver-3: #7f848b;
   --c-silver: linear-gradient(135deg, var(--c-silver-1) 0%, var(--c-silver-2) 45%, var(--c-silver-3) 70%, var(--c-silver-1) 100%);
   --c-accent: var(--c-silver-2); /* focus rings, active states */

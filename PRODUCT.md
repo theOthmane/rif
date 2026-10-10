@@ -71,7 +71,7 @@ single brushed-silver accent that is rare enough to be worth something. The site
 prestige, premium and trusted at the same time — it is a shop, not a showroom, and a visitor arriving
 from Instagram or TikTok has to believe a real merchant stands behind the order within seconds.
 
-- Palette: mostly black, but a **neutral near-black `#050505` rather than `#000`** — the header, bars and footer share the page black and are separated by 1px hairlines, not grey bands — with brushed silver accents. Chrome is opaque: no blur, no translucency.
+- Palette: **pure black `#000000` + void essence `#080808` + brushed silver** — the page, header, bars and footer share pure black and are separated by 1px hairlines, not grey bands; raised surfaces use void essence. Chrome is opaque: no blur, no translucency.
 - Typography: Bodoni Moda for display, Manrope for body.
 - Tone: simple, prestige, premium, trusted. Realistic 3D, subtle animation, subtle scroll. Never flashy or gimmicky, and nothing loops.
 - Motion: subtle, realistic and scroll-linked; reduced motion is a supported path, never a stripped one.

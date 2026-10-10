@@ -27,7 +27,7 @@ You are building the RIFANO Shopify theme. You get **one spec per session**.
 ## Tools
 - Shopify CLI: `npx @shopify/cli@latest …` (the global `shopify` binary is broken).
 - Shopify Dev MCP: use it to look up Liquid objects, filters and tags **before** using one you are not 100% sure of, and to validate. This theme uses OS 2.0 tags (`section`, `sections`, `content_for`, `render`, `doc`). Check them, don't guess.
-- Impeccable: `/impeccable <command>`. Use the command the spec names. Treat `PRODUCT.md` "Brand Commitments" (near-black, Bodoni Moda + Manrope) as intentional, never as anti-patterns.
+- Impeccable: `/impeccable <command>`. Use the command the spec names. Treat `PRODUCT.md` "Brand Commitments" (pure black `#000000` + void essence `#080808` + brushed silver, Bodoni Moda + Manrope) as intentional, never as anti-patterns.
 - **Stores**: preview/test store `fexgzv-pq` (storefront password in `QA-REPORT.md`). Owner preview link: https://fexgzv-pq.myshopify.com/?preview_theme_id=185969639647 . Launch store: **TBD** (owner decides before spec 16; `xpziwn-tw` is not accessible from this login). Never touch `xpziwn-tw`.
 
 ## Workflow for every spec

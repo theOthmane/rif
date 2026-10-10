@@ -9,6 +9,7 @@
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'header.css' | asset_url | stylesheet_tag }}
+    {{ 'footer.css' | asset_url | stylesheet_tag }}
 
     {% # Inlined CSS Variables. Must render after tokens.css so the merchant overrides of --page-max / --gutter win the cascade. %}
     {% render 'css-variables' %}

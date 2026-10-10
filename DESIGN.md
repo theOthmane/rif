@@ -44,20 +44,22 @@ a template. Show it clearly once or twice. Three times is boilerplate.
 
 ### Colour
 
-- `--c-bg: #050505` — page ground. **Neutral near-black (never `#000`)**;
-  header, bars and footer all share the page black and are separated by 1px
-  hairlines, not by grey bands.
-- `--c-surface: #0d0d0d` — cards, drawers. Only a hairline above the page
-  (1.05:1 against `--c-bg`); separation is the border, not the fill.
-- `--c-surface-2: #151515` — hover states, inputs (1.12:1 against `--c-bg`).
-- `--c-line: #2a2a2a` — decorative 1px hairlines and dividers only (1.42:1 on
+- `--c-bg: #000000` — pure-black page ground; header, announcement bar and
+  footer share it and are separated by 1px hairlines, not grey bands.
+- `--c-surface: #080808` — void essence for cards, drawers and dialogs (1.06:1
+  against `--c-bg`); separation is the border, not the fill.
+- `--c-surface-2: #0d0d0d` — the next barely raised, neutral step for inputs and
+  hover states (1.12:1 against `--c-bg`).
+- `--c-line: #2a2a2a` — neutral dark-grey decorative 1px hairlines and dividers only (1.46:1 on
   `--c-bg`; not a text-contrast token).
-- `--c-line-strong: #666c75` — component boundaries (input borders, ghost
+- `--c-line-strong: #666666` — neutral component boundaries (input borders, ghost
   buttons). Kept ≥ 3:1 against `--c-bg`, `--c-surface` and `--c-surface-2`
   for WCAG 1.4.11. Never use `--c-line` for a border a user must see to
   identify a control.
-- `--c-text: #ecebe8` — primary text (warm-neutral). 17.1:1 on `--c-bg`.
-- `--c-text-2: #a7a9ae` — secondary text. Tinted, 8.7:1 on `--c-bg`.
+- `--c-text: #ecebe8` — primary text (warm-neutral). 17.62:1 on `--c-bg` and
+  16.80:1 on `--c-surface` (WCAG AA on both).
+- `--c-text-2: #a7a9ae` — secondary text. 8.93:1 on `--c-bg` and 8.52:1 on
+  `--c-surface` (WCAG AA on both).
 - `--c-silver-1: #e7e9ec`, `--c-silver-2: #b9bdc3`, `--c-silver-3: #7f848b`.
 - `--c-silver` — brushed-silver gradient built from the three silvers.
 - `--c-accent: var(--c-silver-2)` — focus rings, active states.
@@ -210,9 +212,9 @@ Notre mission, FAQ, default page) · system pages (search, 404, password
 
 ## Brand commitments are intentional
 
-Neutral near-black `#050505` (never `#000`), Bodoni Moda + Manrope,
-prestige/restraint tone, subtle motion. Header, bars and footer share the page
-black and are separated by 1px hairlines rather than grey bands. Per
+Pure black `#000000` + void essence `#080808` + brushed silver, Bodoni Moda +
+Manrope, prestige/restraint tone, subtle motion. Header, bars and footer share
+the page black and are separated by 1px hairlines rather than grey bands. Per
 PRODUCT.md "Brand Commitments": these are deliberate brand decisions, never
 anti-patterns to be "corrected" by later design work.
 Priority on conflict: PRODUCT.md > DESIGN.md > Impeccable > scroll-craft >
