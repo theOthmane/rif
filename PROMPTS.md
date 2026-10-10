@@ -66,7 +66,7 @@ Reply with each blocking item → fixed (file:line). Stop.
 ## 4. VISUAL CHECK (you, before moving on)
 
 ```text
-npx @shopify/cli@latest theme dev --path theme --store xpziwn-tw
+npx @shopify/cli@latest theme dev --path theme --store fexgzv-pq
 ```
 Open the preview link on your phone and on desktop. If something looks wrong, paste this into the same session with a screenshot:
 
