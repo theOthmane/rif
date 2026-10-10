@@ -1,0 +1,58 @@
+{% comment %}Collection grid: sort toolbar (Section Rendering API refresh) + paginated cards + empty state.{% endcomment %}
+
+{{ 'collection.css' | asset_url | stylesheet_tag }}
+
+<div class="collection-grid-section page-width" data-section-id="{{ section.id }}">
+  <div class="collection-toolbar">
+    <form method="get" action="{{ collection.url }}" class="collection-sort" data-sort-form>
+      <label class="visually-hidden" for="sort-{{ section.id }}">{{ 'rifano.collection_sort_label' | t }}</label>
+      <select id="sort-{{ section.id }}" name="sort_by" data-sort-select>
+        {% for option in collection.sort_options %}
+          <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected="selected"{% endif %}>{{ option.name }}</option>
+        {% endfor %}
+      </select>
+      <noscript>
+        <button type="submit" class="btn btn--ghost collection-sort__submit">{{ 'rifano.collection_sort_submit' | t }}</button>
+      </noscript>
+    </form>
+  </div>
+
+  <div class="collection-results" data-grid-results aria-busy="false">
+    {% paginate collection.products by 24 %}
+      {% if collection.products.size > 0 %}
+        <ul class="collection-grid">
+          {% for product in collection.products %}
+            <li class="collection-grid__item">
+              {% if forloop.index <= 4 %}
+                {% render 'product-card', product: product, loading: 'eager' %}
+              {% else %}
+                {% render 'product-card', product: product %}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+        {% render 'pagination', paginate: paginate %}
+      {% else %}
+        <div class="collection-empty">
+          <div class="collection-empty__mark">
+            {% render 'logo', variant: 'monogram' %}
+          </div>
+          <p class="collection-empty__title">{{ 'rifano.collection_empty_title' | t }}</p>
+          <a class="btn collection-empty__cta" href="{{ routes.collections_url }}">{{ 'rifano.collection_empty_cta' | t }}</a>
+        </div>
+      {% endif %}
+    {% endpaginate %}
+  </div>
+
+  <p class="visually-hidden" role="status" data-grid-status></p>
+</div>
+
+<script src="{{ 'collection-sort.js' | asset_url }}" type="module" defer></script>
+
+{% schema %}
+{
+  "name": "Product grid",
+  "settings": [],
+  "presets": [{ "name": "Product grid" }]
+}
+{% endschema %}

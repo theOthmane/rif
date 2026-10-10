@@ -31,6 +31,27 @@
   color: var(--c-text-2);
 }
 
+/* Page titles: Bodoni display at --fs-2xl (DESIGN.md: Bodoni only for
+   display >= --fs-xl). Collection and Boutique headings use this. */
+.t-page-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-2xl);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--lh-tight);
+  color: var(--c-text);
+}
+
+/* Safety net: no unstyled link may fall back to UA blue. Component rules
+   (header, footer, cards, tiles) outrank this element selector. */
+a {
+  color: var(--c-text-2);
+}
+
+a:hover {
+  color: var(--c-text);
+}
+
 /* Logo */
 
 /* Default size comes from --logo-size, so a caller can override it without a
@@ -166,13 +187,19 @@ textarea,
 select {
   width: 100%;
   min-height: var(--s-8);
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-3);
   font-family: var(--font-body);
   font-size: var(--fs-md);
   color: var(--c-text);
   background: var(--c-surface-2);
   border: 1px solid var(--c-line-strong);
   border-radius: var(--radius-sm);
+}
+
+/* Placeholder text must clear 4.5:1 on --c-surface-2. */
+::placeholder {
+  color: var(--c-text-2);
+  opacity: 1;
 }
 
 textarea {

@@ -1,0 +1,56 @@
+{% comment %}Boutique: all-collection tiles — 4/5 media, gradient title, count.{% endcomment %}
+
+{{ 'collection.css' | asset_url | stylesheet_tag }}
+
+<div class="boutique page-width">
+  <h1 class="boutique-title t-page-title">{{ 'rifano.footer_shop' | t }}</h1>
+  <p class="boutique-subtitle">{{ 'rifano.tagline_1' | t }} {{ 'rifano.tagline_2' | t }}</p>
+
+  {% liquid
+    assign tile_count = 0
+    for item in collections
+      if item.handle == 'frontpage' or item.handle == blank
+        continue
+      endif
+      assign tile_count = tile_count | plus: 1
+    endfor
+  %}
+
+  {% if tile_count == 0 %}
+    <p class="boutique-empty">{{ 'rifano.boutique_empty' | t }}</p>
+  {% else %}
+    <ul class="boutique-grid">
+      {% for item in collections %}
+        {% if item.handle == 'frontpage' or item.handle == blank %}
+          {% continue %}
+        {% endif %}
+        <li class="tile">
+          <a class="tile__link" href="{{ item.url }}">
+            <span class="tile__media">
+              {% if item.image %}
+                {{ item.image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 1200px) 33vw, (min-width: 768px) 50vw, 100vw', alt: '', class: 'tile__image' }}
+              {% elsif item.products.first.featured_image %}
+                {{ item.products.first.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 1200px) 33vw, (min-width: 768px) 50vw, 100vw', alt: '', class: 'tile__image' }}
+              {% else %}
+                {% capture tile_index %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                {{ 'collection-' | append: tile_index | placeholder_svg_tag: 'tile__placeholder' }}
+              {% endif %}
+            </span>
+            <span class="tile__info">
+              <span class="tile__title">{{ item.title }}</span>
+              <span class="tile__count t-label">{{ 'rifano.collection_count' | t: count: item.all_products_count }}</span>
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Collection tiles",
+  "settings": [],
+  "presets": [{ "name": "Collection tiles" }]
+}
+{% endschema %}

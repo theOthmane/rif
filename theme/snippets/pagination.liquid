@@ -1,0 +1,31 @@
+{% doc %}
+  Collection pagination: previous / page numbers / next.
+
+  @param {paginate} paginate - The paginate object from a {% paginate %} block
+
+  @example
+  {% paginate collection.products by 24 %}
+    ...
+    {% render 'pagination', paginate: paginate %}
+  {% endpaginate %}
+{% enddoc %}
+
+{% if paginate.pages > 1 %}
+  <nav class="pagination" aria-label="{{ 'rifano.pagination_label' | t }}">
+    {% if paginate.previous %}
+      <a class="pagination__item t-label" href="{{ paginate.previous.url }}">{{ 'rifano.collection_prev' | t }}</a>
+    {% endif %}
+
+    {% for part in paginate.parts %}
+      {% if part.is_link %}
+        <a class="pagination__item t-label" href="{{ part.url }}">{{ part.title }}</a>
+      {% else %}
+        <span class="pagination__item pagination__item--current t-label" aria-current="page">{{ part.title }}</span>
+      {% endif %}
+    {% endfor %}
+
+    {% if paginate.next %}
+      <a class="pagination__item t-label" href="{{ paginate.next.url }}">{{ 'rifano.collection_next' | t }}</a>
+    {% endif %}
+  </nav>
+{% endif %}

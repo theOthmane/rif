@@ -1,0 +1,37 @@
+{% comment %}Collection page header: breadcrumb, Bodoni title, description, count.{% endcomment %}
+
+{{ 'collection.css' | asset_url | stylesheet_tag }}
+
+<div class="collection-header page-width">
+  <nav class="collection-breadcrumb" aria-label="{{ 'rifano.collection_breadcrumb_label' | t }}">
+    <ol class="collection-breadcrumb__list">
+      <li class="collection-breadcrumb__item">
+        <a class="collection-breadcrumb__link" href="{{ routes.root_url }}">{{ 'rifano.collection_home' | t }}</a>
+      </li>
+      <li class="collection-breadcrumb__sep" aria-hidden="true">/</li>
+      <li class="collection-breadcrumb__item">
+        <a class="collection-breadcrumb__link" href="{{ routes.collections_url }}">{{ 'rifano.footer_shop' | t }}</a>
+      </li>
+      <li class="collection-breadcrumb__sep" aria-hidden="true">/</li>
+      <li class="collection-breadcrumb__item">
+        <span class="collection-breadcrumb__current" aria-current="page">{{ collection.title }}</span>
+      </li>
+    </ol>
+  </nav>
+
+  <h1 class="collection-title t-page-title">{{ collection.title }}</h1>
+
+  {% if collection.description != blank %}
+    <div class="collection-description">{{ collection.description }}</div>
+  {% endif %}
+
+  <p class="collection-count t-label">{{ 'rifano.collection_count' | t: count: collection.products_count }}</p>
+</div>
+
+{% schema %}
+{
+  "name": "Collection header",
+  "settings": [],
+  "presets": [{ "name": "Collection header" }]
+}
+{% endschema %}

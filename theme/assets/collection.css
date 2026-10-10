@@ -1,0 +1,290 @@
+/** RIFANO collection page + Boutique. Tokens live in tokens.css. */
+
+/* Header: breadcrumb, Bodoni title, description, count. */
+.collection-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding-block-start: var(--s-5);
+  padding-block-end: var(--s-4);
+}
+
+.collection-breadcrumb__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.collection-breadcrumb__link {
+  font-size: var(--fs-sm);
+  text-decoration: none;
+}
+
+.collection-breadcrumb__link:hover {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+  text-decoration-thickness: 1px;
+}
+
+.collection-breadcrumb__current {
+  font-size: var(--fs-sm);
+  color: var(--c-text);
+}
+
+.collection-breadcrumb__sep {
+  color: var(--c-text-2);
+}
+
+.collection-title {
+  margin: 0;
+}
+
+.collection-description {
+  max-width: 60ch;
+  color: var(--c-text-2);
+}
+
+.collection-count {
+  margin: 0;
+}
+
+/* Toolbar: sticky under the header, one 48px row. The exact offset comes
+   from JS measuring `.site-chrome`; the token below is the no-JS fallback. */
+.collection-toolbar {
+  position: sticky;
+  top: var(--s-8);
+  background: var(--c-bg);
+  border-top: var(--hairline);
+  border-bottom: var(--hairline);
+  min-height: var(--s-7);
+  display: flex;
+  align-items: center;
+  padding-block: var(--s-2);
+}
+
+.collection-sort {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.collection-sort select {
+  min-height: var(--s-7);
+  width: auto;
+}
+
+.collection-sort__submit {
+  min-height: var(--s-7);
+}
+
+/* Grid: 2 columns mobile, 3 at 768px, 4 at 1200px. */
+.collection-grid {
+  list-style: none;
+  margin: 0;
+  padding: var(--s-5) 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--s-5);
+  row-gap: var(--s-4);
+}
+
+.collection-grid__item {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .collection-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .collection-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Empty state: 48px monogram, one line, one button. */
+.collection-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  text-align: center;
+  padding-block: var(--s-7);
+}
+
+.collection-empty__mark {
+  --logo-size: var(--logo-footer);
+}
+
+.collection-empty__title {
+  margin: 0;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+/* Boutique: centred title, tagline subtitle, tiles. */
+.boutique {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding-block-start: var(--s-5);
+  padding-block-end: var(--section-y);
+}
+
+.boutique-title {
+  margin: 0;
+  text-align: center;
+}
+
+.boutique-subtitle {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  color: var(--c-text-2);
+}
+
+.boutique-empty {
+  margin: 0;
+  padding-block: var(--s-7);
+  text-align: center;
+  color: var(--c-text-2);
+}
+
+.boutique-grid {
+  list-style: none;
+  margin: 0;
+  padding: var(--s-5) 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-5);
+}
+
+@media (min-width: 768px) {
+  .boutique-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .boutique-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Tile: 4/5 media, title over a bottom --c-bg gradient, count. */
+.tile__link {
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tile__link:focus-visible {
+  outline-offset: var(--s-2);
+}
+
+.tile__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+}
+
+.tile__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+.tile__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: var(--s-6);
+  fill: var(--c-silver-3);
+}
+
+.tile__info {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding: var(--s-5) var(--s-4) var(--s-4);
+  background: linear-gradient(to top, var(--c-bg) 0%, transparent 100%);
+}
+
+.tile__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-md);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tile__link:hover .tile__image {
+    transform: scale(1.03);
+  }
+}
+
+/* Pagination: Prev / numbers / Next, 44px+ targets. */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-2);
+  padding-block: var(--s-5);
+}
+
+.pagination__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--s-7);
+  min-height: var(--s-7);
+  padding: var(--s-2) var(--s-3);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+a.pagination__item:hover {
+  color: var(--c-text);
+  border-color: var(--c-line-strong);
+}
+
+.pagination__item--current {
+  color: var(--c-text);
+  border-color: var(--c-line-strong);
+}
+
+@media (min-width: 1200px) {
+  .collection-toolbar {
+    top: calc(var(--s-8) + var(--s-3));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile__image {
+    transition: none;
+  }
+}

@@ -1,1 +1,1 @@
-{"order":["main"],"sections":{"main":{"settings":{},"type":"main-collection"}}}
+{"order":["header","grid"],"sections":{"header":{"settings":{},"type":"collection-header"},"grid":{"settings":{},"type":"product-grid"}}}
