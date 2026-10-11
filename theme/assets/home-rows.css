@@ -1,0 +1,249 @@
+/** RIFANO home category rows + "Plus" (spec 07). Tokens live in tokens.css. */
+
+/* The group opens and closes on the section rhythm; inside it, each row keeps
+   more air above its heading than below it (DESIGN.md). */
+.rows {
+  padding-block-start: var(--section-y);
+}
+
+.rows__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row + .row {
+  margin-block-start: var(--s-7);
+}
+
+.row__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-block-end: var(--s-4);
+  padding-inline: var(--gutter);
+}
+
+/* Row title: Tenor at --fs-xl (DESIGN.md puts row titles on the display face),
+   the icon optically centred on the title's first line. `min-inline-size: 0`
+   lets a long merchant-authored title wrap instead of pushing "Voir tout" off
+   the gutter. */
+.row__title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  font-size: var(--fs-xl);
+  min-inline-size: 0;
+}
+
+/* `.icon.row__icon` is doubled because header.css also sets a `.icon` size and
+   loads before this file. Silver-2 is the spec's colour for the row glyphs,
+   and --s-5 is the spec's 24px. */
+.icon.row__icon {
+  width: var(--s-5);
+  height: var(--s-5);
+  color: var(--c-silver-2);
+}
+
+.row__all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  flex: none;
+  /* The row's only exit, and the smallest target in the theme if it is left at
+     the label's line box: 48px keeps it above the 44×44 floor. */
+  min-block-size: var(--s-7);
+  padding-inline-end: var(--s-2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.icon.row__all-icon {
+  width: var(--s-4);
+  height: var(--s-4);
+}
+
+/* Track: horizontal, snap-aligned to the gutter, scrollbar hidden but still
+   scrollable. The block padding gives a focused card's outline room inside the
+   scroll container's clip; the inline padding and scroll-padding both carry the
+   gutter so a snapped card sits on the same axis as the row's title. */
+.row__viewport {
+  position: relative;
+}
+
+.row__track {
+  display: flex;
+  gap: var(--s-4);
+  margin: 0;
+  padding: var(--s-3) var(--gutter);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+}
+
+.row__track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card width: ~2.2 visible on a phone so the next card peeks, ~3.3 at 768px,
+   4.5 at 1200px. */
+.row__item {
+  flex: 0 0 auto;
+  inline-size: 46vw;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .row__item {
+    inline-size: 30vw;
+  }
+}
+
+@media (min-width: 1200px) {
+  .row__item {
+    inline-size: 22%;
+  }
+}
+
+/* `hidden` must beat the component's own display rules, or a row waiting
+   behind "Plus" would still render. */
+.row[hidden] {
+  display: none;
+}
+
+/* Entrance: 16px fade-up, once, at 15% visible. home-rows.js adds the class;
+   without it (no JS) the rows are simply there. */
+.row--reveal {
+  animation: row-reveal var(--dur-3) var(--ease-out) both;
+}
+
+@keyframes row-reveal {
+  from {
+    opacity: 0.001;
+    transform: translateY(var(--s-4));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row--reveal {
+    animation: none;
+  }
+}
+
+/* Arrows: a fine pointer only — a touch device swipes the track. */
+.row__nav {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row__nav {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--s-2);
+    pointer-events: none;
+  }
+
+  .row__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: calc(var(--s-8) - var(--s-4));
+    block-size: calc(var(--s-8) - var(--s-4));
+    color: var(--c-text);
+    background: var(--c-bg);
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-2) var(--ease-out), color var(--dur-1) var(--ease-out);
+  }
+
+  /* At an end there is nothing left to scroll to, so the arrow is gone
+     rather than dimmed. */
+  .row__arrow:disabled {
+    display: none;
+  }
+
+  /* Hover is a gentle colour shift (the header's own convention), and the
+     arrow only takes the pointer while it is visible — an invisible target
+     must not sit on top of the first card. */
+  .row__arrow:hover {
+    color: var(--c-silver-2);
+  }
+
+  .row:hover .row__arrow,
+  .row__arrow:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Spine: the vertical rule at the left edge of the rows group from the owner's
+   sketch, desktop only. */
+@media (min-width: 1200px) {
+  .rows__list {
+    border-inline-start: var(--hairline);
+  }
+}
+
+/* "Plus": three dots and a label, centred under the rows. */
+.rows-plus {
+  display: flex;
+  justify-content: center;
+  margin-block-start: var(--s-7);
+  padding-block-end: var(--section-y);
+}
+
+.rows-plus__button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: calc(var(--s-8) - var(--s-4));
+  padding: var(--s-2) var(--s-4);
+  color: var(--c-text-2);
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease-out);
+}
+
+.rows-plus__button:hover {
+  color: var(--c-text);
+}
+
+.rows-plus__dots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+}
+
+.rows-plus__dot {
+  display: block;
+  inline-size: var(--s-1);
+  block-size: var(--s-1);
+  border-radius: var(--radius-pill);
+  background: currentColor;
+}
+
+/* The label keeps the .t-label typography but inherits the control's hover
+   colour, so dots and label brighten together. */
+.rows-plus__button .t-label {
+  color: inherit;
+}
