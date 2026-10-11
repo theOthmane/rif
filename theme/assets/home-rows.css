@@ -116,6 +116,12 @@
   display: none;
 }
 
+/* Same for the boutique link that waits beside "Plus": `.rows-plus__button` is
+   a flex box, so `hidden` has to beat that too. */
+.rows-plus__button[hidden] {
+  display: none;
+}
+
 /* Entrance: 16px fade-up, once, at 15% visible. home-rows.js adds the class;
    without it (no JS) the rows are simply there. */
 .row--reveal {

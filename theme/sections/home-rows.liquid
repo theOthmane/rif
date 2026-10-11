@@ -198,6 +198,16 @@
         {{ rows_dots }}
         <span class="rows-plus__label t-label">{{ 'rifano.rows_plus' | t }}</span>
       </button>
+      {%- comment -%}
+        Rendered next to the button and kept `hidden` until "Plus" has been used.
+        The wrapper is the only element carrying the group's bottom rhythm, so it
+        cannot be removed with the button, and the section keeps one permanent
+        exit to the whole boutique once there is nothing left to reveal.
+      {%- endcomment -%}
+      <a class="rows-plus__button" href="{{ routes.collections_url }}" data-plus-fallback hidden>
+        {{ rows_dots }}
+        <span class="rows-plus__label t-label">{{ 'rifano.rows_all' | t }}</span>
+      </a>
     {% else %}
       <a class="rows-plus__button" href="{{ routes.collections_url }}">
         {{ rows_dots }}
