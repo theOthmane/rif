@@ -1,234 +1,116 @@
-/** RIFANO footer — promise strip, brand, link columns, contact, legal bar. Tokens live in tokens.css. */
+/** RIFANO footer — one calm band: brand left, nav + contact right, hairline, legal bar.
+    Tokens live in tokens.css. */
 
+/* One black, one hairline. No grey band, no shadow, no raised surface. */
 .site-footer {
+  /* 44px, assembled from spacing tokens (0.75 + 1 + 1 rem): the WCAG tap target. */
+  --footer-target: calc(var(--s-3) + var(--s-4) + var(--s-4));
+
   display: block;
   margin-top: 0;
   background: var(--c-bg);
   border-top: var(--hairline);
-  padding-top: var(--section-y);
-  padding-bottom: var(--s-5);
+  padding-block: var(--s-7) var(--s-5);
   color: var(--c-text-2);
 }
 
-/* One rhythm down the footer, then one deliberate pause at the mark. The 1%
-   reads as a held breath, not as five bands of equal air. */
 .site-footer__inner {
   width: 100%;
   max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--gutter);
+}
+
+/* Mobile: one column, everything left-aligned, one rhythm between the two rows. */
+.footer__top {
   display: flex;
   flex-direction: column;
   gap: var(--s-5);
 }
 
-/* Promise strip: stacked under 480px, 3 in a row above. Compact rows — this is
-   a promise, not a feature grid, and it does not need 64px a row to be believed.
-   Set like the announcement bar: a sentence the store makes, not a micro-label. */
-.footer__promises {
+/* Brand mark: the one deliberate pause in the band. The monogram is a tracing
+   from the owner's logo, so its size is a decision — 28px keeps it the quiet
+   anchor of the footer rather than the loudest thing on the page. */
+.footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: var(--footer-target);
+  text-decoration: none;
+}
+
+.footer__monogram {
+  --logo-size: calc(var(--s-4) + var(--s-3)); /* 28px */
+}
+
+/* The wordmark beside it: display face, uppercase, 0.32em — the brand lockup.
+   Tenor Sans has one weight and no italic, so synthesis stays off. */
+.footer__brand .logo__wordmark {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+}
+
+/* Everything right of the brand: nav above contact, stacked. */
+.footer__right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+/* Nav: two columns on mobile so five links read as a list, not a ribbon. */
+.footer__nav-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--s-5);
+}
+
+.footer__nav-link {
   display: flex;
-  flex-direction: column;
-  border-top: var(--hairline);
-  border-bottom: var(--hairline);
+  align-items: center;
+  min-height: var(--footer-target);
   font-family: var(--font-body);
   font-weight: 500;
   font-size: var(--fs-sm);
   line-height: var(--lh-snug);
-  color: var(--c-text-2);
-}
-
-.footer__promise {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--s-2);
-  min-height: var(--s-7);
-  padding-block: var(--s-2);
-  text-align: center;
-}
-
-.footer__promise + .footer__promise {
-  border-top: var(--hairline);
-}
-
-@media (min-width: 480px) {
-  .footer__promises {
-    flex-direction: row;
-    align-items: stretch;
-  }
-
-  .footer__promise {
-    flex: 1;
-  }
-
-  .footer__promise + .footer__promise {
-    border-top: 0;
-    border-left: var(--hairline);
-  }
-}
-
-/* Brand lockup, centred. The only moment the footer opens up. */
-.footer__brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--s-3);
-  padding-block: var(--s-4);
-  text-align: center;
-}
-
-.footer__logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--s-8);
-  min-height: var(--s-8);
-  padding: var(--s-2);
-  text-decoration: none;
-  --logo-size: calc(var(--s-7) + var(--s-2));
-}
-
-.footer__tagline {
-  margin: 0;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--fs-lg);
-  line-height: var(--lh-snug);
-  color: var(--c-text-2);
-}
-
-/* Link columns: accordions on mobile, side-by-side columns on desktop. */
-.footer__menus {
-  display: flex;
-  flex-direction: column;
-  border-bottom: var(--hairline);
-}
-
-/* On mobile the accordions carry the top rules themselves; the container adds
-   its own at >=768px, where they are hidden. Never both at once — two adjacent
-   1px borders read as one 2px rule. */
-.footer__accordion {
-  border-top: var(--hairline);
-  margin: 0;
-}
-
-.footer__summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-3);
-  min-height: var(--s-7);
-  margin: 0;
-  padding-block: var(--s-2);
-  cursor: pointer;
-  list-style: none;
-}
-
-.footer__summary::-webkit-details-marker {
-  display: none;
-}
-
-.footer__chevron {
-  transition: transform var(--dur-1) var(--ease-out);
-}
-
-.footer__accordion[open] .footer__chevron {
-  transform: rotate(180deg);
-}
-
-.footer__column {
-  display: none;
-}
-
-.footer__column h2 {
-  margin: 0;
-}
-
-/* Scoped to beat the legacy `footer .footer__links` rule in base.css (0,2,0 vs 0,1,1). */
-.site-footer .footer__links {
-  list-style: none;
-  margin: 0;
-  padding: 0 0 var(--s-4);
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  gap: var(--s-1);
-}
-
-.site-footer .footer__column .footer__links {
-  padding: 0;
-}
-
-.footer__link {
-  display: flex;
-  align-items: center;
-  min-height: var(--s-7);
-  font-family: var(--font-body);
-  font-size: var(--fs-md);
-  line-height: var(--lh-body);
-  color: var(--c-text-2);
-  text-decoration: none;
-}
-
-.footer__link:hover {
   color: var(--c-text);
+  text-decoration: none;
+}
+
+.footer__nav-link:hover {
   text-decoration: underline;
   text-underline-offset: var(--s-1);
   text-decoration-thickness: 1px;
 }
 
-@media (min-width: 768px) {
-  /* Desktop: two columns drawn together under the centred lockup. `1fr 1fr`
-     pushed them into the far halves of the container with a 32px void between,
-     which read as two unrelated lists rather than one menu. The hairline the
-     mobile footer has stays — a rule that appears at 375px and vanishes at 768px
-     is an accident, not restraint. */
-  .footer__menus {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, max-content));
-    justify-content: center;
-    column-gap: var(--s-8);
-    row-gap: var(--s-5);
-    border-top: var(--hairline);
-  }
-
-  .footer__accordion {
-    display: none;
-  }
-
-  .footer__column {
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-3);
-  }
-}
-
-/* Contact channels. */
-.footer__contact-list {
+/* Contact channels: quieter than the nav, so the promise stays with the
+   announcement bar and the shop links stay the loudest row here. */
+.footer__contact {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--s-2);
+  align-items: center;
+  gap: var(--s-4);
 }
 
 .footer__contact-link {
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
-  min-height: var(--s-7);
-  padding: var(--s-2) var(--s-3);
+  min-height: var(--footer-target);
   font-family: var(--font-body);
+  font-weight: 400;
   font-size: var(--fs-sm);
-  line-height: var(--lh-body);
+  line-height: var(--lh-snug);
   color: var(--c-text-2);
   text-decoration: none;
-  border-radius: var(--radius-sm);
 }
 
 .footer__contact-link:hover {
@@ -238,24 +120,31 @@
   text-decoration-thickness: 1px;
 }
 
-/* Legal bar. Stays centred at every width. It used to flip to
-   space-between at 768px while the four bands above it stayed centred, so the
-   footer changed axis halfway down and stopped reading as one object. */
+/* 18px, the same step base.css gives `.icon--sm`. Scoped to the footer because
+   header.css also writes `.icon`, and it loads after base.css. */
+.footer__contact .icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* Legal bar: hairline, one quiet line, never centred. This is the one compact
+   row in the band — `--fs-xs` on `--lh-snug` keeps the whole legal line at a
+   single text line so the footer stays inside its 240px budget at 1440. */
 .footer__legal {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--s-1);
-  text-align: center;
+  margin-top: var(--s-6);
   border-top: var(--hairline);
-  padding-top: var(--s-5);
+  padding-top: var(--s-4);
 }
 
 .footer__copy {
   margin: 0;
   font-family: var(--font-body);
-  font-size: var(--fs-sm);
-  line-height: var(--lh-body);
+  font-weight: 400;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
   color: var(--c-text-2);
 }
 
@@ -265,25 +154,56 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 0 var(--s-5);
+  align-items: baseline;
+  column-gap: var(--s-4);
+  row-gap: var(--s-1);
 }
 
-.footer__link--legal {
-  min-height: var(--s-7);
-  font-size: var(--fs-sm);
+.footer__policy-link {
+  /* `flex`, not `inline-flex`: inside a flex item the inline box keeps a 25.6px
+     strut from the body line-height, which would cost the band its budget. */
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--c-text-2);
+  text-decoration: none;
 }
 
-@media (min-width: 768px) {
+.footer__policy-link:hover {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+  text-decoration-thickness: 1px;
+}
+
+/* Desktop: brand left, nav + contact right and aligned to the same edge, then a
+   legal bar that keeps the axis instead of re-centring. */
+@media (min-width: 1024px) {
+  .footer__top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--s-8);
+  }
+
+  .footer__right {
+    align-items: flex-end;
+  }
+
+  .footer__nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    column-gap: var(--s-5);
+  }
+
   .footer__legal {
     flex-direction: row;
-    justify-content: center;
-    gap: var(--s-5);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .footer__chevron {
-    transition: none;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s-4);
   }
 }

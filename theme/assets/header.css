@@ -146,13 +146,15 @@
   text-decoration: none;
 }
 
-/* Inline RF fallback until spec-02 snippets/logo.liquid lands. Silver gradient text: logo is an allowed silver use. */
+/* Silver gradient text: the monogram is the rarest asset on the page and one of
+   the three permitted uses of --c-silver. */
 .header__monogram {
   display: inline-flex;
   align-items: center;
   height: var(--s-6);
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
+  font-synthesis: none;
   font-size: var(--fs-lg);
   letter-spacing: 0.32em;
   text-indent: 0.32em;
@@ -283,6 +285,8 @@
   min-width: 0;
   min-height: var(--s-7);
   font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
   font-size: var(--fs-xl);
   line-height: var(--lh-snug);
   color: var(--c-text);

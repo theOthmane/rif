@@ -5,8 +5,11 @@
 .t-display {
   font-family: var(--font-display);
   letter-spacing: var(--tracking-display);
-  line-height: var(--lh-tight);
-  font-weight: 500;
+  /* Tenor Sans at --lh-tight closes up; --lh-snug is the display default and the
+     hero (--fs-3xl) tightens to 1.1 in home-hero.css. */
+  line-height: var(--lh-snug);
+  font-weight: 400;
+  font-synthesis: none; /* Tenor Sans ships one weight and no italic: never synth */
   color: var(--c-text);
 }
 
@@ -31,14 +34,15 @@
   color: var(--c-text-2);
 }
 
-/* Page titles: Bodoni display at --fs-2xl (DESIGN.md: Bodoni only for
-   display >= --fs-xl). Collection and Boutique headings use this. */
+/* Page titles: display at --fs-2xl (DESIGN.md: display only for display >= --fs-xl).
+   Tenor has no 400→700 step to walk up, so the bold is never asked for. */
 .t-page-title {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
+  font-synthesis: none;
   font-size: var(--fs-2xl);
   letter-spacing: var(--tracking-display);
-  line-height: var(--lh-tight);
+  line-height: var(--lh-snug);
   color: var(--c-text);
 }
 
@@ -77,7 +81,7 @@ a:hover {
    so the wordmark sits dead-centre under the monogram. Measured: 1.92px of
    drift at --logo-footer / 4, i.e. a visible lean on a 74px lockup. */
 .logo__wordmark {
-  font-weight: 500;
+  font-weight: 400;
   font-size: var(--fs-sm);
   text-transform: uppercase;
   letter-spacing: 0.32em;
@@ -296,26 +300,21 @@ header .header__icons {
   min-width: 0;
 }
 
-/** Footer */
+/** Footer
+    The shell footer is styled entirely in footer.css (one band: brand, nav,
+    contact, legal). These base rules stay deliberately thin so they cannot
+    fight it; `.site-footer` is the component root and wins on specificity. */
 footer {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--s-4);
-  margin-top: var(--s-6);
-  flex-wrap: wrap;
+  display: block;
 }
+
 footer a {
   text-decoration: none;
   color: var(--c-text);
-  min-height: var(--s-8);
-  display: inline-flex;
-  align-items: center;
 }
-footer .footer__links,
-footer .footer__payment {
-  display: flex;
-  gap: var(--s-4);
-  flex-wrap: wrap;
+
+footer a:hover {
+  color: var(--c-text);
 }
 
 /** Image snippet */

@@ -1,22 +1,18 @@
 {% style %}
+  /* Display: Tenor Sans — one weight (400), no italic, so `font-synthesis: none`
+     on every rule that uses --font-display (base.css) keeps faux bold away.
+     Body: Hanken Grotesk — one variable file, the whole 100–900 range. */
   @font-face {
-    font-family: 'Bodoni Moda';
-    src: url("{{ 'bodoni-moda-var.woff2' | asset_url }}") format('woff2');
-    font-weight: 400 900;
+    font-family: 'Tenor Sans';
+    src: url("{{ 'tenor-sans-400.woff2' | asset_url }}") format('woff2');
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
   }
   @font-face {
-    font-family: 'Bodoni Moda';
-    src: url("{{ 'bodoni-moda-italic-var.woff2' | asset_url }}") format('woff2');
-    font-weight: 400 900;
-    font-style: italic;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Manrope';
-    src: url("{{ 'manrope-var.woff2' | asset_url }}") format('woff2');
-    font-weight: 200 800;
+    font-family: 'Hanken Grotesk';
+    src: url("{{ 'hanken-grotesk-var.woff2' | asset_url }}") format('woff2');
+    font-weight: 100 900;
     font-style: normal;
     font-display: swap;
   }

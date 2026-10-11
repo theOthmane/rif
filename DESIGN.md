@@ -20,7 +20,7 @@ Five levers, in priority order. When two of them disagree, the earlier wins.
    Sections get more air above them than below them. Bands inside a region
    share one rhythm with a single deliberate pause at the one moment that
    matters (the RF lockup in the footer). Never pack, never justify to fill.
-3. **Precise type.** Bodoni Moda does the speaking, Manrope does the work.
+3. **Precise type.** Tenor Sans does the speaking, Hanken Grotesk does the work.
    Optical alignment matters more than alignment: glyph edges, label baselines
    and the cart count all sit on the same axis as the body text, so the page
    reads as one ruled object.
@@ -67,13 +67,13 @@ a template. Show it clearly once or twice. Three times is boilerplate.
 
 ### Type
 
-- `--font-display: "Bodoni Moda", "Didot", Georgia, serif` — display only.
-- `--font-body: "Manrope", system-ui, sans-serif` — everything else.
+- `--font-display: "Tenor Sans", "Optima", "Gill Sans", system-ui, sans-serif` — display only.
+- `--font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif` — everything else.
 - Scale: `--fs-xs 0.75rem`, `--fs-sm 0.875rem`, `--fs-md 1rem`,
   `--fs-lg 1.125rem`, `--fs-xl` / `--fs-2xl` / `--fs-3xl` fluid clamps.
   `--fs-3xl` is reserved for the hero tagline.
 - Leading: `--lh-tight 1.05` (display), `--lh-snug 1.25`, `--lh-body 1.6`.
-- Tracking: `--tracking-label 0.14em` (uppercase Manrope labels),
+- Tracking: `--tracking-label 0.14em` (uppercase body-font labels),
   `--tracking-display -0.01em`.
 
 ### Space
@@ -102,16 +102,22 @@ Component sizes are not spacing tokens and live in their own block:
 
 ## Type pairing and usage rules
 
-- **Bodoni Moda only for display ≥ `--fs-xl` and for prices.**
-  Helpers: `.t-display` (Bodoni, `--tracking-display`, `--lh-tight`).
-- **Manrope for everything else**: body, labels, buttons, inputs, navigation.
-  Helpers: `.t-body`, `.t-muted`, `.t-label` (Manrope 500, `--fs-xs`,
+- **Tenor Sans (display):** hero tagline, page titles, section/row titles, prices,
+  the RIFANO wordmark (uppercase, tracking `0.32em`). Sizes ≥ `--fs-lg` only,
+  weight 400 only — Tenor ships one weight and no italic, so every display rule
+  carries `font-synthesis: none` and no display text is ever italic.
+  Helpers: `.t-display` (Tenor, `--tracking-display`, `--lh-snug`).
+- **Hanken Grotesk (body):** everything else: body 400, UI and buttons 500,
+  labels 500 uppercase with `--tracking-label`.
+  Helpers: `.t-body`, `.t-muted`, `.t-label` (Hanken 500, `--fs-xs`,
   uppercase, `--tracking-label`, `--c-text-2`).
 - **`.t-label` is for labels, not for sentences.** Column headings ("Boutique",
   "Aide"), eyebrow-style field names: yes. A promise the store makes — the COD
-  and free-delivery line in the announcement bar and the footer strip — is a
+  and free-delivery line in the announcement bar — is a
   sentence and is set in sentence case at `--fs-sm` in `--c-text-2`. Micro-type
   makes the most trust-critical line on the site read like shipping boilerplate.
+- Line-height on display: `--lh-tight` closes up on Tenor, so `--lh-snug` is the
+  default and only the hero at `--fs-3xl` tightens to `1.1`.
 - Tagline "Be different. Be RIFANO." stays English by brand choice.
   Storefront voice is otherwise French; Darija only as seasoning
   (e.g. "Mrehba bik"), never for policy or price.
@@ -212,8 +218,8 @@ Notre mission, FAQ, default page) · system pages (search, 404, password
 
 ## Brand commitments are intentional
 
-Pure black `#000000` + void essence `#080808` + brushed silver, Bodoni Moda +
-Manrope, prestige/restraint tone, subtle motion. Header, bars and footer share
+Pure black `#000000` + void essence `#080808` + brushed silver, Tenor Sans +
+Hanken Grotesk, prestige/restraint tone, subtle motion. Header, bars and footer share
 the page black and are separated by 1px hairlines rather than grey bands. Per
 PRODUCT.md "Brand Commitments": these are deliberate brand decisions, never
 anti-patterns to be "corrected" by later design work.

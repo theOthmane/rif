@@ -1,204 +1,149 @@
-{% comment %}RIFANO footer: promise strip, brand lockup, link accordions, contact, legal bar.{% endcomment %}
+{% comment %}
+  RIFANO footer — one calm band: brand left, nav and contact right, then a
+  hairline and the legal bar. The COD + free-delivery promise is deliberately
+  not repeated here: the announcement bar already carries it, and the old
+  promise strip made it the third repeat on the same screen.
+{% endcomment %}
+
+{%- liquid
+  assign shop_links = section.settings.menu_shop.links
+  assign help_links = section.settings.menu_help.links
+  assign footer_nav = ''
+  assign seen_urls = ''
+-%}
+{%- comment -%}
+  One list, shop links then help links, deduped by URL. Capturing each item and
+  appending keeps a single <ul> even though the links come from two menus.
+{%- endcomment -%}
+{%- for link in shop_links -%}
+  {%- assign link_key = link.url | append: '||' -%}
+  {%- unless seen_urls contains link_key -%}
+    {%- assign seen_urls = seen_urls | append: link_key -%}
+    {%- capture footer_nav_item -%}
+      <li class="footer__nav-item">
+        <a
+          class="footer__nav-link"
+          href="{{ link.url }}"
+          {% if link.current %} aria-current="page" {% endif %}
+        >{{ link.title }}</a>
+      </li>
+    {%- endcapture -%}
+    {%- assign footer_nav = footer_nav | append: footer_nav_item -%}
+  {%- endunless -%}
+{%- endfor -%}
+{%- for link in help_links -%}
+  {%- assign link_key = link.url | append: '||' -%}
+  {%- unless seen_urls contains link_key -%}
+    {%- assign seen_urls = seen_urls | append: link_key -%}
+    {%- capture footer_nav_item -%}
+      <li class="footer__nav-item">
+        <a
+          class="footer__nav-link"
+          href="{{ link.url }}"
+          {% if link.current %} aria-current="page" {% endif %}
+        >{{ link.title }}</a>
+      </li>
+    {%- endcapture -%}
+    {%- assign footer_nav = footer_nav | append: footer_nav_item -%}
+  {%- endunless -%}
+{%- endfor -%}
+
+{%- liquid
+  assign has_contact = false
+  if settings.whatsapp_number != blank or settings.support_email != blank or settings.instagram_url != blank or settings.tiktok_url != blank
+    assign has_contact = true
+  endif
+  assign has_footer_right = false
+  if footer_nav != blank or has_contact
+    assign has_footer_right = true
+  endif
+-%}
 
 <footer class="site-footer full-width">
   <div class="site-footer__inner">
-    {%- comment -%}
-      The promise strip carries a sentence, so it takes the same treatment as the
-      announcement bar — sentence case at `--fs-sm` in header.css terms — rather
-      than the `.t-label` micro-type. `.t-label` stays on the two column headings
-      ("Boutique", "Aide"), which really are labels. No wording changed.
-    {%- endcomment -%}
-    <ul class="footer__promises">
-      <li class="footer__promise">
-        {% render 'icon', name: 'cash' %}
-        <span>{{ 'rifano.footer_cod' | t }}</span>
-      </li>
-      <li class="footer__promise">
-        {% render 'icon', name: 'truck' %}
-        <span>
-          {%- if settings.delivery_text != blank -%}
-            {{ settings.delivery_text }} · {{ 'rifano.footer_free' | t }}
-          {%- else -%}
-            {{ 'rifano.footer_delivery_default' | t }}
-          {%- endif -%}
-        </span>
-      </li>
-      <li class="footer__promise">
-        {% render 'icon', name: 'shield' %}
-        <span>
-          {%- if settings.warranty_text != blank -%}
-            {{ settings.warranty_text }}
-          {%- else -%}
-            {{ 'rifano.footer_warranty_default' | t }}
-          {%- endif -%}
-        </span>
-      </li>
-    </ul>
-
-    <div class="footer__brand">
-      <a href="{{ routes.root_url }}" class="footer__logo" aria-label="RF — {{ shop.name }}">
-        {% render 'logo', variant: 'lockup' %}
+    <div class="footer__top">
+      <a class="footer__brand" href="{{ routes.root_url }}" aria-label="RIFANO — {{ shop.name }}">
+        {% render 'logo', variant: 'monogram', class: 'footer__monogram' %}
+        <span class="logo__wordmark" aria-hidden="true">RIFANO</span>
       </a>
-      <p class="footer__tagline">{{ 'rifano.tagline_1' | t }} {{ 'rifano.tagline_2' | t }}</p>
+
+      {%- if has_footer_right -%}
+      <div class="footer__right">
+        {%- if footer_nav != blank -%}
+          <nav class="footer__nav" aria-label="{{ 'rifano.footer_nav' | t }}">
+            <ul class="footer__nav-list">
+              {{ footer_nav }}
+            </ul>
+          </nav>
+        {%- endif -%}
+
+        {%- if has_contact -%}
+          <ul class="footer__contact">
+            {%- if settings.whatsapp_number != blank -%}
+              <li class="footer__contact-item">
+                <a class="footer__contact-link" href="https://wa.me/{{ settings.whatsapp_number }}">
+                  {% render 'icon', name: 'whatsapp' %}
+                  <span>{{ 'rifano.whatsapp' | t }}</span>
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if settings.support_email != blank -%}
+              <li class="footer__contact-item">
+                <a class="footer__contact-link" href="mailto:{{ settings.support_email }}">
+                  {% render 'icon', name: 'mail' %}
+                  <span>{{ settings.support_email }}</span>
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if settings.instagram_url != blank -%}
+              <li class="footer__contact-item">
+                <a class="footer__contact-link" href="{{ settings.instagram_url }}">
+                  {% render 'icon', name: 'instagram' %}
+                  <span>{{ 'rifano.instagram' | t }}</span>
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if settings.tiktok_url != blank -%}
+              <li class="footer__contact-item">
+                <a class="footer__contact-link" href="{{ settings.tiktok_url }}">
+                  {% render 'icon', name: 'tiktok' %}
+                  <span>{{ 'rifano.tiktok' | t }}</span>
+                </a>
+              </li>
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
+      </div>
+      {%- endif -%}
     </div>
 
-    {% liquid
-      assign menu_shop = section.settings.menu_shop
-      assign menu_help = section.settings.menu_help
-    %}
-
-    {% if menu_shop.links != blank or menu_help.links != blank %}
-      <div class="footer__menus">
-        {% if menu_shop.links != blank %}
-          <details class="footer__accordion">
-            <summary class="footer__summary t-label">
-              <span>{{ 'rifano.footer_shop' | t }}</span>
-              {% render 'icon', name: 'chevron-down', class: 'footer__chevron' %}
-            </summary>
-            <ul class="footer__links">
-              {% for link in menu_shop.links %}
-                <li>
-                  <a
-                    href="{{ link.url }}"
-                    class="footer__link"
-                    {% if link.current %}
-                      aria-current="page"
-                    {% endif %}
-                  >
-                    {{ link.title }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </details>
-          <nav class="footer__column" aria-label="{{ 'rifano.footer_shop' | t }}">
-            <h2 class="t-label">{{ 'rifano.footer_shop' | t }}</h2>
-            <ul class="footer__links">
-              {% for link in menu_shop.links %}
-                <li>
-                  <a
-                    href="{{ link.url }}"
-                    class="footer__link"
-                    {% if link.current %}
-                      aria-current="page"
-                    {% endif %}
-                  >
-                    {{ link.title }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </nav>
-        {% endif %}
-        {% if menu_help.links != blank %}
-          <details class="footer__accordion">
-            <summary class="footer__summary t-label">
-              <span>{{ 'rifano.footer_help' | t }}</span>
-              {% render 'icon', name: 'chevron-down', class: 'footer__chevron' %}
-            </summary>
-            <ul class="footer__links">
-              {% for link in menu_help.links %}
-                <li>
-                  <a
-                    href="{{ link.url }}"
-                    class="footer__link"
-                    {% if link.current %}
-                      aria-current="page"
-                    {% endif %}
-                  >
-                    {{ link.title }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </details>
-          <nav class="footer__column" aria-label="{{ 'rifano.footer_help' | t }}">
-            <h2 class="t-label">{{ 'rifano.footer_help' | t }}</h2>
-            <ul class="footer__links">
-              {% for link in menu_help.links %}
-                <li>
-                  <a
-                    href="{{ link.url }}"
-                    class="footer__link"
-                    {% if link.current %}
-                      aria-current="page"
-                    {% endif %}
-                  >
-                    {{ link.title }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </nav>
-        {% endif %}
-      </div>
-    {% endif %}
-
-    {% if settings.whatsapp_number != blank or settings.support_email != blank or settings.instagram_url != blank or settings.tiktok_url != blank %}
-      <div class="footer__contact">
-        <ul class="footer__contact-list">
-          {% if settings.whatsapp_number != blank %}
-            <li>
-              <a class="footer__contact-link" href="https://wa.me/{{ settings.whatsapp_number }}">
-                {% render 'icon', name: 'whatsapp' %}
-                <span>{{ 'rifano.whatsapp' | t }}</span>
-              </a>
-            </li>
-          {% endif %}
-          {% if settings.support_email != blank %}
-            <li>
-              <a class="footer__contact-link" href="mailto:{{ settings.support_email }}">
-                {% render 'icon', name: 'mail' %}
-                <span>{{ settings.support_email }}</span>
-              </a>
-            </li>
-          {% endif %}
-          {% if settings.instagram_url != blank %}
-            <li>
-              <a class="footer__contact-link" href="{{ settings.instagram_url }}">
-                {% render 'icon', name: 'instagram' %}
-                <span>{{ 'rifano.instagram' | t }}</span>
-              </a>
-            </li>
-          {% endif %}
-          {% if settings.tiktok_url != blank %}
-            <li>
-              <a class="footer__contact-link" href="{{ settings.tiktok_url }}">
-                {% render 'icon', name: 'tiktok' %}
-                <span>{{ 'rifano.tiktok' | t }}</span>
-              </a>
-            </li>
-          {% endif %}
-        </ul>
-      </div>
-    {% endif %}
-
     <div class="footer__legal">
-      <p class="footer__copy">&copy; {{ 'now' | date: '%Y' }} RIFANO</p>
-      {% if shop.privacy_policy != blank or shop.refund_policy != blank or shop.shipping_policy != blank or shop.terms_of_service != blank %}
+      <p class="footer__copy">&copy; {{ 'now' | date: '%Y' }} RIFANO · {{ 'rifano.tagline_1' | t }} {{ 'rifano.tagline_2' | t }}</p>
+
+      {%- if shop.privacy_policy != blank or shop.refund_policy != blank or shop.shipping_policy != blank or shop.terms_of_service != blank -%}
         <ul class="footer__policies">
-          {% if shop.privacy_policy != blank %}
+          {%- if shop.privacy_policy != blank -%}
             <li>
-              <a class="footer__link footer__link--legal" href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title }}</a>
+              <a class="footer__policy-link" href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title }}</a>
             </li>
-          {% endif %}
-          {% if shop.refund_policy != blank %}
+          {%- endif -%}
+          {%- if shop.refund_policy != blank -%}
             <li>
-              <a class="footer__link footer__link--legal" href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title }}</a>
+              <a class="footer__policy-link" href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title }}</a>
             </li>
-          {% endif %}
-          {% if shop.shipping_policy != blank %}
+          {%- endif -%}
+          {%- if shop.shipping_policy != blank -%}
             <li>
-              <a class="footer__link footer__link--legal" href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title }}</a>
+              <a class="footer__policy-link" href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title }}</a>
             </li>
-          {% endif %}
-          {% if shop.terms_of_service != blank %}
+          {%- endif -%}
+          {%- if shop.terms_of_service != blank -%}
             <li>
-              <a class="footer__link footer__link--legal" href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title }}</a>
+              <a class="footer__policy-link" href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title }}</a>
             </li>
-          {% endif %}
+          {%- endif -%}
         </ul>
-      {% endif %}
+      {%- endif -%}
     </div>
   </div>
 </footer>

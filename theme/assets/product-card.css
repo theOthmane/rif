@@ -95,7 +95,8 @@
 
 .price__current {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
+  font-synthesis: none;
   font-size: var(--fs-md);
   letter-spacing: var(--tracking-display);
   color: var(--c-text);
@@ -103,6 +104,8 @@
 
 .price__compare {
   font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
   font-size: var(--fs-sm);
   color: var(--c-text-2);
   text-decoration-thickness: 1px;

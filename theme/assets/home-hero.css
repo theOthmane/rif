@@ -25,10 +25,12 @@
   text-align: center;
 }
 
-/* Tagline: Bodoni via .t-display, the hero scale, two fixed lines. */
+/* Tagline: display via .t-display, the hero scale, two fixed lines. */
 .hero__title {
   margin: 0;
   font-size: var(--fs-3xl);
+  /* --lh-tight is a serif's leading; Tenor at the hero scale needs its own. */
+  line-height: 1.1;
   text-wrap: balance;
 }
 
@@ -37,10 +39,10 @@
   animation: hero-rise var(--dur-3) var(--ease-out) both;
 }
 
-/* Line 2 is the brand moment: italic, brushed silver (a permitted silver use —
-   the tagline the brand is built on, set once on the home page). */
+/* Line 2 is the brand moment: brushed silver (a permitted silver use — the tagline
+   the brand is built on, set once on the home page). No italic: the pair has no
+   italic face and the gradient alone carries the accent. */
 .hero__line--accent {
-  font-style: italic;
   background: var(--c-silver);
   -webkit-background-clip: text;
   background-clip: text;

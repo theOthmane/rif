@@ -97,7 +97,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 05 product card | ✅ | 02b0b1a |
 | 06 home intro | ✅ | 3b9a328 |
 | 08 collection + boutique | ✅ | 7cd641d |
-| 17 fonts + footer redesign | ⏭ next | — |
+| 17 fonts + footer redesign | ✅ | —
 | 07 home rows | ⬜ | — |
 | 09 product | ⬜ | — |
 | 10 cart | ⬜ | — |
