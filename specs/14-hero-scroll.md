@@ -40,7 +40,7 @@ three-quarter to front view while "Be RIFANO." resolves. It should feel realisti
 - LCP stays the poster; CLS 0.
 
 ## Verification
-- Manual: real phone (Android mid-range if possible) via the `theme dev` URL; desktop Chrome at 1440px.
+- Manual: real phone (Android mid-range if possible) via the preview URL (AGENTS.md §5) and agent-browser screenshots; desktop Chrome at 1440px.
 - If `playwright-core` + Chrome are available (`npm i playwright-core` in `tools/hero-verify/`), write a tiny script that loads the preview URL at 390×844 and 1440×900, scrolls to p = 0, 0.25, 0.5, 0.75, 1, waits 300 ms, and saves screenshots into `tools/hero-verify/out/`. Following scroll-craft's `verify.md`, confirm: no dead scroll inside the runway, "Be RIFANO." reaches full opacity, text contrast ≥ 4.5:1 over the brightest frame behind it. Attach the contact sheet to your reply.
 
 ## Acceptance

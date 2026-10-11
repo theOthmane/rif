@@ -200,7 +200,7 @@ Product on near-black (`--c-bg`), contained (never cropped watches),
 no lifestyle stock, no third-party brand marks. `brand/watches/*.png` are
 reference only and never ship in `theme/assets/`.
 
-## Component list (from PLAN.md)
+## Component list
 
 Announcement bar · header (☰ · RF · cart) · menu drawer with search ·
 footer · product card · home intro ("Be different / Be RIFANO" + hero) ·

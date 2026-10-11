@@ -28,7 +28,7 @@ Store: **TBD (owner decides before spec 16; `xpziwn-tw` not accessible)**. Every
 - [ ] Owner: full test on your phone: home → row → product → add → drawer → Commander → checkout shows **Paiement à la livraison** and **Livraison gratuite** → place a test order → cancel/archive it.
 - [ ] Owner: Online Store → Themes → **Publish** the RIFANO theme.
 - [ ] Owner: when ready, turn password protection **off**.
-- [ ] 🤖 Tag the release: `git tag v1.0.0 && git push --tags`; final STATUS.md entry.
+- [ ] 🤖 Tag the release: `git tag v1.0.0 && git push --tags`; mark spec 16 ✅ in AGENTS.md Progress.
 
 ## After launch (backlog, not v1)
 COD form app (EasySell) if checkout drop-off is high · reviews · Spain/Spanish market · predictive search · collection filters · analytics pixels (TikTok/Meta) via Customer Events.

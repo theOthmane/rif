@@ -19,7 +19,7 @@ The /cart page and the drawer both display this section, so it renders the same 
 - **Checkout**: `<button type="submit" name="checkout" class="btn btn--block">Commander</button>` inside `<form action="{{ routes.cart_url }}" method="post">`. Under it, a small `.t-muted` line: "Vous payez en espèces à la réception."
 - **WhatsApp fallback** under the checkout button (ghost, small): "Une question ? Écrivez-nous sur WhatsApp".
 - **Empty state**: monogram 40px, "Votre panier est vide.", button "Découvrir la boutique" → `routes.collections_url`, then "Nos pièces du moment": 4 product cards from `collections.all.products` (first 4), or placeholders.
-- Errors (e.g. quantity above stock): inline message per line, `role="alert"`, quantity reset to what the server returned (see `theme/AGENTS.md` note on server-adjusted controls).
+- Errors (e.g. quantity above stock): inline message per line, `role="alert"`, quantity reset to what the server returned (see AGENTS.md §3, Section Rendering API).
 
 ## Drawer (`theme/sections/cart-drawer.liquid`)
 - `<dialog id="cart-drawer">` from the right, width `min(440px, 100vw)`, header "Panier (n)" + close button, a body area, summary pinned at the bottom.

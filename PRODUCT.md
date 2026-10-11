@@ -85,7 +85,7 @@ Reference studied: maisonduhype.com. Keep its persistent COD announcement bar an
 
 ## Evidence on Hand
 
-What exists: the brand logo and four watch renders listed above; the OS 2.0 theme in `theme/` (sections + JSON templates + section groups) with its shipped templates; repo setup state in `STATUS.md`.
+What exists: the brand logo and four watch renders listed above; the OS 2.0 theme in `theme/` (sections + JSON templates + section groups) with its shipped templates; progress in AGENTS.md §7.
 
 What does not exist and must never be fabricated: product photography and product data beyond the four watch renders, customer testimonials or reviews, press, benchmarks, delivery or warranty records, or sales figures. No product listings have been confirmed to exist in the store. `brand/watches/*.png` show third-party brands (AP, Emporio Armani, Rolex, Casio). Reference only; never shipped or shown.
 
