@@ -10,7 +10,10 @@
   margin-top: 0;
   background: var(--c-bg);
   border-top: var(--hairline);
-  padding-block: var(--s-7) var(--s-5);
+  /* Top step is --s-6, not --s-7: the legal links carry a 24px minimum target
+     (WCAG 2.2 AA 2.5.8), so the air above pays for it and the band keeps its
+     240px budget at 1440. */
+  padding-block: var(--s-6) var(--s-5);
   color: var(--c-text-2);
 }
 
@@ -164,6 +167,9 @@
      strut from the body line-height, which would cost the band its budget. */
   display: flex;
   align-items: center;
+  /* 24px minimum target (WCAG 2.2 AA 2.5.8); the footer's top padding pays
+     for it so the band stays inside 240px at 1440. */
+  min-height: 1.5rem;
   font-family: var(--font-body);
   font-weight: 400;
   font-size: var(--fs-xs);
