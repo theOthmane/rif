@@ -73,7 +73,7 @@
       {
         "type": "image_picker",
         "id": "hero_poster",
-        "label": "t:labels.hero_poster"
+        "label": "Hero poster"
       }
     ]
   },

@@ -2,16 +2,23 @@
     Tokens live in tokens.css. Spec 14 mounts the canvas inside .hero__stage and turns
     .hero into the scroll runway; the class names below are its contract. */
 
-/* One screen minus the sticky chrome. The chrome height depends on the merchant's
-   announcement text and its wrapping, so home-hero.js measures .site-chrome into
-   --hero-chrome-h; the fallback estimate (header + a short announcement) keeps the
-   first screen usable without JS. */
+/* One screen minus the sticky chrome (sentinel + announcement bar + header).
+   The chrome's height depends on the merchant's announcement text and its
+   wrapping, so this is a token-only estimate rather than a measurement: it is
+   deliberately generous enough that a long or multi-line announcement can never
+   push the tagline, the stage or the CTA below the fold. Keeping the height in
+   CSS (not measured by JS) also means the hero is laid out correctly on first
+   paint and with JS disabled. */
+.hero {
+  --hero-chrome-h: calc(var(--s-8) + var(--s-7) + var(--s-4));
+}
+
 .hero__sticky {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--s-4);
-  min-height: calc(100svh - var(--hero-chrome-h, calc(var(--s-8) + var(--s-6))));
+  min-height: calc(100svh - var(--hero-chrome-h));
   max-inline-size: var(--page-max);
   margin-inline: auto;
   padding: var(--s-5) var(--gutter) var(--s-6);

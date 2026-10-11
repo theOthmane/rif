@@ -697,3 +697,48 @@ desktop. Owner, Shopify admin: when spec 13's poster is final, set **Theme setti
 (the store currently has none, so preview shows the dial placeholder by design).
 
 Next: spec 07 (home rows + "Plus"). Do not start until told.
+
+### Spec 06 — review fixes (adversary review of commit `2ea385e`)
+
+Date: 2026-10-11. Commit `fix(06): review fixes`. Three blocking findings from the review, all fixed; nothing
+else touched.
+
+1. **Extra file outside the spec's list — `theme/locales/en.default.schema.json`.** The spec lists
+   `fr.default.json` only. Fixed by dropping the `t:` key so the file is not needed:
+   `theme/config/settings_schema.json` `hero_poster` label is now the literal `"Hero poster"`, and
+   `theme/locales/en.default.schema.json` is restored to its pre-spec-06 state (`git checkout HEAD~1 --`).
+   The merchant still gets a readable English editor label; the storefront is untouched. Net effect across
+   `2ea385e` + this commit: the spec's file list is now honoured exactly.
+2. **`home-hero.js` exceeded the spec's "≤30-line script" cap (71 lines / 49 code).** The overage was the
+   `.site-chrome` / `ResizeObserver` height-sync block, which the spec never asked for — it only asks the hero
+   be "`min-height: 100svh` minus header". Fixed by deleting that block; the file is now **29 lines** and
+   contains the pointer parallax only. The height moved into CSS: `.hero { --hero-chrome-h: calc(var(--s-8) +
+   var(--s-7) + var(--s-4)) }` (128px), a token-only estimate deliberately generous enough that a long or
+   multi-line merchant announcement can never push the tagline, stage or CTA below the fold. Keeping the
+   height in CSS rather than measured by JS also means the hero is correct on first paint and with JS
+   disabled — which removed the last layout-shift source (CLS went 0.002 → 0).
+3. **`home-hero.liquid` poster had no fallback `alt`.** `alt="{{ hero_poster.alt | escape }}"` emitted `alt=""`
+   whenever the merchant leaves the image alt blank — a reachable state that fails WCAG 1.1.1 on the page's
+   LCP image. Fixed with a `{% liquid %}` branch: blank alt falls back to the new
+   `rifano.hero_poster_alt` key (`fr.default.json`, "Montre RIFANO"); a merchant-supplied alt still wins.
+
+Re-verified live on `rifano-smoke` #185969639647 after the push: theme check **0 errors, 0 warnings** (44
+files); push smoke **0 errors**. At 375×667 — hero box 125→**664** (3px inside the fold, previously 8px
+past it), title 149–238, stage 254–552, CTA 568→**632** (`DÉCOUVRIR LA COLLECTION`, 280×64), all three hero
+elements visible without scrolling; LCP = `SPAN.hero__line` at 332ms; **CLS 0**; `scrollWidth == clientWidth`
+with **0** overflowing elements at 320/375/414/768/1200/1440. Reduced motion: `animation-name: none` on both
+`.hero__line` and `.hero__stage`, `--dur-3: 0ms`, hero still ends at 664 — page completely static and fully
+read. No JS-set inline properties on `.hero__sticky` (CSS-only height confirmed). No `translation missing`
+on the page; one `<h1>`.
+
+Trade-off recorded, not a defect: the 128px estimate over-covers the real chrome (105.5px desktop / 123px at
+375px), so at ≥768px the hero ends ~22px above the fold and the top of the footer becomes visible. Accepted
+in exchange for the CTA never dropping below the fold on a long announcement. The parallax keeps its verified
+signs and ≤3° cap; only the measurement block was removed.
+
+Not verified: the poster `alt` fallback path (needs a poster set in Shopify admin — the store has none, so
+the placeholder branch renders and no `<img>` is emitted). Logic verified by construction; theme check parses
+the Liquid. Owner to eyeball in `theme dev`: the parallax on a real desktop (headless reports
+`hover: none`), and the entrance feel on a real phone.
+
+Next: spec 07 (home rows + "Plus"). Do not start until told.

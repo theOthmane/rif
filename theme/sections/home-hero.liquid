@@ -9,6 +9,11 @@
 
 {% liquid
   assign hero_poster = settings.hero_poster
+  if hero_poster.alt == blank
+    assign poster_alt = 'rifano.hero_poster_alt' | t
+  else
+    assign poster_alt = hero_poster.alt
+  endif
 %}
 
 <section class="hero" data-hero>
@@ -27,7 +32,7 @@
           sizes="(min-width: 768px) 60vw, 100vw"
           width="{{ hero_poster.width }}"
           height="{{ hero_poster.height }}"
-          alt="{{ hero_poster.alt | escape }}"
+          alt="{{ poster_alt | escape }}"
           fetchpriority="high"
           loading="eager"
         >
