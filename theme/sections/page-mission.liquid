@@ -1,0 +1,52 @@
+{% comment %}
+  Notre mission (spec 11). Editorial: the mission sentence as one large centred
+  Tenor quote, then the rest of the page as rich text, then the closing lockup —
+  monogram, the brand tagline and one CTA to the Boutique.
+
+  The quote is the first block of `page.content` when the owner marked it as a
+  blockquote; otherwise the page renders as plain rich text. The content is
+  never paraphrased or reordered, and nothing historical (dates, numbers,
+  milestones) is invented here — the page is the owner's words only.
+{% endcomment %}
+
+{{ 'pages.css' | asset_url | stylesheet_tag }}
+{{ 'rte.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign content = page.content | strip
+  assign quote = ''
+  assign rest = content
+
+  if content != blank
+    assign prefix = content | slice: 0, 11
+    if prefix == '<blockquote'
+      assign after_open = content | split: '<blockquote' | slice: 1, 999 | join: '<blockquote' | remove_first: '>'
+      assign quote = after_open | split: '</blockquote>' | first | replace: '<p>', '' | replace: '</p>', ' ' | strip
+      assign rest = content | split: '</blockquote>' | slice: 1, 999 | join: '</blockquote>' | strip
+    endif
+  endif
+-%}
+
+<div class="mission page-width">
+  {%- if quote != blank -%}
+    <blockquote class="mission__quote t-display">{{ quote }}</blockquote>
+  {%- endif -%}
+
+  {%- if rest != blank -%}
+    <div class="mission__body rte">{{ rest }}</div>
+  {%- endif -%}
+
+  <div class="mission__lockup">
+    {% render 'logo', variant: 'monogram', class: 'mission__logo' %}
+    <p class="mission__tagline t-display">{{ 'rifano.tagline_1' | t }}<br>{{ 'rifano.tagline_2' | t }}</p>
+    <a class="btn mission__cta" href="{{ routes.collections_url }}">{{ 'rifano.mission_cta' | t }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Mission",
+  "settings": [],
+  "presets": [{ "name": "Mission" }]
+}
+{% endschema %}

@@ -1,0 +1,11 @@
+{
+  "order": ["header", "faq"],
+  "sections": {
+    "header": {
+      "type": "page-header"
+    },
+    "faq": {
+      "type": "faq"
+    }
+  }
+}

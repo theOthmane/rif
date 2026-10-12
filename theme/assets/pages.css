@@ -1,0 +1,274 @@
+/** RIFANO content pages (spec 11): page header, default page, contact & SAV,
+    FAQ and mission. Tokens only — the shell's one-black, one-hairline language
+    carried onto the content templates. */
+
+/* Page header — shared by every content template (page-header section). */
+.page-header {
+  text-align: center;
+  padding-block: var(--section-y) var(--s-6);
+}
+
+.page-header__eyebrow {
+  margin-block-end: var(--s-3);
+}
+
+.page-header__title {
+  text-wrap: balance;
+}
+
+/* Default page (main-page section). */
+.page-content {
+  padding-block-end: var(--section-y);
+}
+
+/* Contact & SAV */
+.contact {
+  padding-block-end: var(--section-y);
+}
+
+.contact__intro {
+  margin-block-end: var(--s-7);
+}
+
+.contact__grid {
+  display: grid;
+  gap: var(--s-8);
+}
+
+@media (min-width: 1024px) {
+  .contact__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    column-gap: var(--s-9);
+  }
+}
+
+.contact__section + .contact__section {
+  margin-block-start: var(--s-7);
+}
+
+.contact__title {
+  margin-block-end: var(--s-4);
+}
+
+/* Channels: large tappable rows — icon, label + value, arrow. */
+.contact__channels {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-block-start: var(--hairline);
+}
+
+.contact__channel-item {
+  border-block-end: var(--hairline);
+}
+
+.contact__channel {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-height: var(--s-8);
+  padding-block: var(--s-3);
+  color: var(--c-text);
+  text-decoration: none;
+}
+
+.contact__channel-icon,
+.contact__channel-arrow {
+  color: var(--c-text-2);
+  transition: color var(--dur-1) var(--ease-out);
+}
+
+.contact__channel:hover .contact__channel-icon,
+.contact__channel:hover .contact__channel-arrow {
+  color: var(--c-text);
+}
+
+.contact__channel-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  min-width: 0;
+}
+
+.contact__channel-value {
+  font-size: var(--fs-md);
+  overflow-wrap: anywhere;
+}
+
+.contact__channel-arrow {
+  margin-inline-start: auto;
+}
+
+/* SAV summary: the three promise rows, each linking to its policy. */
+.contact__sav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-block-start: var(--hairline);
+}
+
+.contact__sav-item {
+  border-block-end: var(--hairline);
+}
+
+.contact__sav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: var(--s-7);
+  padding-block: var(--s-3);
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+  text-decoration: none;
+}
+
+a.contact__sav-link:hover {
+  color: var(--c-text);
+}
+
+.contact__sav-icon {
+  color: var(--c-text-2);
+}
+
+.contact__sav-arrow {
+  margin-inline-start: auto;
+  color: var(--c-text-2);
+}
+
+/* Form */
+.contact__form {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.contact__success {
+  padding: var(--s-4);
+  border: 1px solid var(--c-success);
+  border-radius: var(--radius-sm);
+  color: var(--c-success);
+  font-size: var(--fs-sm);
+}
+
+.contact__errors {
+  padding: var(--s-4);
+  border: 1px solid var(--c-danger);
+  border-radius: var(--radius-sm);
+  color: var(--c-danger);
+  font-size: var(--fs-sm);
+}
+
+.contact__errors ul {
+  margin: 0;
+  padding-inline-start: var(--s-5);
+}
+
+/* FAQ */
+.faq {
+  padding-block-end: var(--section-y);
+}
+
+.faq__intro {
+  margin-block-end: var(--s-7);
+}
+
+.faq__list {
+  border-block-start: var(--hairline);
+}
+
+.faq__item {
+  border-block-end: var(--hairline);
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-height: var(--s-8);
+  padding-block: var(--s-4);
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.faq__question-text {
+  font-size: var(--fs-lg);
+}
+
+.faq__chevron {
+  color: var(--c-text-2);
+  transition: rotate var(--dur-2) var(--ease-out);
+}
+
+.faq__item[open] .faq__chevron {
+  rotate: 180deg;
+}
+
+.faq__answer {
+  padding-block-end: var(--s-5);
+}
+
+/* Height animation only where the browser can interpolate to auto; everywhere
+   else the native instant toggle stands. Durations come from tokens, so
+   prefers-reduced-motion keeps the toggle instant. */
+@supports (interpolate-size: allow-keywords) {
+  .faq {
+    interpolate-size: allow-keywords;
+  }
+
+  .faq__item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--dur-2) var(--ease-out),
+      content-visibility var(--dur-2) allow-discrete;
+  }
+
+  .faq__item[open]::details-content {
+    block-size: auto;
+  }
+}
+
+/* Mission */
+.mission {
+  padding-block-end: var(--section-y);
+}
+
+.mission__quote {
+  max-width: 24ch;
+  margin-block: 0;
+  margin-inline: auto;
+  font-size: var(--fs-2xl);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.mission__body {
+  margin-block-start: var(--s-8);
+  margin-inline: auto;
+}
+
+.mission__lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  margin-block-start: var(--s-9);
+  text-align: center;
+}
+
+.mission__logo {
+  --logo-size: var(--s-8);
+}
+
+.mission__tagline {
+  font-size: var(--fs-xl);
+}
+
+.mission__cta {
+  margin-block-start: var(--s-2);
+}

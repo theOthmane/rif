@@ -1,0 +1,236 @@
+{% comment %}
+  Contact & SAV (spec 11). Channels first — the reference store had none — then
+  the three promises, then the form; two columns from 1024px, stacked below.
+
+  Rows render only when their setting or policy exists: a channel with no
+  number, or a promise the merchant cleared, is left out rather than invented.
+  The warranty row points at the terms of service — Shopify has no warranty
+  policy type, and the terms page is where a warranty clause lives.
+
+  Email is required, not optional: Shopify's contact endpoint rejects a
+  submission without `contact[email]` ("Required input" in the contact form
+  docs), so an optional-looking field would only move the failure to after the
+  send button. Phone is required too — it is the channel RIFANO's buyers use.
+{% endcomment %}
+
+{{ 'pages.css' | asset_url | stylesheet_tag }}
+{{ 'rte.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign wa_number = settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-'
+  assign support_email = settings.support_email
+  assign instagram_url = settings.instagram_url
+  assign instagram_value = instagram_url | remove: 'https://' | remove: 'http://' | remove: 'www.'
+
+  assign shipping_policy = shop.shipping_policy
+  assign warranty_policy = shop.terms_of_service
+  assign refund_policy = shop.refund_policy
+
+  assign sav_delivery = settings.delivery_text
+  assign sav_warranty = settings.warranty_text
+  assign sav_returns = settings.returns_text
+  assign has_sav = false
+  if sav_delivery != blank or sav_warranty != blank or sav_returns != blank
+    assign has_sav = true
+  endif
+-%}
+
+<div class="contact page-width">
+  {%- if page.content != blank -%}
+    <div class="contact__intro rte">{{ page.content }}</div>
+  {%- endif -%}
+
+  <div class="contact__grid">
+    <div class="contact__col">
+      {%- if wa_number != blank or support_email != blank or instagram_url != blank -%}
+        <section class="contact__section">
+          <h2 class="contact__title t-label">{{ 'rifano.contact_channels' | t }}</h2>
+
+          <ul class="contact__channels">
+            {%- if wa_number != blank -%}
+              <li class="contact__channel-item">
+                <a class="contact__channel" href="https://wa.me/{{ wa_number }}">
+                  {% render 'icon', name: 'whatsapp', class: 'contact__channel-icon' %}
+                  <span class="contact__channel-text">
+                    <span class="contact__channel-label t-label">{{ 'rifano.whatsapp' | t }}</span>
+                    <span class="contact__channel-value">+{{ wa_number }}</span>
+                  </span>
+                  {% render 'icon', name: 'arrow-right', class: 'contact__channel-arrow' %}
+                </a>
+              </li>
+            {%- endif -%}
+
+            {%- if support_email != blank -%}
+              <li class="contact__channel-item">
+                <a class="contact__channel" href="mailto:{{ support_email }}">
+                  {% render 'icon', name: 'mail', class: 'contact__channel-icon' %}
+                  <span class="contact__channel-text">
+                    <span class="contact__channel-label t-label">{{ 'rifano.email_label' | t }}</span>
+                    <span class="contact__channel-value">{{ support_email }}</span>
+                  </span>
+                  {% render 'icon', name: 'arrow-right', class: 'contact__channel-arrow' %}
+                </a>
+              </li>
+            {%- endif -%}
+
+            {%- if instagram_url != blank -%}
+              <li class="contact__channel-item">
+                <a class="contact__channel" href="{{ instagram_url }}" target="_blank" rel="noopener">
+                  {% render 'icon', name: 'instagram', class: 'contact__channel-icon' %}
+                  <span class="contact__channel-text">
+                    <span class="contact__channel-label t-label">{{ 'rifano.instagram' | t }}</span>
+                    <span class="contact__channel-value">{{ instagram_value }}</span>
+                  </span>
+                  {% render 'icon', name: 'arrow-right', class: 'contact__channel-arrow' %}
+                </a>
+              </li>
+            {%- endif -%}
+          </ul>
+        </section>
+      {%- endif -%}
+
+      {%- if has_sav -%}
+        <section class="contact__section">
+          <h2 class="contact__title t-label">{{ 'rifano.contact_sav' | t }}</h2>
+
+          <ul class="contact__sav">
+            {%- if sav_delivery != blank -%}
+              <li class="contact__sav-item">
+                {%- if shipping_policy != blank -%}
+                  <a class="contact__sav-link" href="{{ shipping_policy.url }}">
+                    {% render 'icon', name: 'truck', class: 'icon--sm contact__sav-icon' %}
+                    <span class="contact__sav-text">{{ sav_delivery }}</span>
+                    {% render 'icon', name: 'arrow-right', class: 'icon--sm contact__sav-arrow' %}
+                  </a>
+                {%- else -%}
+                  <span class="contact__sav-link">
+                    {% render 'icon', name: 'truck', class: 'icon--sm contact__sav-icon' %}
+                    <span class="contact__sav-text">{{ sav_delivery }}</span>
+                  </span>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+
+            {%- if sav_warranty != blank -%}
+              <li class="contact__sav-item">
+                {%- if warranty_policy != blank -%}
+                  <a class="contact__sav-link" href="{{ warranty_policy.url }}">
+                    {% render 'icon', name: 'shield', class: 'icon--sm contact__sav-icon' %}
+                    <span class="contact__sav-text">{{ sav_warranty }}</span>
+                    {% render 'icon', name: 'arrow-right', class: 'icon--sm contact__sav-arrow' %}
+                  </a>
+                {%- else -%}
+                  <span class="contact__sav-link">
+                    {% render 'icon', name: 'shield', class: 'icon--sm contact__sav-icon' %}
+                    <span class="contact__sav-text">{{ sav_warranty }}</span>
+                  </span>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+
+            {%- if sav_returns != blank -%}
+              <li class="contact__sav-item">
+                {%- if refund_policy != blank -%}
+                  <a class="contact__sav-link" href="{{ refund_policy.url }}">
+                    {% render 'icon', name: 'return', class: 'icon--sm contact__sav-icon' %}
+                    <span class="contact__sav-text">{{ sav_returns }}</span>
+                    {% render 'icon', name: 'arrow-right', class: 'icon--sm contact__sav-arrow' %}
+                  </a>
+                {%- else -%}
+                  <span class="contact__sav-link">
+                    {% render 'icon', name: 'return', class: 'icon--sm contact__sav-icon' %}
+                    <span class="contact__sav-text">{{ sav_returns }}</span>
+                  </span>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+          </ul>
+        </section>
+      {%- endif -%}
+    </div>
+
+    <div class="contact__col">
+      <section class="contact__section">
+        <h2 class="contact__title t-label">{{ 'rifano.contact_form_title' | t }}</h2>
+
+        {%- form 'contact', class: 'contact__form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="contact__success" role="status">{{ 'rifano.contact_success' | t }}</p>
+          {%- elsif form.errors -%}
+            <div class="contact__errors" role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+
+          <div class="contact__field">
+            <label for="contact-name-{{ section.id }}">{{ 'rifano.contact_name' | t }}</label>
+            <input
+              type="text"
+              id="contact-name-{{ section.id }}"
+              name="contact[name]"
+              autocomplete="name"
+            >
+          </div>
+
+          <div class="contact__field">
+            <label for="contact-phone-{{ section.id }}">{{ 'rifano.contact_phone' | t }}</label>
+            <input
+              type="tel"
+              id="contact-phone-{{ section.id }}"
+              name="contact[phone]"
+              autocomplete="tel"
+              required="required"
+            >
+          </div>
+
+          <div class="contact__field">
+            <label for="contact-email-{{ section.id }}">{{ 'rifano.contact_email' | t }}</label>
+            <input
+              type="email"
+              id="contact-email-{{ section.id }}"
+              name="contact[email]"
+              autocomplete="email"
+              required="required"
+            >
+          </div>
+
+          <div class="contact__field">
+            <label for="contact-subject-{{ section.id }}">{{ 'rifano.contact_subject' | t }}</label>
+            <select id="contact-subject-{{ section.id }}" name="contact[subject]">
+              <option value="{{ 'rifano.contact_subject_order' | t }}">
+                {{- 'rifano.contact_subject_order' | t -}}
+              </option>
+              <option value="{{ 'rifano.contact_subject_warranty' | t }}">
+                {{- 'rifano.contact_subject_warranty' | t -}}
+              </option>
+              <option value="{{ 'rifano.contact_subject_return' | t }}">
+                {{- 'rifano.contact_subject_return' | t -}}
+              </option>
+              <option value="{{ 'rifano.contact_subject_other' | t }}">
+                {{- 'rifano.contact_subject_other' | t -}}
+              </option>
+            </select>
+          </div>
+
+          <div class="contact__field">
+            <label for="contact-message-{{ section.id }}">{{ 'rifano.contact_message' | t }}</label>
+            <textarea
+              id="contact-message-{{ section.id }}"
+              name="contact[body]"
+              rows="6"
+              required="required"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--block">{{ 'rifano.contact_submit' | t }}</button>
+        {%- endform -%}
+      </section>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact & SAV",
+  "settings": [],
+  "presets": [{ "name": "Contact & SAV" }]
+}
+{% endschema %}

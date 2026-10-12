@@ -1,0 +1,104 @@
+/** RIFANO rich text (spec 11) — page content, FAQ answers and the mission
+    body. One measure, one voice: Hanken Grotesk at --lh-body, headings in
+    Tenor Sans, silver only on the small accents (bullets, quote rule). */
+
+.rte {
+  max-width: 65ch;
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--c-text);
+}
+
+.rte > :first-child {
+  margin-block-start: 0;
+}
+
+.rte > :last-child {
+  margin-block-end: 0;
+}
+
+.rte p,
+.rte ul,
+.rte ol,
+.rte blockquote,
+.rte table {
+  margin-block: 0 var(--s-5);
+}
+
+.rte h2,
+.rte h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+.rte h2 {
+  margin-block: var(--s-7) var(--s-4);
+  font-size: var(--fs-xl);
+}
+
+.rte h3 {
+  margin-block: var(--s-6) var(--s-3);
+  font-size: var(--fs-lg);
+}
+
+.rte a {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.rte a:hover {
+  text-decoration-color: var(--c-accent);
+}
+
+.rte ul,
+.rte ol {
+  padding-inline-start: var(--s-5);
+}
+
+.rte li::marker {
+  color: var(--c-accent);
+}
+
+.rte li + li {
+  margin-block-start: var(--s-2);
+}
+
+.rte blockquote {
+  padding-inline-start: var(--s-5);
+  border-inline-start: 1px solid var(--c-accent);
+  color: var(--c-text-2);
+}
+
+.rte strong {
+  font-weight: 600;
+}
+
+.rte hr {
+  margin-block: var(--s-6);
+  border: 0;
+  border-block-start: var(--hairline);
+}
+
+.rte table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rte th,
+.rte td {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--c-line);
+  text-align: start;
+}
+
+.rte th {
+  font-weight: 500;
+}

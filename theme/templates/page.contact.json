@@ -1,0 +1,11 @@
+{
+  "order": ["header", "contact"],
+  "sections": {
+    "header": {
+      "type": "page-header"
+    },
+    "contact": {
+      "type": "contact-form"
+    }
+  }
+}

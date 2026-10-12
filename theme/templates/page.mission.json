@@ -1,0 +1,11 @@
+{
+  "order": ["header", "mission"],
+  "sections": {
+    "header": {
+      "type": "page-header"
+    },
+    "mission": {
+      "type": "page-mission"
+    }
+  }
+}

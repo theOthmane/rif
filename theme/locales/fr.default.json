@@ -160,6 +160,21 @@
     "whatsapp_order": "Commander sur WhatsApp",
     "whatsapp_message": "Bonjour RIFANO, je souhaite commander : {{ product }} ({{ variant }}) {{ link }}",
     "whatsapp_message_simple": "Bonjour RIFANO, je souhaite commander : {{ product }} {{ link }}",
-    "product_add_error": "Ce produit n'a pas pu être ajouté. Réessayez dans un instant."
+    "product_add_error": "Ce produit n'a pas pu être ajouté. Réessayez dans un instant.",
+    "contact_channels": "Nous joindre",
+    "contact_sav": "SAV",
+    "contact_form_title": "Écrivez-nous",
+    "contact_name": "Nom",
+    "contact_phone": "Téléphone",
+    "contact_email": "E-mail",
+    "contact_subject": "Sujet",
+    "contact_subject_order": "Commande",
+    "contact_subject_warranty": "Garantie / SAV",
+    "contact_subject_return": "Retour",
+    "contact_subject_other": "Autre",
+    "contact_message": "Message",
+    "contact_submit": "Envoyer",
+    "contact_success": "Merci, nous vous répondons rapidement.",
+    "mission_cta": "Découvrir la boutique"
   }
 }

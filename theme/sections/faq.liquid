@@ -1,0 +1,79 @@
+{% comment %}
+  FAQ (spec 11). The owner writes the page in admin as: each question is a
+  Heading 3, the paragraphs under it are its answer. This section splits
+  `page.content` on `<h3` and renders one native <details> per question, with
+  the content before the first heading as an intro. A page with no Heading 3
+  falls back to a plain rich-text page, and the FAQPage JSON-LD is built from
+  the same split, so the structured data can never disagree with the page.
+
+  Open and close is the browser's own <details>: keyboard accessible for free,
+  no JavaScript, and the optional height animation is CSS-only (pages.css).
+{% endcomment %}
+
+{{ 'pages.css' | asset_url | stylesheet_tag }}
+{{ 'rte.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign content = page.content
+  assign has_questions = false
+  if content != blank and content contains '<h3'
+    assign has_questions = true
+  endif
+  assign parts = content | split: '<h3'
+-%}
+
+<div class="faq page-width">
+  {%- if has_questions -%}
+    {%- assign intro = parts | first -%}
+    {%- if intro != blank -%}
+      <div class="faq__intro rte">{{ intro }}</div>
+    {%- endif -%}
+
+    <div class="faq__list">
+      {%- for part in parts offset: 1 -%}
+        {%- assign question_html = part | split: '</h3>' | first -%}
+        {%- assign question = question_html | split: '>' | slice: 1, 999 | join: '>' | strip -%}
+        {%- assign answer = part | split: '</h3>' | last -%}
+        <details class="faq__item">
+          <summary class="faq__question">
+            <span class="faq__question-text t-display">{{ question }}</span>
+            {% render 'icon', name: 'chevron-down', class: 'faq__chevron' %}
+          </summary>
+          <div class="faq__answer rte">{{ answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {%- for part in parts offset: 1 -%}
+            {%- assign question_html = part | split: '</h3>' | first -%}
+            {%- assign question = question_html | split: '>' | slice: 1, 999 | join: '>' | strip -%}
+            {%- assign answer = part | split: '</h3>' | last -%}
+            {
+              "@type": "Question",
+              "name": {{ question | strip_html | strip | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ answer | replace: '</p>', ' ' | replace: '</li>', ' ' | replace: '<br>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | json }}
+              }
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- elsif content != blank -%}
+    <div class="rte">{{ content }}</div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [],
+  "presets": [{ "name": "FAQ" }]
+}
+{% endschema %}
