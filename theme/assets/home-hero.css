@@ -187,7 +187,28 @@
    Without it the section stays the spec 06 poster version at normal height. */
 
 /* The runway: the pinned viewport below gets 160svh of scroll travel on
-   desktop, 120svh below 768px. Mobile-first: the short runway is the base. */
+   desktop, 120svh below 768px. Mobile-first: the short runway is the base.
+   The height is reserved from the server-rendered data-scrub attribute, so it
+   is already correct at first paint and adding .is-scrub moves nothing (it was
+   worth 0.0089 CLS: the rows below the hero jumped as the hero grew from one
+   screen to 260svh after load). Only for scriptable, motion-allowed screens:
+   a visitor without JS, or who asks for reduced motion, keeps the spec 06
+   one-screen poster version. hero-scrub.js drops the attribute when a
+   runtime-only gate (save-data, deviceMemory) closes, which hands the height
+   back — the .is-scrub rules below carry the same values for browsers that do
+   not support `scripting` in media queries. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .hero[data-scrub='true'] {
+    height: 220svh;
+  }
+}
+
+@media (min-width: 768px) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .hero[data-scrub='true'] {
+    height: 260svh;
+  }
+}
+
 .hero.is-scrub {
   height: 220svh;
 }

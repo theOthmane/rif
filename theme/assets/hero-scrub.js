@@ -12,20 +12,36 @@
   const cta = hero && hero.querySelector('.hero__cta');
   if (!hero || !sticky || !canvas || !framesEl || !cta || !canvas.getContext) return;
 
+  /* The runway height is reserved by CSS from this same attribute so the hero
+     is the right height at first paint (see home-hero.css). Any path that ends
+     the scrub has to hand the height back, or the visitor scrolls through empty
+     space: the media queries there cannot see save-data or deviceMemory. */
+  const releaseRunway = () => hero.removeAttribute('data-scrub');
+
   /* Activation gate: merchant switch, motion, data-saver, memory. Anything
      off keeps the spec 06 poster version at normal page height. */
   if (hero.dataset.scrub !== 'true') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (navigator.connection && navigator.connection.saveData) return;
-  if (navigator.deviceMemory && navigator.deviceMemory < 2) return;
+  if (navigator.connection && navigator.connection.saveData) {
+    releaseRunway();
+    return;
+  }
+  if (navigator.deviceMemory && navigator.deviceMemory < 2) {
+    releaseRunway();
+    return;
+  }
 
   let sets = null;
   try {
     sets = JSON.parse(framesEl.textContent);
   } catch (err) {
+    releaseRunway();
     return;
   }
-  if (!sets || !sets.desktop || !sets.mobile || !sets.desktop.length || !sets.mobile.length) return;
+  if (!sets || !sets.desktop || !sets.mobile || !sets.desktop.length || !sets.mobile.length) {
+    releaseRunway();
+    return;
+  }
 
   const ctx = canvas.getContext('2d');
   const bg = getComputedStyle(document.documentElement).getPropertyValue('--c-bg').trim() || 'black';
@@ -73,9 +89,12 @@
 
   const progress = () => Math.min(1, Math.max(0, (window.scrollY - geom.start) / geom.travel));
 
-  /* Rotation window p 0.15–0.85 sweeps the whole set; the ends hold. */
+  /* Rotation window p 0.15–0.55 sweeps the whole set; both ends hold. The
+     window closes before the peak so the watch is parked on the front view
+     while "Be RIFANO." rises (p 0.55–0.85), per the spec's peak rule:
+     nothing but line 2 may move there. */
   const target = (p) => {
-    const t = Math.min(1, Math.max(0, (p - 0.15) / 0.7));
+    const t = Math.min(1, Math.max(0, (p - 0.15) / 0.4));
     return Math.round(t * (urls.length - 1));
   };
 
@@ -109,10 +128,12 @@
     if (dead) return;
     const p = progress();
     const idx = target(p);
-    /* The tail (p >= 0.85) carries the floor/CTA choreography with a parked
-       frame index, so it updates every scroll frame; elsewhere only the
-       frame index matters. */
-    if (!force && idx === lastIdx && !(p >= 0.85 && p !== lastP)) return;
+    /* Publish whenever the frame index OR the progress moved. Gating on the
+       index alone froze --hero-p through the peak (the rotation parks at
+       p 0.55, the tagline still has to rise until 0.85) and through the
+       0.85–1 floor/CTA tail. 1/1000 of progress is below what a scroll
+       frame can produce, so this costs one style write per scrolling frame. */
+    if (!force && idx === lastIdx && Math.abs(p - lastP) < 0.001) return;
     lastIdx = idx;
     lastP = p;
     hero.style.setProperty('--hero-p', p.toFixed(4));
@@ -135,6 +156,12 @@
   const abort = () => {
     dead = true;
     hero.classList.remove('is-scrub', 'is-framed');
+    releaseRunway();
+    /* The fallback changes the page height under the visitor's feet: anyone
+       deep in the runway would be dropped into the middle of the rows below.
+       Put them back at the top of the hero, which is the poster version this
+       falls back to. */
+    if (window.scrollY > geom.start) window.scrollTo(0, Math.max(0, geom.start));
   };
 
   const pump = () => {
@@ -187,23 +214,35 @@
     { passive: true }
   );
 
-  /* Re-pick the set and re-size only when the width changes (150 ms
-     debounce). Height-only changes (mobile address bar) only refresh the
-     progress geometry — the canvas is never re-allocated or cleared. */
+  /* Any change in the canvas box re-allocates the backing store: a height-only
+     resize (mobile address bar, desktop window drag) resizes the box, and
+     leaving the old backing store in place stretches the frame vertically.
+     fit() is a no-op when the pixel size is unchanged, so this cannot cost a
+     repaint on its own; painted = null forces the nearest decoded frame to be
+     drawn again into the new store in the same task (no flash, no reset).
+     Only a width change re-picks the frame set. */
   let lastW = window.innerWidth;
+  let lastH = canvas.clientHeight;
   let resizeTimer = 0;
   window.addEventListener('resize', () => {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
       if (dead) return;
       measure();
-      if (window.innerWidth === lastW) return;
+      const wChanged = window.innerWidth !== lastW;
+      const hChanged = canvas.clientHeight !== lastH;
+      if (!wChanged && !hChanged) return;
       lastW = window.innerWidth;
-      activeKey = small() ? 'mobile' : 'desktop';
-      urls = sets[activeKey];
-      store = caches[activeKey];
+      lastH = canvas.clientHeight;
+      if (wChanged) {
+        activeKey = small() ? 'mobile' : 'desktop';
+        urls = sets[activeKey];
+        store = caches[activeKey];
+        buildQueue();
+        failed = 0;
+        pump();
+      }
       fit();
-      buildQueue();
       painted = null;
       /* A fresh set may have nothing near the current frame yet: show the
          poster until its first frame is ready instead of a blank canvas. */
@@ -211,9 +250,7 @@
         framed = false;
         hero.classList.remove('is-framed');
       }
-      failed = 0;
       update(true);
-      pump();
     }, 150);
   });
 

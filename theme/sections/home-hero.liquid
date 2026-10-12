@@ -91,6 +91,19 @@
 {% endif %}
 </hero-scrub>
 
+<noscript>
+  {%- comment -%}
+    The runway height is reserved in CSS from data-scrub so it is right at
+    first paint (CLS 0). Without scripting there is no scrub to scroll, so the
+    reservation has to go back — belt and braces alongside the `scripting:
+    enabled` guard in home-hero.css, and the safety net for a browser that does
+    not support that media feature.
+  {%- endcomment -%}
+  <style>
+    .hero[data-scrub='true'] { height: auto; }
+  </style>
+</noscript>
+
 <script src="{{ 'home-hero.js' | asset_url }}" type="module" defer></script>
 {% if scrub_enabled %}
   <script src="{{ 'hero-scrub.js' | asset_url }}" type="module" defer></script>
