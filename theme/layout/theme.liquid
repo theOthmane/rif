@@ -10,6 +10,14 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'header.css' | asset_url | stylesheet_tag }}
     {{ 'footer.css' | asset_url | stylesheet_tag }}
+    {%- comment -%}
+      Spec 12 deviation (owner-approved): policy pages render through this
+      layout with no template of their own, so the system styles reach them
+      only from here — and only on policy pages.
+    {%- endcomment -%}
+    {%- if request.page_type == 'policy' -%}
+      {{ 'system.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
 
     {% # Inlined CSS Variables. Must render after tokens.css so the merchant overrides of --page-max / --gutter win the cascade. %}
     {% render 'css-variables' %}

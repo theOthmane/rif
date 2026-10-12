@@ -1,13 +1,20 @@
-<div class="page-width">
-  <h1>{{ '404.title' | t }}</h1>
+{% comment %}
+  404 (spec 12): one centred column — the monogram at 64px, a display title,
+  one line, and two theme buttons. No browser-default blue anywhere.
+{% endcomment %}
 
-  <p>
-    {{ '404.not_found' | t }}
-  </p>
+{{ 'system.css' | asset_url | stylesheet_tag }}
 
-  <a href="{{ routes.all_products_collection_url }}">
-    {{ '404.back_to_shopping' | t }}
-  </a>
+<div class="not-found page-width">
+  <div class="not-found__mark" aria-hidden="true">
+    {% render 'logo', variant: 'monogram' %}
+  </div>
+  <h1 class="not-found__title t-page-title">{{ 'rifano.not_found_title' | t }}</h1>
+  <p class="not-found__text">{{ 'rifano.not_found_text' | t }}</p>
+  <div class="not-found__actions">
+    <a class="btn" href="{{ routes.root_url }}">{{ 'rifano.not_found_home' | t }}</a>
+    <a class="btn btn--ghost" href="{{ routes.collections_url }}">{{ 'rifano.not_found_boutique' | t }}</a>
+  </div>
 </div>
 
 {% schema %}

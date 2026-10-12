@@ -1,12 +1,23 @@
 {% layout none %}
 
+{% comment %}
+  Gift card (spec 12): kept functional, restyled with tokens — a centred
+  column with the lockup, the balance in Tenor (via the `money` filter, never
+  a hardcoded "DH"), the dark card with its mono-spaced code pill, a copy
+  button, the QR code and the Apple Wallet pass. Deliberately not over-invested.
+{% endcomment %}
+
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
+    {{ 'hanken-grotesk-var.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'tenor-sans-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+
     {% # Load and preload the critical CSS %}
     {{ 'tokens.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'system.css' | asset_url | stylesheet_tag }}
 
     {% # Inlined CSS Variables. Must render after tokens.css so the merchant overrides of --page-max / --gutter win the cascade. %}
     {% render 'css-variables' %}
@@ -21,48 +32,87 @@
     <a href="#main-content" class="skip-link">{{ 'rifano.skip_to_content' | t }}</a>
 
     <main id="main-content">
-      <div>
-        <h1>{{ gift_card.balance | money }}</h1>
+      <div class="gift">
+        <div class="gift__inner">
+          <div class="gift__brand" aria-hidden="true">
+            {% render 'logo', variant: 'lockup' %}
+          </div>
 
-        {% if gift_card.enabled == false or gift_card.expired %}
-          <p>{{ 'gift_card.expired' | t }}</p>
-        {% endif %}
+          <p class="gift__eyebrow t-label">{{ 'gift_card.card' | t }}</p>
+          <p class="gift__amount t-display">{{ gift_card.balance | money }}</p>
 
-        {% if gift_card.expires_on %}
-          {% assign expires_on = gift_card.expires_on | date: '%B %e, %Y' %}
-          <p>
-            {{ 'gift_card.expires_on' | t: expires_on: expires_on }}
-          </p>
-        {% endif %}
-
-        <p>
-          {% if settings.logo %}
-            {{ settings.logo | image_url: width: 300 | image_tag: alt: shop.name }}
-          {% else %}
-            <img
-              src="{{ 'gift-card/card.svg' | shopify_asset_url }}"
-              alt="{{ 'gift_card.card' | t }}"
-              width="300"
-              height="200"
-            >
+          {% if gift_card.enabled == false or gift_card.expired %}
+            <p class="gift__note" role="alert">{{ 'gift_card.expired' | t }}</p>
           {% endif %}
-        </p>
 
-        <h2>{{ shop.name }}</h2>
-        <p>{{ 'gift_card.use_at_checkout' | t }}</p>
-        <p>{{ gift_card.code | format_code }}</p>
+          {% if gift_card.expires_on %}
+            {% assign expires_on = gift_card.expires_on | date: '%d/%m/%Y' %}
+            <p class="gift__note">
+              {{ 'gift_card.expires_on' | t: expires_on: expires_on }}
+            </p>
+          {% endif %}
 
-        {% if gift_card.pass_url %}
-          <a href="{{ gift_card.pass_url }}">
-            <img
-              src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
-              alt="{{ 'gift_card.add_to_apple_wallet' | t }}"
-              width="200"
-              height="60"
+          <div class="gift__card">
+            <p class="gift__shop">{{ shop.name }}</p>
+            <p class="gift__code" data-gift-code>
+              <span class="visually-hidden">{{ 'gift_card.code_label' | t }}: </span>{{- gift_card.code | format_code -}}
+            </p>
+            <button
+              type="button"
+              class="btn btn--ghost"
+              data-gift-copy
+              data-copied="{{ 'rifano.gift_copied' | t }}"
             >
-          </a>
-        {% endif %}
+              {{ 'rifano.gift_copy' | t }}
+            </button>
+          </div>
+
+          <p class="gift__note">{{ 'gift_card.use_at_checkout' | t }}</p>
+
+          {% if gift_card.qr_identifier %}
+            <div class="gift__qr" id="qr-code" data-qr="{{ gift_card.qr_identifier | escape }}"></div>
+            <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+            <script defer>
+              (function () {
+                var el = document.getElementById('qr-code');
+                if (el && typeof QRCode !== 'undefined') {
+                  new QRCode(el, { text: el.getAttribute('data-qr'), width: 120, height: 120 });
+                }
+              })();
+            </script>
+          {% endif %}
+
+          {% if gift_card.pass_url %}
+            <a href="{{ gift_card.pass_url }}">
+              <img
+                src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
+                alt="{{ 'gift_card.add_to_apple_wallet' | t }}"
+                width="200"
+                height="60"
+              >
+            </a>
+          {% endif %}
+
+          <a class="btn btn--ghost gift__back" href="{{ routes.root_url }}">{{ 'rifano.not_found_home' | t }}</a>
+        </div>
       </div>
     </main>
+
+    <script type="module">
+      const copyButton = document.querySelector('[data-gift-copy]');
+      const code = document.querySelector('[data-gift-code]');
+      if (copyButton && code && navigator.clipboard) {
+        copyButton.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(code.textContent.trim());
+            copyButton.textContent = copyButton.getAttribute('data-copied');
+          } catch (error) {
+            /* Keep the label: the code stays selectable. */
+          }
+        });
+      } else if (copyButton) {
+        copyButton.hidden = true;
+      }
+    </script>
   </body>
 </html>

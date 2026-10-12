@@ -1,18 +1,4 @@
 {
-  "404": {
-    "title": "404",
-    "not_found": "Page introuvable.",
-    "back_to_shopping": "Retour aux achats"
-  },
-  "blog": {
-    "article_comments": "Commentaires",
-    "article_metadata_html": "{{ date }} par {{ author }}",
-    "comment_form_body": "Commentaire",
-    "comment_form_email": "E-mail",
-    "comment_form_name": "Nom",
-    "comment_form_submit": "Publier",
-    "comment_form_title": "Ajouter un commentaire"
-  },
   "cart": {
     "title": "Votre panier",
     "empty": "Votre panier est vide.",
@@ -52,6 +38,7 @@
   "gift_card": {
     "add_to_apple_wallet": "Ajouter à Apple Wallet",
     "card": "Carte cadeau",
+    "code_label": "Code de la carte cadeau",
     "expired": "Cette carte cadeau a expiré",
     "expires_on": "Expire le {{ expires_on }}",
     "use_at_checkout": "Utilisez cette carte cadeau au moment du paiement"
@@ -74,18 +61,6 @@
     "liquid_tips_1": "Préférez le contrôle des espaces avec {%- -%} pour un HTML propre",
     "liquid_tips_2": "Utilisez la balise render plutôt que include pour isoler chaque extrait",
     "liquid_tips_3": "Assignez les recherches coûteuses à une variable et réutilisez-la"
-  },
-  "password": {
-    "title": "Cette boutique est privée",
-    "password": "Mot de passe",
-    "enter": "Entrer"
-  },
-  "search": {
-    "title": "Recherche",
-    "placeholder": "Rechercher articles, pages ou produits",
-    "submit": "Rechercher",
-    "no_results_html": "Aucun résultat pour {{ terms }}",
-    "results_for_html": "{{ count }} résultats pour {{ terms }}"
   },
   "rifano": {
     "announcement": "Paiement à la livraison · Livraison gratuite partout au Maroc",
@@ -175,6 +150,31 @@
     "contact_message": "Message",
     "contact_submit": "Envoyer",
     "contact_success": "Merci, nous vous répondons rapidement.",
-    "mission_cta": "Découvrir la boutique"
+    "mission_cta": "Découvrir la boutique",
+    "search_title": "Recherche",
+    "search_count": {
+      "one": "{{ count }} résultat pour « {{ terms }} »",
+      "other": "{{ count }} résultats pour « {{ terms }} »"
+    },
+    "search_products": "Produits",
+    "search_pages": "Pages",
+    "search_empty_hint": "Tapez un mot-clé ci-dessus pour explorer la boutique.",
+    "search_no_results": "Aucun résultat pour « {{ terms }} ».",
+    "search_suggestions": "Essayez plutôt",
+    "search_boutique": "Toute la boutique",
+    "not_found_title": "Page introuvable",
+    "not_found_text": "Le temps est précieux, ne le perdez pas ici.",
+    "not_found_home": "Accueil",
+    "not_found_boutique": "Boutique",
+    "password_soon": "Bientôt.",
+    "password_email_label": "E-mail",
+    "password_email_placeholder": "Votre e-mail",
+    "password_signup": "Me prévenir",
+    "password_success": "Merci, vous serez prévenu en premier.",
+    "password_access": "Accès boutique",
+    "password_label": "Mot de passe",
+    "password_enter": "Entrer",
+    "gift_copy": "Copier le code",
+    "gift_copied": "Code copié"
   }
 }

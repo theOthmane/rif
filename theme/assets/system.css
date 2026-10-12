@@ -1,0 +1,477 @@
+/** RIFANO system pages (spec 12): search, 404, password "Bientôt", policies,
+    gift card. Tokens only — the shell's one-black, one-hairline language
+    carried onto the system templates. Display titles reuse the `.t-page-title`
+    helper from base.css (Tenor Sans via `--font-display`); this file owns
+    layout, rhythm and the few component details each page needs. */
+
+/* Search */
+.search {
+  padding-block-start: var(--section-y);
+  padding-block-end: var(--section-y);
+}
+
+.search__title {
+  margin-block: 0 var(--s-5);
+}
+
+.search__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-block-end: var(--s-6);
+}
+
+.search__input {
+  font-size: var(--fs-lg);
+}
+
+.search__submit {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .search__form {
+    flex-direction: row;
+  }
+
+  .search__submit {
+    width: auto;
+    flex: none;
+  }
+}
+
+.search__count {
+  margin-block: 0 var(--s-6);
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+.search__subtitle {
+  margin-block: var(--s-7) var(--s-4);
+}
+
+.search__subtitle:first-of-type {
+  margin-block-start: 0;
+}
+
+/* Text results (pages, articles): hairline rows, title + arrow, 44px+ target. */
+.search__rows {
+  list-style: none;
+  margin: 0 0 var(--s-5);
+  padding: 0;
+  border-block-start: var(--hairline);
+}
+
+.search__row {
+  border-block-end: var(--hairline);
+}
+
+.search__row-link {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-height: var(--s-8);
+  padding-block: var(--s-3);
+  color: var(--c-text);
+  text-decoration: none;
+}
+
+.search__row-title {
+  font-size: var(--fs-md);
+  line-height: var(--lh-snug);
+}
+
+.search__row-link:hover .search__row-title {
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+  text-decoration-thickness: 1px;
+}
+
+.search__row-icon {
+  margin-inline-start: auto;
+  color: var(--c-text-2);
+}
+
+/* Suggestions: home-row collections + the Boutique, as ghost buttons. */
+.search__suggest {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  margin-block-start: var(--s-6);
+}
+
+.search__suggest-label {
+  margin: 0;
+}
+
+.search__suggest-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+}
+
+/* 404: one centred column — monogram, display title, one line, two buttons. */
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  padding-block: var(--section-y);
+  text-align: center;
+}
+
+.not-found__mark {
+  --logo-size: var(--s-8);
+}
+
+.not-found__title {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.not-found__text {
+  margin: 0;
+  color: var(--c-text-2);
+}
+
+.not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-3);
+  margin-block-start: var(--s-3);
+}
+
+/* Password "Bientôt": full-viewport, centred column, no header or footer. */
+.password {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: var(--s-6) var(--gutter);
+  background: var(--c-bg);
+}
+
+.password__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+  max-width: 42ch;
+  text-align: center;
+}
+
+.password__brand {
+  color: var(--c-text);
+  text-decoration: none;
+}
+
+.password__title {
+  margin: 0;
+}
+
+.password__tagline {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+
+.password__welcome {
+  margin: 0;
+}
+
+.password__message {
+  margin: 0;
+  color: var(--c-text-2);
+  font-size: var(--fs-sm);
+}
+
+.password__form {
+  display: grid;
+  gap: var(--s-4);
+  width: 100%;
+  text-align: start;
+}
+
+.password__success {
+  margin: 0;
+  padding: var(--s-4);
+  border: 1px solid var(--c-success);
+  border-radius: var(--radius-sm);
+  color: var(--c-success);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+.password__errors {
+  padding: var(--s-4);
+  border: 1px solid var(--c-danger);
+  border-radius: var(--radius-sm);
+  color: var(--c-danger);
+  font-size: var(--fs-sm);
+}
+
+.password__errors ul {
+  margin: 0;
+  padding-inline-start: var(--s-5);
+}
+
+/* Boutique access: a small disclosure holding the password form. */
+.password__access {
+  width: 100%;
+  border-block-start: var(--hairline);
+  padding-block-start: var(--s-4);
+}
+
+.password__access-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--s-8);
+  padding-inline: var(--s-3);
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+  text-decoration-thickness: 1px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.password__access-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.password__access-toggle:hover {
+  color: var(--c-text);
+}
+
+.password__access-body {
+  padding-block-start: var(--s-4);
+}
+
+.password__socials {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: var(--s-2);
+  margin: var(--s-3) 0 0;
+  padding: 0;
+}
+
+.password__social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--s-8);
+  min-height: var(--s-8);
+  color: var(--c-text-2);
+  text-decoration: none;
+  transition: color var(--dur-1) var(--ease-out);
+}
+
+.password__social:hover {
+  color: var(--c-text);
+}
+
+/* Policies: Shopify renders these through theme.liquid inside
+   `.shopify-policy__container`. One measure, centred; the title speaks in
+   Tenor and the body follows the rte rules from spec 11. */
+.shopify-policy__container {
+  max-width: 65ch;
+  margin-inline: auto;
+  padding-block: var(--section-y);
+  padding-inline: var(--gutter);
+}
+
+.shopify-policy__title {
+  margin-block: 0 var(--s-6);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: var(--fs-2xl);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.shopify-policy__body {
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--c-text);
+}
+
+.shopify-policy__body > :first-child {
+  margin-block-start: 0;
+}
+
+.shopify-policy__body > :last-child {
+  margin-block-end: 0;
+}
+
+.shopify-policy__body p,
+.shopify-policy__body ul,
+.shopify-policy__body ol,
+.shopify-policy__body table {
+  margin-block: 0 var(--s-5);
+}
+
+.shopify-policy__body h2,
+.shopify-policy__body h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+.shopify-policy__body h2 {
+  margin-block: var(--s-7) var(--s-4);
+  font-size: var(--fs-xl);
+}
+
+.shopify-policy__body h3 {
+  margin-block: var(--s-6) var(--s-3);
+  font-size: var(--fs-lg);
+}
+
+.shopify-policy__body a {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-decoration-color: var(--c-line-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.shopify-policy__body a:hover {
+  text-decoration-color: var(--c-accent);
+}
+
+.shopify-policy__body ul,
+.shopify-policy__body ol {
+  padding-inline-start: var(--s-5);
+}
+
+.shopify-policy__body li::marker {
+  color: var(--c-accent);
+}
+
+.shopify-policy__body li + li {
+  margin-block-start: var(--s-2);
+}
+
+.shopify-policy__body strong {
+  font-weight: 600;
+}
+
+.shopify-policy__body hr {
+  margin-block: var(--s-6);
+  border: 0;
+  border-block-start: var(--hairline);
+}
+
+.shopify-policy__body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.shopify-policy__body th,
+.shopify-policy__body td {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--c-line);
+  text-align: start;
+}
+
+.shopify-policy__body th {
+  font-weight: 500;
+}
+
+/* Gift card: centred column — lockup, balance, the dark card with its code
+   pill, and the QR. Kept functional, per spec. */
+.gift {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: var(--s-6) var(--gutter);
+  background: var(--c-bg);
+}
+
+.gift__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+  max-width: 42ch;
+  text-align: center;
+}
+
+.gift__eyebrow {
+  margin: 0;
+}
+
+.gift__amount {
+  margin: 0;
+  font-size: var(--fs-2xl);
+}
+
+.gift__note {
+  margin: 0;
+  color: var(--c-text-2);
+  font-size: var(--fs-sm);
+}
+
+.gift__note[role='alert'] {
+  color: var(--c-danger);
+}
+
+.gift__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+  padding: var(--s-6) var(--s-5);
+  background: var(--c-surface);
+  border: var(--hairline);
+  border-radius: var(--radius-md);
+}
+
+.gift__shop {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+}
+
+.gift__code {
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  font-size: var(--fs-lg);
+  letter-spacing: 0.08em;
+  color: var(--c-text);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-sm);
+}
+
+.gift__qr {
+  display: flex;
+  justify-content: center;
+}
+
+.gift__qr img {
+  border-radius: var(--radius-sm);
+}
+
+.gift__back {
+  margin-block-start: var(--s-2);
+}
