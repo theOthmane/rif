@@ -99,7 +99,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 08 collection + boutique | ✅ | 7cd641d |
 | 17 fonts + footer redesign | ✅ | 2e687df |
 | 07 home rows | ✅ | 5223fe8 |
-| 09 product | ⚠️ Gate C blocked: store has 0 products | — |
+| 09 product | ⚠️ Gate C blocked: store has 0 products | 1828643 |
 | 10 cart | ⬜ | — |
 | 11 content pages | ⬜ | — |
 | 12 system pages | ⬜ | — |
