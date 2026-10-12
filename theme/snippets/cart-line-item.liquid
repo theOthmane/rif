@@ -1,0 +1,95 @@
+{% doc %}
+  One cart line, shared by the cart drawer and the cart page.
+
+  The line is a grid: media, info, quantity stepper, remove link, line price
+  and an error region. The quantity input is named `updates[]` only on the
+  page, so the page form can update quantities without JavaScript; the
+  drawer's input stays unnamed because its steppers always go through
+  `/cart/change.js`.
+
+  @param {object} item - The line_item to render
+  @param {string} context - 'drawer' or 'page'; controls the input name
+  @param {number} index - 1-based line position, the `line` for change.js
+
+  @example
+  {% render 'cart-line-item', item: item, context: 'drawer', index: forloop.index %}
+{% enddoc %}
+
+{%- liquid
+  assign line_title = item.product.title
+  assign quantity_id = context | append: '-qty-' | append: index
+-%}
+
+<li class="cart-line" data-cart-line="{{ index }}" data-cart-key="{{ item.key | escape }}">
+  <a class="cart-line__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+    {%- if item.image -%}
+      {{ item.image | image_url: width: 160 | image_tag: class: 'cart-line__image', loading: 'lazy', alt: '' }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'cart-line__placeholder' }}
+    {%- endif -%}
+  </a>
+
+  <div class="cart-line__info">
+    <a class="cart-line__title" href="{{ item.url }}">{{ line_title }}</a>
+    {%- unless item.product.has_only_default_variant -%}
+      <p class="cart-line__variant t-muted">{{ item.variant.title }}</p>
+    {%- endunless -%}
+    <p class="cart-line__unit">
+      <span class="cart-line__unit-price">{{ item.final_price | money }}</span>
+      {%- if item.variant.compare_at_price > item.original_price -%}
+        <s class="cart-line__unit-compare">{{ item.variant.compare_at_price | money }}</s>
+      {%- endif -%}
+    </p>
+  </div>
+
+  <div class="cart-line__controls">
+    <quantity-input class="qty">
+      <button
+        type="button"
+        class="qty__button"
+        data-qty-down
+        data-cart-action="decrease"
+        aria-label="{{ 'cart.qty_decrease' | t: title: line_title | escape }}"
+      >
+        {% render 'icon', name: 'minus', class: 'qty__icon' %}
+      </button>
+      <label class="visually-hidden" for="{{ quantity_id }}">
+        {{- 'cart.qty_label' | t: title: line_title -}}
+      </label>
+      <input
+        type="number"
+        class="qty__input"
+        id="{{ quantity_id }}"
+        value="{{ item.quantity }}"
+        min="1"
+        step="1"
+        inputmode="numeric"
+        {% if context == 'page' %}name="updates[]"{% endif %}
+        data-qty-input
+        data-cart-action="input"
+      >
+      <button
+        type="button"
+        class="qty__button"
+        data-qty-up
+        data-cart-action="increase"
+        aria-label="{{ 'cart.qty_increase' | t: title: line_title | escape }}"
+      >
+        {% render 'icon', name: 'plus', class: 'qty__icon' %}
+      </button>
+    </quantity-input>
+    <p class="cart-line__line-price">{{ item.final_line_price | money }}</p>
+  </div>
+
+  <a class="cart-line__remove" href="{{ item.url_to_remove }}" data-cart-action="remove">
+    {{- 'cart.remove' | t -}}
+    <span class="visually-hidden"> — {{ line_title }}</span>
+  </a>
+
+  <p
+    class="cart-line__error"
+    data-cart-line-error
+    aria-live="polite"
+    data-message="{{ 'cart.error' | t | escape }}"
+  ></p>
+</li>

@@ -1,0 +1,40 @@
+{% doc %}
+  Cart totals, shared by the cart drawer and the cart page: subtotal, the
+  free-delivery line, the one COD sentence, and the checkout submit. The
+  drawer also gets the link to the full cart page.
+
+  The checkout control is a plain submit with `name="checkout"` inside the
+  surrounding form — that is how native Shopify checkout is reached, and
+  there is no checkout route to link to.
+
+  @param {string} context - 'drawer' or 'page'
+
+  @example
+  {% render 'cart-totals', context: 'drawer' %}
+{% enddoc %}
+
+<div class="cart-totals">
+  <div class="cart-totals__row">
+    <span class="cart-totals__label t-label">{{ 'cart.subtotal' | t }}</span>
+    <span class="cart-totals__value">{{ cart.items_subtotal_price | money }}</span>
+  </div>
+  <div class="cart-totals__row">
+    <span class="cart-totals__label t-label">{{ 'cart.shipping' | t }}</span>
+    <span class="cart-totals__value cart-totals__value--free t-muted">{{ 'cart.shipping_free' | t }}</span>
+  </div>
+
+  <p class="cart-totals__note t-muted">{{ 'cart.cod' | t }}</p>
+
+  <button
+    type="submit"
+    name="checkout"
+    class="btn btn--block cart-totals__checkout"
+    data-cart-checkout
+  >
+    {{- 'cart.checkout' | t -}}
+  </button>
+
+  {%- if context == 'drawer' -%}
+    <a class="cart-totals__view" href="{{ routes.cart_url }}">{{ 'cart.view_cart' | t }}</a>
+  {%- endif -%}
+</div>

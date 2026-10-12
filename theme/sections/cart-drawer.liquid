@@ -1,0 +1,86 @@
+{% comment %}
+  Cart drawer (spec 10). Rendered statically by layout/theme.liquid, so it has
+  the stable section id `cart-drawer` — the id the Cart API's bundled section
+  rendering asks for after every add or change. The dialog itself is never
+  replaced: cart.js swaps only [data-cart-contents] and the head count, so an
+  open dialog, its focus and its scroll survive a re-render.
+{% endcomment %}
+
+{{ 'cart.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart.js' | asset_url }}" type="module" defer></script>
+
+<cart-drawer data-cart-change-url="{{ routes.cart_change_url }}">
+  <dialog
+    id="cart-drawer"
+    class="cart-drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cart-drawer-title"
+    tabindex="-1"
+    scroll-lock
+  >
+    <div class="cart-drawer__panel">
+      <div class="cart-drawer__head">
+        <div class="cart-drawer__heading">
+          <h2 id="cart-drawer-title" class="cart-drawer__title t-display">{{ 'cart.title' | t }}</h2>
+          <p
+            class="cart-drawer__count t-muted"
+            data-cart-drawer-count
+            {% if cart.item_count == 0 %}hidden{% endif %}
+          >
+            {%- if cart.item_count > 0 -%}
+              {{ 'cart.item_count' | t: count: cart.item_count }}
+            {%- endif -%}
+          </p>
+        </div>
+        <button
+          type="button"
+          class="icon-button cart-drawer__close"
+          data-cart-close
+          aria-label="{{ 'cart.close' | t }}"
+        >
+          {% render 'icon', name: 'close' %}
+        </button>
+      </div>
+
+      <cart-items class="cart-drawer__items" data-cart-region="drawer">
+        <form id="cart-drawer-form" class="cart-drawer__form" action="{{ routes.cart_url }}" method="post">
+          <div class="cart-drawer__contents" data-cart-contents>
+            <div class="cart-drawer__body" data-cart-scroll>
+              {%- if cart.item_count > 0 -%}
+                <ul class="cart-lines">
+                  {%- for item in cart.items -%}
+                    {% render 'cart-line-item', item: item, context: 'drawer', index: forloop.index %}
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                {% render 'cart-empty' %}
+              {%- endif -%}
+            </div>
+
+            {%- if cart.item_count > 0 -%}
+              <div class="cart-drawer__footer">
+                {% render 'cart-totals', context: 'drawer' %}
+              </div>
+            {%- endif -%}
+          </div>
+        </form>
+      </cart-items>
+    </div>
+  </dialog>
+
+  <p
+    class="visually-hidden"
+    aria-live="polite"
+    data-cart-announcement
+    data-message="{{ 'cart.updated' | t | escape }}"
+  ></p>
+</cart-drawer>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [],
+  "presets": [{ "name": "Cart drawer" }]
+}
+{% endschema %}

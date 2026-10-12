@@ -1,0 +1,33 @@
+{% doc %}
+  The empty cart state, shared by the drawer and the page: one line, then
+  the two doors. Each door is a RIFANO setting (a collection) and falls
+  back to the all-collections page, so the state works before the owner
+  creates the collections.
+
+  @example
+  {% render 'cart-empty' %}
+{% enddoc %}
+
+{%- liquid
+  assign fallback_url = routes.collections_url
+
+  if settings.cart_empty_montres != blank
+    assign montres_url = settings.cart_empty_montres.url
+  else
+    assign montres_url = fallback_url
+  endif
+
+  if settings.cart_empty_colliers != blank
+    assign colliers_url = settings.cart_empty_colliers.url
+  else
+    assign colliers_url = fallback_url
+  endif
+-%}
+
+<div class="cart-empty">
+  <p class="cart-empty__text">{{ 'cart.empty' | t }}</p>
+  <div class="cart-empty__actions">
+    <a class="btn cart-empty__action" href="{{ montres_url }}">{{ 'cart.continue' | t }}</a>
+    <a class="btn btn--ghost cart-empty__action" href="{{ colliers_url }}">{{ 'cart.continue_colliers' | t }}</a>
+  </div>
+</div>

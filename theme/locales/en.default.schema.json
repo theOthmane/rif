@@ -53,7 +53,11 @@
     "warranty_text": "Warranty text",
     "returns_text": "Returns text",
     "home_rows_menu": "Home rows menu",
-    "rows_visible": "Visible rows"
+    "rows_visible": "Visible rows",
+    "cart_type": "Cart type",
+    "cart_show_note": "Show order note field",
+    "cart_empty_montres": "Empty cart: watches collection",
+    "cart_empty_colliers": "Empty cart: necklaces collection"
   },
   "options": {
     "alignment": {
@@ -68,6 +72,10 @@
     "page_width": {
       "narrow": "Narrow",
       "wide": "Wide"
+    },
+    "cart_type": {
+      "drawer": "Drawer",
+      "page": "Cart page"
     },
     "size": {
       "large": "Large",

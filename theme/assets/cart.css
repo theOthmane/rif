@@ -1,0 +1,462 @@
+/** RIFANO cart — drawer and page (spec 10). Tokens live in tokens.css.
+    The shell's rules at cart scale: one black, one hairline, one accent. */
+
+cart-items {
+  display: block;
+}
+
+/* Drawer
+   ------------------------------------------------------------------
+   Same construction as the menu drawer (header.css): a full-height
+   dialog sliding in from the right, a hairline edge, the page dimmed
+   behind the backdrop. Full-width sheet under ~420px, which is where
+   the menu drawer's width expression lands too. */
+
+.cart-drawer {
+  margin: 0;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-left: var(--hairline);
+  width: min(calc(var(--s-9) * 4 + var(--s-6) + var(--s-1)), 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  background: var(--c-surface);
+  color: var(--c-text);
+  transform: translateX(100%);
+  transition: transform var(--dur-2) var(--ease-out), display var(--dur-2) allow-discrete;
+}
+
+.cart-drawer[open] {
+  transform: translateX(0);
+}
+
+@starting-style {
+  .cart-drawer[open] {
+    transform: translateX(100%);
+  }
+}
+
+.cart-drawer::backdrop {
+  background: color-mix(in srgb, var(--c-bg) 60%, transparent);
+}
+
+.cart-drawer__panel {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.cart-drawer__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--gutter);
+  border-bottom: var(--hairline);
+}
+
+.cart-drawer__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  min-width: 0;
+}
+
+.cart-drawer__title {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+
+.cart-drawer__count {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.cart-drawer__count[hidden] {
+  display: none;
+}
+
+.cart-drawer__items {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.cart-drawer__form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* The swap target spans the scrolling body and the pinned footer, so a
+   re-render replaces both in one pass while the form still lays them out
+   as direct children. */
+.cart-drawer__contents {
+  display: contents;
+}
+
+.cart-drawer__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--s-2) var(--gutter) var(--s-4);
+}
+
+.cart-drawer__footer {
+  flex: none;
+  border-top: var(--hairline);
+  padding: var(--s-4) var(--gutter);
+}
+
+/* Lines
+   ------------------------------------------------------------------ */
+
+.cart-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cart-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "media info"
+    "media controls"
+    "media remove"
+    "error error";
+  column-gap: var(--s-4);
+  row-gap: var(--s-2);
+  align-items: start;
+  padding-block: var(--s-4);
+}
+
+.cart-line + .cart-line {
+  border-top: var(--hairline);
+}
+
+.cart-line__media {
+  grid-area: media;
+  display: block;
+  inline-size: var(--s-8);
+  block-size: var(--s-8);
+  background: var(--c-surface-2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.cart-line__image,
+.cart-line__placeholder {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  padding: var(--s-1);
+  fill: var(--c-silver-3);
+}
+
+.cart-line__info {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  min-width: 0;
+}
+
+.cart-line__title {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+  text-decoration: none;
+}
+
+.cart-line__title:hover {
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+}
+
+.cart-line__variant {
+  margin: 0;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+}
+
+.cart-line__unit {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  font-size: var(--fs-xs);
+  color: var(--c-text-2);
+}
+
+.cart-line__unit-compare {
+  text-decoration-thickness: 1px;
+}
+
+.cart-line__controls {
+  grid-area: controls;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.cart-line__line-price {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+.cart-line__remove {
+  grid-area: remove;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--s-7);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+  text-decoration: none;
+}
+
+.cart-line__remove:hover {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+}
+
+.cart-line__error {
+  grid-area: error;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--c-danger);
+}
+
+/* Quantity stepper
+   ------------------------------------------------------------------
+   Same construction as the product page's (product.css): a bordered
+   48px row, the number between two hairline dividers, no native spinner. */
+
+.qty {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-sm);
+}
+
+.qty__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--s-7);
+  min-block-size: var(--s-7);
+  padding: 0;
+  color: var(--c-text);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease-out);
+}
+
+.qty__button:hover {
+  color: var(--c-silver-2);
+}
+
+.qty__button[disabled] {
+  color: var(--c-text-2);
+  cursor: not-allowed;
+}
+
+.qty__icon {
+  inline-size: var(--s-4);
+  block-size: var(--s-4);
+}
+
+/* The doubled selector outranks base.css `input[type="number"]`, which
+   would otherwise size the stepper by the browser's default width. */
+.qty .qty__input {
+  inline-size: calc(var(--s-8) - var(--s-3));
+  min-height: var(--s-7);
+  padding: 0;
+  border: 0;
+  border-inline: 1px solid var(--c-line-strong);
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.qty .qty__input::-webkit-outer-spin-button,
+.qty .qty__input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+/* Totals
+   ------------------------------------------------------------------ */
+
+.cart-totals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.cart-totals__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.cart-totals__label {
+  margin: 0;
+}
+
+.cart-totals__value {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+.cart-totals__value--free {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+}
+
+/* A promise is a sentence: body font, sentence case, --fs-sm (DESIGN.md). */
+.cart-totals__note {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+}
+
+.cart-totals__checkout {
+  margin-block-start: var(--s-2);
+}
+
+.cart-totals__view {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--s-7);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+  text-decoration: none;
+}
+
+.cart-totals__view:hover {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+}
+
+/* Empty state
+   ------------------------------------------------------------------ */
+
+.cart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-5);
+  padding-block: var(--s-6);
+}
+
+.cart-empty__text {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--c-text);
+}
+
+.cart-empty__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.cart-empty__action {
+  min-block-size: var(--s-8);
+}
+
+/* Cart page
+   ------------------------------------------------------------------ */
+
+.cart-page {
+  padding-block: var(--s-6) var(--section-y);
+}
+
+.cart-page__title {
+  margin: 0 0 var(--s-6);
+}
+
+.cart-page__layout {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.cart-page__update-wrap {
+  margin-block-start: var(--s-4);
+}
+
+/* The steppers and the change.js path replace this control the moment
+   cart.js is alive; without JavaScript the element never upgrades and the
+   button stays visible, which is the whole no-JS update path. */
+cart-items:defined .cart-page__update-wrap {
+  display: none;
+}
+
+.cart-page__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  padding: var(--s-5);
+  background: var(--c-surface);
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+}
+
+.cart-page__note {
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-page__note textarea {
+  min-height: calc(var(--s-8) * 2);
+  resize: vertical;
+}
+
+/* Desktop: lines left, totals right (spec 10 §5). */
+@media (min-width: 768px) {
+  .cart-page__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+    gap: var(--s-7);
+    align-items: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-drawer {
+    transform: none;
+    transition: none;
+  }
+}

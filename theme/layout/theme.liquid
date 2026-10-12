@@ -43,6 +43,16 @@
       </main>
 
       {% sections 'footer-group' %}
+
+      {%- comment -%}
+        Static render so the drawer keeps the stable section id `cart-drawer`
+        (spec 10): that id is what the Cart API's bundled section rendering
+        asks for. Page mode ships no drawer — the header link and the product
+        form then behave natively.
+      {%- endcomment -%}
+      {%- if settings.cart_type == 'drawer' -%}
+        {% section 'cart-drawer' %}
+      {%- endif -%}
     </div>
   </body>
 </html>

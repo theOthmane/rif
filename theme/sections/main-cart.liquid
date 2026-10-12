@@ -1,33 +1,83 @@
-<div class="page-width">
-  <h1>{{ 'cart.title' | t }}</h1>
+{% comment %}
+  Cart page (spec 10). Same lines and totals as the drawer, laid out as two
+  columns on desktop. Works without JavaScript: the form posts updates[] and a
+  name="checkout" submit to the native cart routes, and remove links use the
+  line item's url_to_remove. cart.js upgrades it — steppers and remove links
+  go through /cart/change.js and the shared regions re-render from the
+  response — and the "Mettre à jour" button stands down once the module is
+  alive (cart-items:defined).
+{% endcomment %}
 
-  <form action="{{ routes.cart_url }}" method="post">
-    <table>
-      {% for item in cart.items %}
-        <tr>
-          <td>
-            {% render 'image', image: item.image, url: item.url %}
-          </td>
-          <td>
-            <p>{{ item.product.title }}</p>
-            {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-          </td>
-          <td>
-            <input type="text" name="updates[]" value="{{ item.quantity }}">
-            <input type="submit" value="{{ 'cart.update' | t }}">
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
+{{ 'cart.css' | asset_url | stylesheet_tag }}
+{%- unless settings.cart_type == 'drawer' -%}
+  <script src="{{ 'cart.js' | asset_url }}" type="module" defer></script>
+{%- endunless -%}
 
-    <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
-  </form>
+<div
+  class="cart-page page-width"
+  data-cart-page
+  data-cart-change-url="{{ routes.cart_change_url }}"
+>
+  <h1 class="cart-page__title t-page-title">{{ 'cart.title' | t }}</h1>
+
+  <cart-items data-cart-region="page">
+    <form action="{{ routes.cart_url }}" method="post" class="cart-page__form">
+      <div data-cart-contents>
+        {%- if cart.item_count > 0 -%}
+          <div class="cart-page__layout">
+            <div class="cart-page__lines">
+              <ul class="cart-lines">
+                {%- for item in cart.items -%}
+                  {% render 'cart-line-item', item: item, context: 'page', index: forloop.index %}
+                {%- endfor -%}
+              </ul>
+              <div class="cart-page__update-wrap">
+                <button type="submit" name="update" class="btn btn--ghost cart-page__update">
+                  {{- 'cart.update' | t -}}
+                </button>
+              </div>
+            </div>
+
+            <aside class="cart-page__aside">
+              {%- if section.settings.show_note -%}
+                <div class="cart-page__note">
+                  <label for="cart-note">{{ 'cart.note_label' | t }}</label>
+                  <textarea id="cart-note" name="note">{{ cart.note }}</textarea>
+                </div>
+              {%- endif -%}
+              {% render 'cart-totals', context: 'page' %}
+            </aside>
+          </div>
+        {%- else -%}
+          <div class="cart-page__empty">
+            {% render 'cart-empty' %}
+          </div>
+        {%- endif -%}
+      </div>
+    </form>
+  </cart-items>
+
+  {%- unless settings.cart_type == 'drawer' -%}
+    <p
+      class="visually-hidden"
+      aria-live="polite"
+      data-cart-announcement
+      data-message="{{ 'cart.updated' | t | escape }}"
+    ></p>
+  {%- endunless -%}
 </div>
 
 {% schema %}
 {
   "name": "Main cart",
-  "settings": [],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_note",
+      "label": "t:labels.cart_show_note",
+      "default": false
+    }
+  ],
   "presets": [{ "name": "Main cart" }]
 }
 {% endschema %}

@@ -71,6 +71,32 @@
         "default": 3
       },
       {
+        "type": "select",
+        "id": "cart_type",
+        "label": "t:labels.cart_type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "t:options.cart_type.drawer"
+          },
+          {
+            "value": "page",
+            "label": "t:options.cart_type.page"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "collection",
+        "id": "cart_empty_montres",
+        "label": "t:labels.cart_empty_montres"
+      },
+      {
+        "type": "collection",
+        "id": "cart_empty_colliers",
+        "label": "t:labels.cart_empty_colliers"
+      },
+      {
         "type": "image_picker",
         "id": "hero_poster",
         "label": "Hero poster"

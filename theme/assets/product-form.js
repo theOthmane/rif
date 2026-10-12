@@ -12,12 +12,16 @@
  *    gallery. An option value with no available variant behind it is struck
  *    through and labelled, but stays selectable: a shopper who wants the sold
  *    out size can still see it and ask for it.
- * 2. Add to cart. Posts JSON to `routes.cart_add_url + '.js'`. On success it
- *    dispatches `cart:added` on `document`, carrying the cart and the line.
- *    Spec 10 listens for that event, opens the drawer and calls
- *    `preventDefault()`; until then nothing listens, the event stays
+ * 2. Add to cart. In `drawer` mode, posts JSON to `routes.cart_add_url + '.js'`.
+ *    Before the request goes out, a `cart:before-add` event lets the cart
+ *    module (spec 10) add its `sections` bundle to the body, so the response
+ *    carries the rendered drawer and header HTML. On success it dispatches
+ *    `cart:added` on `document`, carrying the cart, the line and the button
+ *    that triggered it. Spec 10 listens for that event, opens the drawer and
+ *    calls `preventDefault()`; until then nothing listens, the event stays
  *    uncancelled, and this module falls back to `routes.cart_url` so the
- *    shopper still sees their order.
+ *    shopper still sees their order. In `page` mode the form is left alone
+ *    and posts natively to /cart/add, landing on /cart.
  * 3. The WhatsApp link rewrites itself on variant change. The message lives
  *    once, in French, in the locale file; this module splices the new variant
  *    title into the part the sentinel marks.
@@ -66,6 +70,8 @@ if (info) {
     fieldsets: Array.from(info.querySelectorAll('[data-option]')),
     cartAddUrl: info.dataset.cartAddUrl,
     cartUrl: info.dataset.cartUrl,
+    cartType: info.dataset.cartType,
+    pending: false,
   };
 
   // The variant id only starts being submitted once this module has taken
@@ -283,12 +289,30 @@ function bindAddToCart(state) {
   if (!form || !atc || !state.cartAddUrl) return;
 
   form.addEventListener('submit', async (event) => {
+    // `page` mode keeps the form native: no interception, the browser posts
+    // to /cart/add and Shopify lands the shopper on /cart. Only the drawer
+    // needs the fetch path.
+    if (state.cartType === 'page') return;
+
     event.preventDefault();
+    if (state.pending) return;
+
     if (state.error) state.error.textContent = '';
 
     const id = state.idInput ? Number(state.idInput.value) : 0;
     const quantity = state.quantity ? Number(state.quantity.value) || 1 : 1;
     const line = { id, quantity };
+
+    // Captured before the buttons are disabled: a disabled element loses
+    // focus, and the drawer hands focus back to this element on close.
+    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : state.atc;
+
+    // Spec 10's cart module listens here and adds `sections` (drawer,
+    // header) to the request, so the add response already carries the
+    // rendered HTML the drawer opens with. With no listener the body is
+    // untouched and the add behaves exactly as before.
+    const request = { items: [line] };
+    document.dispatchEvent(new CustomEvent('cart:before-add', { detail: { body: request } }));
 
     setBusy(state, true);
 
@@ -299,20 +323,21 @@ function bindAddToCart(state) {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify({ items: [line] }),
+        body: JSON.stringify(request),
       });
 
       if (!response.ok) throw new Error(String(response.status));
 
       const cart = await response.json();
 
-      // Spec 10 listens here and opens the drawer. Until it exists nothing
-      // listens, the event stays uncancelled, and that is the signal to send
-      // the shopper to the cart page: `dispatchEvent` returns false only when
-      // a listener called `preventDefault()`, so a `true` return means nobody
-      // handled the add and the redirect is the only feedback the shopper gets.
+      // Spec 10 listens here, opens the drawer and cancels the event. A
+      // `true` return means nobody handled the add, and the redirect is the
+      // only feedback the shopper gets.
       const unhandled = document.dispatchEvent(
-        new CustomEvent('cart:added', { detail: { cart, item: line }, cancelable: true })
+        new CustomEvent('cart:added', {
+          detail: { cart, item: line, trigger },
+          cancelable: true,
+        })
       );
 
       if (unhandled && state.cartUrl) window.location.href = state.cartUrl;
@@ -331,8 +356,21 @@ function bindAddToCart(state) {
 }
 
 function setBusy(state, busy) {
+  state.pending = busy;
   for (const button of [state.atc, state.stickyButton]) {
-    if (button) button.setAttribute('aria-busy', busy ? 'true' : 'false');
+    if (!button) continue;
+    button.setAttribute('aria-busy', busy ? 'true' : 'false');
+    // Disabled while pending (spec 10): a second submit mid-request would
+    // add a second line. The pre-request state is remembered and restored,
+    // so a sold-out button comes back disabled rather than being re-enabled
+    // by this function — the variant picker is the only thing allowed to
+    // change a button's availability.
+    if (busy) {
+      button.dataset.wasDisabled = button.disabled ? 'true' : 'false';
+      button.disabled = true;
+    } else {
+      button.disabled = button.dataset.wasDisabled === 'true';
+    }
   }
 }
 

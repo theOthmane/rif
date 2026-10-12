@@ -14,10 +14,29 @@
     "comment_form_title": "Ajouter un commentaire"
   },
   "cart": {
+    "title": "Votre panier",
+    "empty": "Votre panier est vide.",
+    "continue": "Découvrir les montres",
+    "continue_colliers": "Découvrir les colliers",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "shipping_free": "Gratuite",
+    "cod": "Paiement à la livraison",
     "checkout": "Commander",
-    "title": "Panier",
+    "view_cart": "Voir le panier",
+    "remove": "Retirer",
     "update": "Mettre à jour",
-    "remove": "Retirer"
+    "updated": "Panier mis à jour",
+    "close": "Fermer",
+    "qty_decrease": "Diminuer la quantité de {{ title }}",
+    "qty_increase": "Augmenter la quantité de {{ title }}",
+    "qty_label": "Quantité de {{ title }}",
+    "item_count": {
+      "one": "{{ count }} pièce",
+      "other": "{{ count }} pièces"
+    },
+    "error": "Mise à jour impossible. Réessayez.",
+    "note_label": "Note de commande"
   },
   "customers": {
     "login": {
@@ -81,7 +100,10 @@
     "search_placeholder": "Rechercher un article…",
     "search_label": "Rechercher",
     "cart": "Panier",
-    "cart_with_count": "Panier ({{ count }} articles)",
+    "cart_with_count": {
+      "one": "Panier ({{ count }} article)",
+      "other": "Panier ({{ count }} articles)"
+    },
     "menu_empty": "Menu bientôt disponible",
     "menu_all": "Tous les",
     "whatsapp": "WhatsApp",
