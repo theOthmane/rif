@@ -102,7 +102,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 09 product | ✅ | 1828643 |
 | 10 cart | ✅ (add-success branch verified during spec 11 QA: drawer opens with the line item; Esc returns focus to the ATC button) | ed02c80 |
 | 11 content pages | ⚠️ (live contact POST not completable from headless QA — store hCaptcha gates automated submits; phone-required + success branch verified, re-test from a real browser; accepted deviations in notes below) | 359262b |
-| 12 system pages | ✅ | a5090f5 |
+| 12 system pages | ✅ | f3409d5 |
 | 13 hero frames (Part B) | ⬜ | — |
 | 14 hero scroll | ⬜ | — |
 | 15 audit + polish | ⬜ | — |
@@ -110,7 +110,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 
 Accepted spec 11 deviations: email is required — Shopify's contact endpoint needs `contact[email]`; the mission page renders the first blockquote as the large quote, otherwise a plain rte.
 
-Accepted spec 12 deviations: `layout/theme.liquid` loads `system.css` only when `request.page_type == 'policy'` (owner-approved; policy pages render through `theme.liquid` with no template of their own, so the styles reach them only from there). `layout/password.liquid` untouched — already the minimal shell (tokens + critical + base for `.btn`/`.t-*`, no header/footer). Gift-card expiry uses numeric `%d/%m/%Y` (the `date` filter's month names are English-only); the gift code sits in a system mono stack (functional, not a brand font). Search reuses `collection.css` grid + pagination styles and the drawer's `rifano.search_label`/`search_placeholder` keys instead of duplicating them. Blog deletion (`blog.json`, `article.json`, `main-blog.liquid`, `main-article.liquid`) passed theme check with no errors.
+Accepted spec 12 deviations: `layout/theme.liquid` loads `system.css` only when `request.page_type == 'policy'` (owner-approved; policy pages render through `theme.liquid` with no template of their own, so the styles reach them only from there). `layout/password.liquid` untouched — already the minimal shell (tokens + critical + base for `.btn`/`.t-*`, no header/footer). Gift-card expiry uses numeric `%d/%m/%Y` (the `date` filter's month names are English-only); the gift code sits in a system mono stack (functional, not a brand font). Search reuses `collection.css` grid + pagination styles and the drawer's `rifano.search_label`/`search_placeholder` keys instead of duplicating them. Blog deletion (`blog.json`, `article.json`, `main-blog.liquid`, `main-article.liquid`) passed theme check with no errors. Closeout fix `f3409d5`: deleted orphaned `snippets/image.liquid` (zero callers since the search rewrite), dropped the unstyled `.password__field` wrappers in `main-password.liquid`, dedicated `rifano.gift_back_home` key for the gift-card back link.
 
 ### Spec 15 backlog
 - Consolidate `.rte`: `product.css` (68ch) vs `rte.css` (65ch) — one file, one measure; product descriptions get the rich-text styles.
@@ -121,3 +121,6 @@ Accepted spec 12 deviations: `layout/theme.liquid` loads `system.css` only when 
 - Gift card never browser-QA'd (needs a real gift-card code URL) — verify QR, "Copier le code" and the Apple Wallet pass from a real session.
 - Search mixed-results subheadings ("Produits"/"Pages") never rendered live — the 1-product preview store can't produce a mixed page; verify on a stocked store.
 - Password email-signup success branch never posted live (would create a customer) — verify from a real browser; same hCaptcha caveat as spec 11.
+- Footer menu item titled "Search" is English — rename to "Recherche" in the store admin (visible in every page footer).
+- `/pages/faq`, `/pages/mission` and `/pages/sav` do not exist in the preview store admin (all 404) — create them so regression can cover the spec-11 templates.
+- Policy title wraps mid-word at 375 ("confidential ité") — review `text-wrap: balance` / hyphenation for long titles in `system.css`.
