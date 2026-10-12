@@ -31,6 +31,13 @@
     `product-form.js` reads `data-wa-template` (the URL-encoded message) and
     `data-wa-sentinel`. When the message has no sentinel there is no variant in
     it and JS leaves it alone.
+
+    A product that cannot be bought has no working primary button, which makes
+    this link the shopper's only real action — so when the variant is unavailable
+    it takes the primary `.btn` treatment instead of the ghost one. It is the
+    same link, the same promise, promoted only while it is the only way forward.
+    `paintAvailability` keeps the class in step when a variant change flips
+    availability.
   {%- endcomment -%}
   {%- if product.has_only_default_variant -%}
     {%- capture wa_message -%}
@@ -43,8 +50,10 @@
     {%- endcapture -%}
   {%- endif -%}
 
+  {%- assign wa_available = product.selected_or_first_available_variant.available -%}
+
   <a
-    class="btn btn--ghost btn--block product-info__whatsapp"
+    class="btn {% if wa_available %}btn--ghost{% endif %} btn--block product-info__whatsapp"
     data-whatsapp
     data-wa-base="https://wa.me/{{ wa_number }}?text="
     data-wa-template="{{ wa_message | url_encode | escape }}"

@@ -217,6 +217,10 @@ function paintAvailability(state, variant) {
   for (const button of [state.atc, state.stickyButton]) {
     if (button) button.disabled = !variant.available;
   }
+  // When nothing can be bought, the WhatsApp link is the only action left, so it
+  // takes the primary treatment the dead button gave up. Ghost when the product
+  // can be bought, primary when it cannot.
+  if (state.whatsapp) state.whatsapp.classList.toggle('btn--ghost', variant.available);
   // Both labels were rendered by Liquid with both of their strings as data
   // attributes, so a state flip never invents a word in a language this module
   // does not speak.
@@ -348,14 +352,31 @@ function bindStickyBar(state) {
     // `dialog[open]` rather than this page's own dialog: the bar belongs to the
     // product page and must stand down for the menu drawer as well as the
     // gallery viewer, and for the cart drawer spec 10 will add.
-    const show = !wide.matches && buttonOutOfView && !document.querySelector('dialog[open]');
+    //
+    // Above the breakpoint the bar normally stands down, because the sticky info
+    // column keeps the real button on screen. But `measureChrome` stands that
+    // column down too when it is taller than the viewport — and at that point the
+    // bar is the only buy affordance left, so it takes over. CSS and this gate
+    // key off the same `is-tall` class, so the two can never disagree.
+    const columnStandsDown = info.classList.contains('is-tall');
+    const show =
+      (!wide.matches || columnStandsDown) &&
+      buttonOutOfView &&
+      !document.querySelector('dialog[open]');
     if (show === visible) return;
     visible = show;
     bar.classList.toggle('is-visible', show);
     // The bar is fixed, so without this the last footer links sit under it and
     // cannot be tapped. The space goes on the page, not on the footer, so the
-    // footer keeps its own rhythm.
+    // footer keeps its own rhythm. The reserve is the bar's real height, so a
+    // taller bar (or a wrapped title) can never eat the footer's last row.
     document.body.classList.toggle('has-sticky-atc', show);
+    if (show) {
+      document.documentElement.style.setProperty(
+        '--sticky-atc-h',
+        `${bar.offsetHeight}px`
+      );
+    }
   };
 
   const observer = new IntersectionObserver(

@@ -407,10 +407,18 @@
   min-block-size: var(--s-8);
 }
 
+/* A disabled primary is the trap this replaces: `filter: grayscale(1)` over the
+   silver gradient still leaves a 173x64px plate that is the largest bright mass
+   on a black page — brighter by area than the H1 — so the one control the shopper
+   cannot use becomes the thing their eye lands on. DESIGN.md spends silver only
+   to mark an action; a dead button is not an action. Ghost it out instead. */
 .product-info__atc[disabled] {
+  background: transparent;
+  border: 1px solid var(--c-line);
+  color: var(--c-text-2);
+  filter: none;
+  opacity: 1;
   cursor: not-allowed;
-  filter: grayscale(1);
-  opacity: 0.55;
 }
 
 .product-info__atc[aria-busy="true"] {
@@ -593,9 +601,12 @@
 
 /* The page is padded, not the footer: the footer keeps its own rhythm and the
    space lands under the last thing on the page, where a fixed bar has to have
-   something to sit over. */
+   something to sit over. The reserve is the bar's own measured height
+   (`--sticky-atc-h`, published by product-form.js), not a guessed step — a fixed
+   guess left the footer links clearing the bar by 7px, one footer row away from
+   being covered. `--s-8` is only the no-JS fallback. */
 body.has-sticky-atc {
-  padding-block-end: calc(var(--s-8) + env(safe-area-inset-bottom, 0px));
+  padding-block-end: calc(var(--sticky-atc-h, var(--s-8)) + env(safe-area-inset-bottom, 0px));
 }
 
 .product-sticky-atc__inner {
@@ -658,9 +669,12 @@ body.has-sticky-atc {
 }
 
 .product-sticky-atc__button[disabled] {
+  background: transparent;
+  border: 1px solid var(--c-line);
+  color: var(--c-text-2);
+  filter: none;
+  opacity: 1;
   cursor: not-allowed;
-  filter: grayscale(1);
-  opacity: 0.55;
 }
 
 /* Recommendations
@@ -668,7 +682,11 @@ body.has-sticky-atc {
    Same horizontal row as the home category rows (spec 07) so the site
    has one way of showing a shelf of products. */
 
-.product-recommendations {
+/* The wrapper survives even when no shelf rendered inside it, so the padding is
+   scoped to a non-empty block: otherwise an empty recommendations section
+   reserves a full `--section-y` of black above the footer for a shelf that will
+   never exist. */
+.product-recommendations:not(:empty) {
   padding-block-end: var(--section-y);
 }
 
@@ -819,9 +837,18 @@ body.has-sticky-atc {
     padding-block-end: var(--s-7);
   }
 
-  /* Above 1024px the real button is pinned with the column, so the bar
-     would be a second way to do the same thing. */
+  /* Above 1024px the real button is pinned with the column, so the bar would be
+     a second way to do the same thing — EXCEPT when the column stood down
+     because it is taller than the viewport. In that case the guard above removed
+     the only affordance instead of relocating it, and the shopper scrolled a
+     1300px gallery with no buy button anywhere. So the bar takes over exactly
+     when the sticky column does not, and stands down when the column pins. */
   .product-sticky-atc {
     display: none;
+  }
+
+  .product-info.is-tall ~ .product-sticky-atc,
+  main:has(.product-info.is-tall) .product-sticky-atc {
+    display: block;
   }
 }

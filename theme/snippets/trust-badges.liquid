@@ -24,15 +24,23 @@
 
   <li class="trust__row">
     {% render 'icon', name: 'truck', class: 'trust__icon' %}
-    <span class="trust__text">
-      {%- if settings.delivery_text != blank -%}
-        {{ settings.delivery_text }}
-      {%- else -%}
-        {{- 'rifano.trust_delivery_free' | t -}}
-      {%- endif -%}
-      {%- if settings.delivery_text != blank %} · {% endif -%}
-      {{- 'rifano.trust_delivery_free' | t -}}
-    </span>
+    {%- comment -%}
+      The separator and the clause are appended to one string rather than
+      printed around an `if`: printing them separately left a stray space before
+      the middot, and an `else` that printed the free-delivery line still had the
+      unconditional line below it repeat that same phrase the moment the merchant
+      cleared the placeholder delivery text.
+
+      The key is translated BEFORE it is appended: `append | t` translates the
+      whole joined string, which rendered as "Translation missing".
+    {%- endcomment -%}
+    {%- assign trust_delivery = '' -%}
+    {%- if settings.delivery_text != blank -%}
+      {%- assign trust_delivery = settings.delivery_text | append: ' · ' -%}
+    {%- endif -%}
+    {%- assign trust_free = 'rifano.trust_delivery_free' | t -%}
+    {%- assign trust_delivery = trust_delivery | append: trust_free -%}
+    <span class="trust__text">{{ trust_delivery }}</span>
   </li>
 
   {%- if settings.warranty_text != blank -%}
