@@ -103,7 +103,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 10 cart | ✅ (add-success branch verified during spec 11 QA: drawer opens with the line item; Esc returns focus to the ATC button) | ed02c80 |
 | 11 content pages | ⚠️ (live contact POST not completable from headless QA — store hCaptcha gates automated submits; phone-required + success branch verified, re-test from a real browser; accepted deviations in notes below) | 359262b |
 | 12 system pages | ✅ | f3409d5 |
-| 13 hero frames (Part B) | ⬜ | — |
+| 13 hero frames (Part B) | ✅ (ffprobe re-verified: 1280×720, 24 fps, 8.0 s, 192 frames, AAC dropped; cropdetect union 444:508:446:62 → CX=668, X0=380. Desktop 96×1280×720 fps=12 reversed q72 = 1.5 MB ≤4 MB; mobile 72×576×720 crop 380:0 fps=9 reversed q68 = 1.2 MB ≤1.8 MB. Corners 0,0,0 / 1,1,1 = within #000000 ±1. 001 turned view, 096/072 front view matching poster.png, RF monogram crisp, no third-party marks; contact sheet tools/shots/13-contact.png. Deviations: _contact.png/_poster_small.png never existed on disk; poster kept native 896×1112 (measured block supersedes generic scale); frames not wired into hero (spec 14); Gate C N/A — no storefront change, visual evidence is the contact sheet + full-res dial crops. Remote smoke theme: 96+72 frames MD5-identical to local) | 13108ab |
 | 14 hero scroll | ⬜ | — |
 | 15 audit + polish | ⬜ | — |
 | 16 launch | ⬜ | — |
