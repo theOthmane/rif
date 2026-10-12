@@ -778,15 +778,18 @@ body.has-sticky-atc {
     grid-column: 1 / -1;
   }
 
-  /* `main` carries the gutter now, so the three sections stop adding one
-     of their own — the gallery needs a real inset because its photos run
-     to the edge of its column. */
+  /* `main` carries the gutter, so every section stops adding one of its own —
+     the gallery included. It used to add `--gutter` here as well, which stacked
+     two gutters and pushed the photo's left edge 32px past the page's gutter
+     axis (x=64 vs x=32 at 1440), so the photo no longer shared a ruled edge
+     with the header, the info column or the footer. The photo now starts flush
+     with `main`'s content box, on the same axis as everything else. */
   .product-info {
     padding-inline: 0;
   }
 
   .product-gallery {
-    padding-inline: var(--gutter);
+    padding-inline: 0;
   }
 
   .product-gallery__track {

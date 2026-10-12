@@ -17,13 +17,20 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
 
-  # The eyebrow: the first collection the product sits in, or the brand itself.
-  # PRODUCT.md forbids showing third-party brand names, and a collection title is
-  # the one merchant-authored string allowed above the product title.
+  # The eyebrow: the product's first *real* collection title, or the brand.
+  # `frontpage` is Shopify's auto-created "Home page" collection; a fresh store
+  # puts every product in it, so reading collections.first blindly rendered the
+  # literal label "HOME PAGE" above the title. Skip it and prefer the first
+  # collection the merchant actually curated. PRODUCT.md forbids third-party
+  # brand names, and a curated collection title is the merchant-authored string
+  # allowed above the product title.
   assign eyebrow = 'RIFANO'
-  if product.collections.first != blank
-    assign eyebrow = product.collections.first.title
-  endif
+  for collection in product.collections
+    if collection.handle != 'frontpage'
+      assign eyebrow = collection.title
+      break
+    endif
+  endfor
 
   assign refund_policy = shop.refund_policy
 

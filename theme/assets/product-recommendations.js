@@ -22,6 +22,25 @@
 
 const REFRESH_MARGIN = '300px 0px';
 
+/* product-card.js runs once, at load, and promotes the hover-swap `data-src` on
+   every card that exists at that moment. Cards injected by the refresh below
+   arrive after it has already run, so their second image would never be promoted
+   and the hover-swap would silently never fire in this row on a pointer that can
+   hover. This mirrors product-card.js for the swapped subtree only. */
+const HOVER_CAPABLE = '(hover: hover) and (pointer: fine)';
+
+function promoteHoverImages(root) {
+  if (!window.matchMedia(HOVER_CAPABLE).matches) return;
+  for (const image of root.querySelectorAll('.card__image--alt[data-srcset]')) {
+    image.srcset = image.dataset.srcset;
+    image.sizes = image.dataset.sizes;
+    image.src = image.dataset.src;
+    delete image.dataset.srcset;
+    delete image.dataset.sizes;
+    delete image.dataset.src;
+  }
+}
+
 for (const block of document.querySelectorAll('[data-recommendations]')) {
   watch(block);
 }
@@ -62,6 +81,7 @@ async function refresh(block) {
     if (!incoming || !current) return;
 
     block.innerHTML = incoming.outerHTML;
+    promoteHoverImages(block);
     block.dataset.recommendationsLoaded = 'true';
   } catch (error) {
     // The server-rendered row is still on screen and still correct; there is

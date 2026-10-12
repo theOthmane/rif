@@ -17,7 +17,10 @@
 
 {%- liquid
   assign wa_number = settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-'
-  assign wa_link = 'https://' | append: shop.url | append: product.url
+  # `shop.url` already carries the scheme (it renders "https://store.myshopify.com"),
+  # so prepending one again produced "https://https://..." in the message the
+  # customer receives. Append the product path to it as-is.
+  assign wa_link = shop.url | append: product.url
   # The sentinel is a stamp, not a word: a merchant title can contain anything,
   # and the JS splits the message on this exact string.
   assign wa_sentinel = 'rifano-variant-' | append: 'now' | date: '%s'
