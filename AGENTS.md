@@ -102,7 +102,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 09 product | ✅ | 1828643 |
 | 10 cart | ✅ (add-success branch verified during spec 11 QA: drawer opens with the line item; Esc returns focus to the ATC button) | ed02c80 |
 | 11 content pages | ⚠️ (live contact POST not completable from headless QA — store hCaptcha gates automated submits; phone-required + success branch verified, re-test from a real browser; accepted deviations in notes below) | 359262b |
-| 12 system pages | ✅ | — |
+| 12 system pages | ✅ | a5090f5 |
 | 13 hero frames (Part B) | ⬜ | — |
 | 14 hero scroll | ⬜ | — |
 | 15 audit + polish | ⬜ | — |
