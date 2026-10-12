@@ -1,0 +1,56 @@
+{% doc %}
+  WhatsApp fallback for the buyer who is not ready to enter an address: one ghost
+  button that opens a chat with the product and the exact variant already in the
+  message.
+
+  The message is written once, in French, in `rifano.whatsapp_message`. The
+  variant is spliced in by product-form.js on variant change, so the message is
+  never stale — JS replaces the part between the sentinel and the link.
+
+  @param {object} product - The product to name in the message. Its variant
+  title is spliced in by JS from the `product:variant` event, so this snippet
+  does not need the variant.
+
+  @example
+    {% render 'whatsapp-link', product: product %}
+{% enddoc %}
+
+{%- liquid
+  assign wa_number = settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-'
+  assign wa_link = 'https://' | append: shop.url | append: product.url
+  # The sentinel is a stamp, not a word: a merchant title can contain anything,
+  # and the JS splits the message on this exact string.
+  assign wa_sentinel = 'rifano-variant-' | append: 'now' | date: '%s'
+-%}
+
+{%- if wa_number != blank -%}
+  {%- comment -%}
+    `product-form.js` reads `data-wa-template` (the URL-encoded message) and
+    `data-wa-sentinel`. When the message has no sentinel there is no variant in
+    it and JS leaves it alone.
+  {%- endcomment -%}
+  {%- if product.has_only_default_variant -%}
+    {%- capture wa_message -%}
+      {{- 'rifano.whatsapp_message_simple' | t: product: product.title, link: wa_link -}}
+    {%- endcapture -%}
+    {%- assign wa_sentinel = blank -%}
+  {%- else -%}
+    {%- capture wa_message -%}
+      {{- 'rifano.whatsapp_message' | t: product: product.title, variant: wa_sentinel, link: wa_link -}}
+    {%- endcapture -%}
+  {%- endif -%}
+
+  <a
+    class="btn btn--ghost btn--block product-info__whatsapp"
+    data-whatsapp
+    data-wa-base="https://wa.me/{{ wa_number }}?text="
+    data-wa-template="{{ wa_message | url_encode | escape }}"
+    data-wa-sentinel="{{ wa_sentinel | escape }}"
+    href="https://wa.me/{{ wa_number }}?text={{ wa_message | url_encode }}"
+    target="_blank"
+    rel="noopener"
+  >
+    {% render 'icon', name: 'whatsapp', class: 'product-info__whatsapp-icon' %}
+    <span>{{ 'rifano.whatsapp_order' | t }}</span>
+  </a>
+{%- endif -%}

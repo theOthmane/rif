@@ -1,0 +1,163 @@
+{% comment %}
+  Product gallery (spec 09).
+
+  Mobile: a horizontal scroll-snap strip, one square photo per screen width,
+  with pagination dots under it. From 1024px: a vertical stack, the first photo
+  large and the rest 2-up. Tapping any photo opens a native <dialog> viewer at
+  2000px, where the browser's own pinch-zoom works and the strip is swipeable.
+
+  A product with no photo at all — the state the store is in today — renders one
+  `product-1` placeholder, no dots and no viewer, because there is nothing to
+  zoom and no dot that could move.
+
+  Only `image` media is collected: a product whose gallery is a video or a 3D
+  model has no photograph to contain on near-black, so it gets the placeholder
+  rather than a half-rendered embed.
+{% endcomment %}
+
+{{ 'product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-gallery.js' | asset_url }}" type="module" defer></script>
+
+{%- liquid
+  # One pass to count, because the dots and the viewer need the total before the
+  # strip is written.
+  assign photo_total = 0
+  for media in product.media
+    if media.media_type == 'image'
+      assign photo_total = photo_total | plus: 1
+    endif
+  endfor
+
+  assign photo_widths = '480, 720, 1080, 1440, 2000'
+-%}
+
+{%- comment -%}
+  `product-gallery.js` reads this URL, not the DOM: one query string carries the
+  strip, the dots and the viewer at once, so all three always agree on which
+  photo is showing.
+{%- endcomment -%}
+<div class="product-gallery" data-product-gallery>
+  <div class="product-gallery__viewport">
+    <ul
+      class="product-gallery__track"
+      data-gallery-track
+      tabindex="0"
+      aria-label="{{ 'rifano.product_gallery_label' | t }}"
+    >
+      {%- if photo_total > 0 -%}
+        {%- assign photo_index = 0 -%}
+        {%- for media in product.media -%}
+          {%- if media.media_type == 'image' -%}
+            {%- assign photo_index = photo_index | plus: 1 -%}
+            {%- assign photo_position = photo_index | append: ' sur ' | append: photo_total -%}
+            <li class="product-gallery__slide" data-gallery-slide data-media-id="{{ media.id }}">
+              {%- comment -%}
+                The button owns the accessible name ("Agrandir la photo 2 sur 5"),
+                so the photo inside it is decorative: an alt here would read the
+                same words twice.
+              {%- endcomment -%}
+              <button
+                type="button"
+                class="product-gallery__frame"
+                data-gallery-zoom="{{ photo_index | minus: 1 }}"
+                aria-label="{{ 'rifano.product_image_zoom' | t: position: photo_position }}"
+              >
+                {{ media | image_url: width: 2000 | image_tag:
+                  widths: photo_widths,
+                  sizes: '(min-width: 1024px) 56vw, 100vw',
+                  loading: 'eager',
+                  alt: '',
+                  class: 'product-gallery__image'
+                }}
+              </button>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        <li class="product-gallery__slide">
+          <div class="product-gallery__frame product-gallery__frame--placeholder">
+            {{ 'product-1' | placeholder_svg_tag: 'product-gallery__placeholder' }}
+          </div>
+        </li>
+      {%- endif -%}
+    </ul>
+  </div>
+
+  {%- if photo_total > 1 -%}
+    <div class="product-gallery__dots" data-gallery-dots>
+      {%- for i in (1..photo_total) -%}
+        {%- assign dot_position = i | append: ' sur ' | append: photo_total -%}
+        <button
+          type="button"
+          class="product-gallery__dot"
+          data-gallery-dot="{{ i | minus: 1 }}"
+          aria-label="{{ 'rifano.product_image_position' | t: position: dot_position }}"
+          aria-current="{% if i == 1 %}true{% else %}false{% endif %}"
+        ></button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if photo_total > 0 -%}
+    {%- comment -%}
+      The viewer is its own scroll-snap strip rather than a carousel: swiping to
+      the next photo is native scrolling, so a touch never depends on this
+      theme's JavaScript having run. `scroll-lock` is what critical.css watches
+      to hold the page still behind the modal.
+    {%- endcomment -%}
+    <dialog
+      class="product-gallery__viewer"
+      data-gallery-viewer
+      aria-label="{{ 'rifano.product_gallery_viewer' | t }}"
+      scroll-lock
+    >
+      <div class="product-gallery__viewer-bar">
+        <p
+          class="product-gallery__viewer-count"
+          data-viewer-count
+          data-viewer-count-template="{{ 'rifano.product_image_position_short' | t | escape }}"
+        >
+          {{- 'rifano.product_image_position_short' | t: index: 1, total: photo_total -}}
+        </p>
+        <button
+          type="button"
+          class="icon-button product-gallery__viewer-close"
+          data-viewer-close
+          aria-label="{{ 'rifano.close' | t }}"
+        >
+          {% render 'icon', name: 'close' %}
+        </button>
+      </div>
+
+      <div class="product-gallery__viewer-track" data-viewer-track>
+        {%- assign photo_index = 0 -%}
+        {%- for media in product.media -%}
+          {%- if media.media_type == 'image' -%}
+            {%- assign photo_index = photo_index | plus: 1 -%}
+            <div class="product-gallery__viewer-slide" data-viewer-slide>
+              {{ media | image_url: width: 2000 | image_tag:
+                widths: photo_widths,
+                sizes: '100vw',
+                loading: 'lazy',
+                alt: '',
+                class: 'product-gallery__viewer-image'
+              }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <p class="product-gallery__viewer-hint visually-hidden">
+        {{- 'rifano.product_gallery_hint' | t -}}
+      </p>
+    </dialog>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Product gallery",
+  "settings": [],
+  "presets": [{ "name": "Product gallery" }]
+}
+{% endschema %}

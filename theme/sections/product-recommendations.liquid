@@ -1,0 +1,103 @@
+{% comment %}
+  Product recommendations (spec 09): "Vous aimerez aussi".
+
+  Server-rendered from the Product Recommendations API. When that has run, the
+  products are already in the HTML — the page is complete before any JavaScript
+  executes, which matters on a phone on a Moroccan mobile connection.
+
+  product-recommendations.js then re-fetches this same section through the
+  Section Rendering API the first time the block approaches the viewport, so the
+  row fills in on a product that was created after the page was cached, and
+  nothing is requested for a recommendation the shopper never scrolls to.
+
+  When the API has not run — the state the store is in today, with no catalogue —
+  the block falls back to four products from the product's first collection,
+  minus the product itself. With neither, the heading and the row are not
+  rendered at all: an empty "Vous aimerez aussi" is worse than no section, and
+  the fetch above can still fill the block in.
+{% endcomment %}
+
+{{ 'product.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign rec_limit = 4
+  assign fallback_collection = product.collections.first
+
+  # Liquid has no way to build an array of objects, so the fallback is counted
+  # here and drawn below with the same two rules: skip the product itself, stop
+  # at four.
+  assign fallback_count = 0
+  if fallback_collection != blank
+    for candidate in fallback_collection.products limit: 8
+      if candidate.id != product.id
+        assign fallback_count = fallback_count | plus: 1
+        if fallback_count == rec_limit
+          break
+        endif
+      endif
+    endfor
+  endif
+-%}
+
+{%- if product != blank -%}
+  <div
+    class="product-recommendations"
+    data-recommendations
+    data-recommendations-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ rec_limit }}&intent=related"
+  >
+    {%- if recommendations.performed? and recommendations.products_count > 0 -%}
+      {%- comment -%}
+        Server-rendered from the Product Recommendations API: the row is complete
+        in the first paint, before any JavaScript runs and on a phone that
+        cannot afford a second round trip.
+      {%- endcomment -%}
+      <div class="recommendations">
+        <h2 class="recommendations__title t-display">
+          {{- 'rifano.product_you_may_also_like' | t -}}
+        </h2>
+        <ul class="recommendations__track" data-recommendations-track tabindex="0">
+          {%- for item in recommendations.products limit: rec_limit -%}
+            <li class="recommendations__item">
+              {% render 'product-card', product: item, sizes: '(min-width: 1200px) 20vw, (min-width: 768px) 28vw, 44vw' %}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- elsif fallback_count > 0 -%}
+      {%- comment -%}
+        The API had nothing. Four products from the product's first collection,
+        minus the product itself, so the shelf is never a mirror of the product
+        the shopper is already looking at.
+      {%- endcomment -%}
+      <div class="recommendations">
+        <h2 class="recommendations__title t-display">
+          {{- 'rifano.product_you_may_also_like' | t -}}
+        </h2>
+        <ul class="recommendations__track" data-recommendations-track tabindex="0">
+          {%- assign shown = 0 -%}
+          {%- for candidate in fallback_collection.products limit: 8 -%}
+            {%- if candidate.id != product.id -%}
+              {%- assign shown = shown | plus: 1 -%}
+              <li class="recommendations__item">
+                {% render 'product-card', product: candidate, sizes: '(min-width: 1200px) 20vw, (min-width: 768px) 28vw, 44vw' %}
+              </li>
+              {%- if shown == rec_limit -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+<script src="{{ 'product-recommendations.js' | asset_url }}" type="module" defer></script>
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "settings": [],
+  "presets": [{ "name": "Product recommendations" }]
+}
+{% endschema %}

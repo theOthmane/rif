@@ -1,0 +1,44 @@
+{% doc %}
+  The three promises a RIFANO buyer needs before they press the button: cash on
+  delivery, delivery, warranty.
+
+  One row each, icon plus a sentence at `--fs-sm` in `--c-text-2` with a hairline
+  above and below the group. Never a coloured badge, never a stock counter,
+  never a countdown: DESIGN.md's "trust" lever says the promise is never
+  truncated or shrunk into micro-type, and that two mentions of it are already
+  enough.
+
+  Delivery and warranty come from theme settings (RIFANO → Livraison / Garantie /
+  Retours); the COD line and the free-delivery half are the brand's standing
+  commitments and are not editable per-product.
+
+  @example
+    {% render 'trust-badges' %}
+{% enddoc %}
+
+<ul class="trust">
+  <li class="trust__row">
+    {% render 'icon', name: 'cash', class: 'trust__icon' %}
+    <span class="trust__text">{{ 'rifano.trust_cod' | t }}</span>
+  </li>
+
+  <li class="trust__row">
+    {% render 'icon', name: 'truck', class: 'trust__icon' %}
+    <span class="trust__text">
+      {%- if settings.delivery_text != blank -%}
+        {{ settings.delivery_text }}
+      {%- else -%}
+        {{- 'rifano.trust_delivery_free' | t -}}
+      {%- endif -%}
+      {%- if settings.delivery_text != blank %} · {% endif -%}
+      {{- 'rifano.trust_delivery_free' | t -}}
+    </span>
+  </li>
+
+  {%- if settings.warranty_text != blank -%}
+    <li class="trust__row">
+      {% render 'icon', name: 'shield', class: 'trust__icon' %}
+      <span class="trust__text">{{ settings.warranty_text }}</span>
+    </li>
+  {%- endif -%}
+</ul>

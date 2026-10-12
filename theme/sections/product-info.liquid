@@ -1,0 +1,349 @@
+{% comment %}
+  Product info column (spec 09): eyebrow, title, price, variants, quantity,
+  add to cart, the @app slot a COD form app needs, the three promises, the
+  WhatsApp fallback, and the details. Plus the mobile sticky add-to-cart bar.
+
+  The whole column is one `{% form 'product' %}` so it works with JavaScript off
+  (the <noscript> select carries the variant id) and so a COD-form app that hooks
+  the standard product form — EasySell and its peers — finds the form it expects.
+  There is deliberately no `payment_button`: RIFANO is cash on delivery, and a
+  dynamic checkout button on a page whose entire promise is "you pay the courier"
+  is a contradiction.
+{% endcomment %}
+
+{{ 'product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" type="module" defer></script>
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+
+  # The eyebrow: the first collection the product sits in, or the brand itself.
+  # PRODUCT.md forbids showing third-party brand names, and a collection title is
+  # the one merchant-authored string allowed above the product title.
+  assign eyebrow = 'RIFANO'
+  if product.collections.first != blank
+    assign eyebrow = product.collections.first.title
+  endif
+
+  assign refund_policy = shop.refund_policy
+
+  # The delivery and warranty paragraphs name a setting the merchant can empty.
+  # A setting that has been cleared is simply left out of the sentence rather
+  # than replaced by a default: inventing "Garantie 12 mois" for a merchant who
+  # deleted their warranty would put a promise back that they took away.
+  assign delivery_line = settings.delivery_text
+  assign warranty_line = settings.warranty_text
+  assign returns_line = settings.returns_text
+-%}
+
+<div
+  class="product-info"
+  data-product-info
+  data-cart-add-url="{{ routes.cart_add_url }}"
+  data-cart-url="{{ routes.cart_url }}"
+>
+  <div class="product-info__inner" data-info-inner>
+    <p class="product-info__eyebrow t-label">{{ eyebrow }}</p>
+
+    <h1 class="product-info__title t-page-title">{{ product.title }}</h1>
+
+    <div class="product-info__price">
+      {% render 'price', variant: current_variant %}
+      <p class="product-info__price-note t-muted">{{ 'rifano.product_price_note' | t }}</p>
+    </div>
+
+    {% form 'product', product, class: 'product-info__form' %}
+      {%- comment -%}
+        The variant id input carries no `name` until product-form.js gives it one.
+        That one line is what makes the page honest without JavaScript: with no
+        name the browser never submits it, so the <noscript> select below is the
+        only variant control that reaches /cart/add. With JS, the input takes the
+        name and owns the id for the page's whole life.
+      {%- endcomment -%}
+      <input type="hidden" value="{{ current_variant.id }}" data-variant-id>
+
+      {%- unless product.has_only_default_variant -%}
+        {%- for option in product.options -%}
+          {%- assign option_position = option.position -%}
+          {%- comment -%}
+            The bracket lookup cannot hold a filter, so the index is a separate
+            line. Option positions are 1-based; the array is not.
+          {%- endcomment -%}
+          {%- assign option_index = option_position | minus: 1 -%}
+          {%- assign selected_value = current_variant.options[option_index] -%}
+          <fieldset class="product-info__option" data-option="{{ option_position }}">
+            <legend class="product-info__option-name t-label">{{ option.name }}</legend>
+            <div class="product-info__option-values">
+              {%- for value in option.values -%}
+                {%- assign input_id = section.id | append: '-o' | append: option_position | append: '-' | append: forloop.index -%}
+                <label class="product-info__pill" for="{{ input_id }}" data-pill>
+                  <input
+                    type="radio"
+                    class="product-info__pill-input"
+                    id="{{ input_id }}"
+                    name="{{ option.name | escape }}"
+                    value="{{ value | escape }}"
+                    {% if value == selected_value %}checked="checked"{% endif %}
+                    data-option-input
+                  >
+                  <span class="product-info__pill-value">{{ value }}</span>
+                  <span class="product-info__pill-flag" data-pill-flag hidden>{{ 'rifano.sold_out' | t }}</span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </fieldset>
+        {%- endfor -%}
+      {%- endunless -%}
+
+      {%- comment -%}
+        Without JavaScript the pills above are radio inputs the shopper can change
+        but that no script reads back into the id. So the <noscript> branch takes
+        them off the page and hands the choice to one select, which cannot resolve
+        to the wrong variant: it posts the id directly.
+      {%- endcomment -%}
+      <noscript>
+        <style>
+          .product-info__option {
+            display: none;
+          }
+          .product-info__noscript-label {
+            display: block;
+          }
+        </style>
+        <label class="product-info__noscript-label" for="variant-{{ section.id }}">
+          {{- 'rifano.product_variant_label' | t -}}
+        </label>
+        <select id="variant-{{ section.id }}" name="id">
+          {%- for variant in product.variants -%}
+            <option
+              value="{{ variant.id }}"
+              {% if variant == current_variant %}selected="selected"{% endif %}
+            >
+              {{ variant.title }}{% unless variant.available %} — {{ 'rifano.sold_out' | t }}{% endunless %}
+            </option>
+          {%- endfor -%}
+        </select>
+      </noscript>
+
+      <div class="product-info__row">
+        <div class="product-info__qty" data-qty>
+          <button
+            type="button"
+            class="product-info__qty-button"
+            data-qty-down
+            aria-label="{{ 'rifano.product_qty_decrease' | t }}"
+          >
+            {% render 'icon', name: 'minus', class: 'product-info__qty-icon' %}
+          </button>
+          <label class="visually-hidden" for="quantity-{{ section.id }}">
+            {{- 'rifano.product_quantity' | t -}}
+          </label>
+          <input
+            type="number"
+            class="product-info__qty-input"
+            id="quantity-{{ section.id }}"
+            name="quantity"
+            min="1"
+            step="1"
+            value="1"
+            inputmode="numeric"
+            data-qty-input
+          >
+          <button
+            type="button"
+            class="product-info__qty-button"
+            data-qty-up
+            aria-label="{{ 'rifano.product_qty_increase' | t }}"
+          >
+            {% render 'icon', name: 'plus', class: 'product-info__qty-icon' %}
+          </button>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn--block product-info__atc"
+          data-atc
+          {% unless current_variant.available %}disabled="disabled"{% endunless %}
+        >
+          <span
+            data-atc-label
+            data-add="{{ 'rifano.product_add_to_cart' | t | escape }}"
+            data-sold-out="{{ 'rifano.sold_out' | t | escape }}"
+          >
+            {%- if current_variant.available -%}
+              {{- 'rifano.product_add_to_cart' | t -}}
+            {%- else -%}
+              {{- 'rifano.sold_out' | t -}}
+            {%- endif -%}
+          </span>
+        </button>
+      </div>
+
+      {%- comment -%}
+        Empty on purpose. `p:empty` in critical.css keeps it from reserving a
+        line, and an always-present `role="alert"` node announces its own text the
+        moment it changes — which a node that only becomes visible does not. The
+        message is written here, not in JS, so it is the store's language.
+      {%- endcomment -%}
+      <p
+        class="product-info__error"
+        data-atc-error
+        data-message="{{ 'rifano.product_add_error' | t | escape }}"
+        role="alert"
+      ></p>
+
+      {%- comment -%}
+        The @app slot. product-info is a section inside the product JSON template,
+        which is the one place Shopify renders app blocks at all, so this is where
+        a COD-form app goes. Empty until an app is installed; COD apps can also
+        reach the form above as an embed.
+      {%- endcomment -%}
+      <div class="product-info__apps" data-product-apps>
+        {% content_for 'blocks' %}
+      </div>
+    {% endform %}
+
+    <div class="product-info__trust">
+      {% render 'trust-badges' %}
+    </div>
+
+    <div class="product-info__whatsapp-wrap">
+      {% render 'whatsapp-link', product: product %}
+    </div>
+
+    <div class="product-info__details">
+      {%- if product.description != blank -%}
+        <details class="product-info__detail" open="open">
+          <summary class="product-info__summary">
+            <span>{{ 'rifano.product_details_description' | t }}</span>
+            {% render 'icon', name: 'chevron-down', class: 'product-info__chevron' %}
+          </summary>
+          <div class="product-info__detail-body rte">{{ product.description }}</div>
+        </details>
+      {%- endif -%}
+
+      <details class="product-info__detail">
+        <summary class="product-info__summary">
+          <span>{{ 'rifano.product_details_delivery' | t }}</span>
+          {% render 'icon', name: 'chevron-down', class: 'product-info__chevron' %}
+        </summary>
+        <div class="product-info__detail-body">
+          {%- if delivery_line != blank -%}
+            <p>{{ delivery_line }}</p>
+          {%- endif -%}
+          <p>{{ 'rifano.product_details_cod' | t }}</p>
+        </div>
+      </details>
+
+      <details class="product-info__detail">
+        <summary class="product-info__summary">
+          <span>{{ 'rifano.product_details_warranty' | t }}</span>
+          {% render 'icon', name: 'chevron-down', class: 'product-info__chevron' %}
+        </summary>
+        <div class="product-info__detail-body">
+          {%- if warranty_line != blank -%}
+            <p>{{ warranty_line }}</p>
+          {%- endif -%}
+          {%- if returns_line != blank -%}
+            <p>{{ returns_line }}</p>
+          {%- endif -%}
+          {%- if refund_policy != blank -%}
+            <p>
+              <a class="product-info__policy-link" href="{{ refund_policy.url }}">
+                {{- 'rifano.product_refund_policy' | t -}}
+              </a>
+            </p>
+          {%- endif -%}
+        </div>
+      </details>
+    </div>
+  </div>
+</div>
+
+{%- comment -%}
+  Sticky add-to-cart, below 1024px only. It exists for the thumb that has scrolled
+  past the real button, so it never renders above 1024px where the info column is
+  already pinned beside the gallery. The bar reuses the real form: its button
+  calls requestSubmit() rather than posting anything of its own, so there is
+  exactly one quantity, one variant and one source of truth.
+{%- endcomment -%}
+<div class="product-sticky-atc" data-sticky-atc-bar>
+  <div class="product-sticky-atc__inner">
+    <span class="product-sticky-atc__media" aria-hidden="true">
+      {%- if product.featured_image -%}
+        {{ product.featured_image | image_url: width: 120 | image_tag:
+          loading: 'lazy',
+          alt: '',
+          class: 'product-sticky-atc__image'
+        }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'product-sticky-atc__placeholder' }}
+      {%- endif -%}
+    </span>
+
+    <span class="product-sticky-atc__info">
+      <span class="product-sticky-atc__title">{{ product.title }}</span>
+      <span class="product-sticky-atc__price" data-sticky-price>
+        {{- current_variant.price | money -}}
+      </span>
+    </span>
+
+    <button
+      type="button"
+      class="btn product-sticky-atc__button"
+      data-sticky-atc
+      {% unless current_variant.available %}disabled="disabled"{% endunless %}
+    >
+      <span
+        data-sticky-atc-label
+        data-add="{{ 'rifano.product_add_to_cart' | t | escape }}"
+        data-sold-out="{{ 'rifano.sold_out' | t | escape }}"
+      >
+        {%- if current_variant.available -%}
+          {{- 'rifano.product_add_to_cart' | t -}}
+        {%- else -%}
+          {{- 'rifano.sold_out' | t -}}
+        {%- endif -%}
+      </span>
+      <span class="visually-hidden"> — {{ product.title }}</span>
+    </button>
+  </div>
+</div>
+
+{%- comment -%}
+  One payload, read by product-form.js. `price_money` is formatted here rather
+  than in JS so the money format stays the admin's setting instead of becoming a
+  second, wrong implementation of it; `options` is the array the picker matches
+  a selection against.
+{%- endcomment -%}
+{%- capture variants_json -%}
+  [
+    {%- for variant in product.variants -%}
+      {
+        "id": {{ variant.id }},
+        "title": {{ variant.title | json }},
+        "options": {{ variant.options | json }},
+        "available": {{ variant.available }},
+        "price": {{ variant.price }},
+        "price_money": {{ variant.price | money | json }},
+        "compare_at_price": {% if variant.compare_at_price %}{{ variant.compare_at_price }}{% else %}null{% endif %},
+        "compare_at_money": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
+        "featured_media": {% if variant.featured_media %}{{ variant.featured_media.id }}{% else %}null{% endif %}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+{%- endcapture -%}
+<script type="application/json" data-product-variants>{{ variants_json }}</script>
+
+{% schema %}
+{
+  "name": "Product info",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [{ "name": "Product info" }]
+}
+{% endschema %}

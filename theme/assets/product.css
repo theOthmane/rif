@@ -1,0 +1,822 @@
+/** RIFANO product page — gallery, info column, sticky add-to-cart, recommendations.
+    Tokens live in tokens.css. One black ground, one hairline, one accent. */
+
+/* Gallery
+   ------------------------------------------------------------------
+   Mobile is a scroll-snap strip: one photo per screen width, full bleed,
+   because a watch photographed on black has nothing around it worth
+   showing and the phone is the primary surface (PRODUCT.md). `contain`
+   keeps the watch whole inside its square; the square keeps the row of
+   photos from changing height as they scroll. */
+
+.product-gallery {
+  background: var(--c-bg);
+}
+
+.product-gallery__viewport {
+  position: relative;
+}
+
+.product-gallery__track {
+  display: flex;
+  gap: var(--s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.product-gallery__track::-webkit-scrollbar {
+  display: none;
+}
+
+.product-gallery__slide {
+  flex: 0 0 auto;
+  inline-size: 100%;
+  scroll-snap-align: start;
+}
+
+.product-gallery__frame {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--c-surface);
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.product-gallery__image {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+/* The placeholder illustration is inset like a photo so it sits in the
+   same optical square the real photos would have occupied. */
+.product-gallery__frame--placeholder {
+  cursor: default;
+}
+
+.product-gallery__placeholder {
+  inline-size: 100%;
+  block-size: 100%;
+  padding: var(--s-7);
+  fill: var(--c-silver-3);
+}
+
+/* Dots: navigation, not decoration. Each dot is a 44px target around a
+   6px mark, and the dots are the only control between the strip and the
+   info column, so they are the one silver moment on the gallery. */
+.product-gallery__dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--s-2);
+  padding-block: var(--s-3);
+}
+
+.product-gallery__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: calc(var(--s-7) - var(--s-2));
+  block-size: calc(var(--s-7) - var(--s-2));
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.product-gallery__dot::after {
+  content: "";
+  display: block;
+  inline-size: var(--s-1);
+  block-size: var(--s-1);
+  border-radius: var(--radius-pill);
+  background: var(--c-line-strong);
+  transition: background var(--dur-1) var(--ease-out), transform var(--dur-1) var(--ease-out);
+}
+
+.product-gallery__dot[aria-current="true"]::after {
+  background: var(--c-silver-2);
+  transform: scale(1.6);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-gallery__dot:hover::after {
+    background: var(--c-silver-3);
+  }
+}
+
+/* Viewer: native <dialog> over the page. The bar is 48px of black with a
+   hairline, not a floating pill — the design language has no floating
+   surfaces. Photos are contained, and `touch-action: pinch-zoom` keeps
+   the browser's own pinch zoom available inside a normally scrollable
+   strip. */
+.product-gallery__viewer {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  inline-size: 100vw;
+  max-inline-size: 100vw;
+  max-block-size: 100dvh;
+  block-size: 100dvh;
+  background: var(--c-bg);
+  color: var(--c-text);
+}
+
+.product-gallery__viewer::backdrop {
+  background: var(--c-bg);
+}
+
+.product-gallery__viewer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-inline: var(--gutter);
+  block-size: var(--s-8);
+  border-bottom: var(--hairline);
+}
+
+.product-gallery__viewer-count {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-label);
+  color: var(--c-text-2);
+}
+
+.product-gallery__viewer-track {
+  display: flex;
+  block-size: calc(100dvh - var(--s-8));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pinch-zoom;
+}
+
+.product-gallery__viewer-track::-webkit-scrollbar {
+  display: none;
+}
+
+.product-gallery__viewer-slide {
+  flex: 0 0 auto;
+  inline-size: 100vw;
+  block-size: 100%;
+  scroll-snap-align: start;
+  padding: var(--s-4);
+}
+
+.product-gallery__viewer-image {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+/* Info column
+   ------------------------------------------------------------------
+   One vertical rhythm, more air above a block than below it (DESIGN.md). */
+
+.product-info {
+  padding-inline: var(--gutter);
+  padding-block: var(--s-5) var(--section-y);
+}
+
+.product-info__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  max-inline-size: var(--s-9);
+}
+
+.product-info__eyebrow {
+  margin: 0;
+}
+
+/* The title is the page title: Tenor at --fs-2xl, never a synthetic bold. */
+.product-info__title {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.product-info__price {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+/* `.price` lives in product-card.css, which this page does not load, so
+   the block's own rules are written here — scoped to the product page so
+   they can never reach a card. */
+.product-info .price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+
+.product-info .price__current {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: var(--fs-xl);
+  letter-spacing: var(--tracking-display);
+  color: var(--c-text);
+}
+
+.product-info .price__compare {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: var(--fs-lg);
+  color: var(--c-text-2);
+  text-decoration-thickness: 1px;
+}
+
+.product-info .price__from {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  color: var(--c-text-2);
+}
+
+.product-info__price-note {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+/* Variants: one fieldset per option, pill radios. 48px tall, so the
+   option row is as tall as the header's tap targets. */
+.product-info__option {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.product-info__option + .product-info__option {
+  margin-block-start: var(--s-5);
+}
+
+.product-info__option-name {
+  margin: 0 0 var(--s-3);
+  padding: 0;
+}
+
+.product-info__option-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.product-info__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-block-size: var(--s-7);
+  padding-inline: var(--s-4);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--c-text);
+  background: transparent;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color var(--dur-1) var(--ease-out), background var(--dur-1) var(--ease-out);
+}
+
+/* The radio itself is the accessible control, so it is the focusable
+   thing and the label is what is painted. `peer` is not needed: `:has()`
+   reads the checked state off the input without a script or a class. */
+.product-info__pill-input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.product-info__pill:has(.product-info__pill-input:checked) {
+  border-color: var(--c-silver-2);
+  background: var(--c-surface-2);
+}
+
+.product-info__pill:has(.product-info__pill-input:focus-visible) {
+  outline: 1px solid var(--c-accent);
+  outline-offset: var(--s-1);
+}
+
+/* An unavailable value stays selectable — a shopper may want to see it —
+   but it is struck through and says so, and it is announced as disabled
+   without being removed from the tab order, because a control that cannot
+   be focused cannot be read by a screen reader either. */
+.product-info__pill.is-unavailable {
+  color: var(--c-text-2);
+  text-decoration: line-through;
+}
+
+.product-info__pill.is-unavailable .product-info__pill-flag {
+  text-decoration: none;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--c-text-2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-info__pill:hover {
+    border-color: var(--c-line-strong);
+  }
+}
+
+.product-info__noscript-label {
+  margin-block-end: var(--s-2);
+}
+
+/* Quantity + add to cart share one row: the quantity is a control the
+   shopper may skip, so it never takes a row of its own. */
+.product-info__row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-3);
+  margin-block-start: var(--s-5);
+}
+
+.product-info__qty {
+  display: flex;
+  align-items: stretch;
+  flex: none;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-sm);
+}
+
+.product-info__qty-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--s-7);
+  min-block-size: var(--s-7);
+  padding: 0;
+  color: var(--c-text);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease-out);
+}
+
+.product-info__qty-button:hover {
+  color: var(--c-silver-2);
+}
+
+.product-info__qty-icon {
+  inline-size: var(--s-4);
+  block-size: var(--s-4);
+}
+
+/* `type=number` brings spinner buttons that duplicate ours. */
+.product-info__qty-input {
+  inline-size: calc(var(--s-8) - var(--s-3));
+  min-height: var(--s-7);
+  padding: 0;
+  border: 0;
+  border-inline: 1px solid var(--c-line-strong);
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.product-info__qty-input::-webkit-outer-spin-button,
+.product-info__qty-input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.product-info__atc {
+  flex: 1 1 auto;
+  min-block-size: var(--s-8);
+}
+
+.product-info__atc[disabled] {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.product-info__atc[aria-busy="true"] {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.product-info__error {
+  margin: var(--s-3) 0 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--c-danger);
+}
+
+/* The @app slot sits directly under the button: a COD form app reads as
+   part of the buy action, not as a separate band further down. */
+.product-info__apps:not(:empty) {
+  margin-block-start: var(--s-4);
+}
+
+/* Both wrappers are `display: contents`, so the column is a flat list of blocks
+   on one gap rather than a stack of wrapper divs each with a margin of its own
+   — which is how a column drifts out of rhythm one rule at a time. */
+.product-info__trust,
+.product-info__whatsapp-wrap {
+  display: contents;
+}
+
+/* Details: hairlines, not boxes. Each summary is a 48px row with the
+   price-line rhythm of the whole column. The band gets a full extra step of
+   air above it: it is a different kind of thing to the buy controls, and it
+   should read as one quiet block rather than three more rows. */
+.product-info__details {
+  margin-block-start: var(--s-5);
+  border-top: var(--hairline);
+}
+
+.product-info__detail {
+  border-bottom: var(--hairline);
+}
+
+.product-info__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-block-size: var(--s-8);
+  padding-block: var(--s-3);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  color: var(--c-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.product-info__summary::-webkit-details-marker {
+  display: none;
+}
+
+.product-info__chevron {
+  flex: none;
+  transition: transform var(--dur-1) var(--ease-out);
+}
+
+.product-info__detail[open] .product-info__chevron {
+  transform: rotate(180deg);
+}
+
+.product-info__detail-body {
+  padding-block-end: var(--s-5);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--c-text-2);
+}
+
+.product-info__detail-body > :first-child {
+  margin-block-start: 0;
+}
+
+.product-info__detail-body > :last-child {
+  margin-block-end: 0;
+}
+
+/* A merchant's own description is content, so it gets content measure —
+   a 90rem line of text is unreadable whatever font it is set in. */
+.rte {
+  max-inline-size: 68ch;
+}
+
+.product-info__policy-link {
+  color: var(--c-text);
+  text-underline-offset: var(--s-1);
+  text-decoration-thickness: 1px;
+}
+
+/* Trust badges
+   ------------------------------------------------------------------ */
+
+.trust {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: var(--hairline);
+  border-bottom: var(--hairline);
+}
+
+.trust__row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: var(--s-8);
+}
+
+.trust__row + .trust__row {
+  border-top: var(--hairline);
+}
+
+/* `.icon` is set by header.css, which loads on this page too, so the
+   size is written doubled to win. */
+.icon.trust__icon {
+  inline-size: var(--s-5);
+  block-size: var(--s-5);
+  color: var(--c-silver-3);
+}
+
+/* A promise is a sentence: body font, sentence case, --fs-sm, never the
+   12px uppercase label type (DESIGN.md). */
+.trust__text {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-text-2);
+}
+
+/* WhatsApp: a ghost button, not a silver one. The silver belongs to the
+   add-to-cart; two silver fills on one screen would make the second one
+   stop meaning anything. */
+.product-info__whatsapp {
+  min-block-size: var(--s-8);
+}
+
+.product-info__whatsapp-icon {
+  inline-size: var(--s-5);
+  block-size: var(--s-5);
+}
+
+/* Sticky add-to-cart
+   ------------------------------------------------------------------
+   Mobile only. Fixed to the bottom, sharing the page black with a
+   hairline above it — the same rule the announcement bar and the header
+   use, never a raised surface or a translucency. It translates up from
+   --dur-2 when the real button leaves the viewport and down when the
+   real button comes back, so the two are never on screen together. */
+
+.product-sticky-atc {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: var(--z-header);
+  background: var(--c-bg);
+  border-top: var(--hairline);
+  padding-block-end: env(safe-area-inset-bottom, 0px);
+  /* `visibility`, not the `hidden` attribute: it takes the bar out of the tab
+     order and out of the accessibility tree while it is off screen, and it can
+     still be transitioned. `hidden` would switch the box off mid-slide. */
+  visibility: hidden;
+  transform: translateY(100%);
+  transition: transform var(--dur-2) var(--ease-out), visibility 0s linear var(--dur-2);
+}
+
+.product-sticky-atc.is-visible {
+  visibility: visible;
+  transform: translateY(0);
+  transition: transform var(--dur-2) var(--ease-out), visibility 0s;
+}
+
+/* The page is padded, not the footer: the footer keeps its own rhythm and the
+   space lands under the last thing on the page, where a fixed bar has to have
+   something to sit over. */
+body.has-sticky-atc {
+  padding-block-end: calc(var(--s-8) + env(safe-area-inset-bottom, 0px));
+}
+
+.product-sticky-atc__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: var(--s-8);
+  padding: var(--s-2) var(--gutter);
+}
+
+.product-sticky-atc__media {
+  flex: none;
+  inline-size: var(--s-8);
+  block-size: var(--s-8);
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.product-sticky-atc__image,
+.product-sticky-atc__placeholder {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  padding: var(--s-1);
+  fill: var(--c-silver-3);
+}
+
+.product-sticky-atc__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  min-inline-size: 0;
+  flex: 1 1 auto;
+}
+
+.product-sticky-atc__title {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product-sticky-atc__price {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+.product-sticky-atc__button {
+  flex: none;
+  min-block-size: calc(var(--s-7) + var(--s-2));
+  padding-inline: var(--s-4);
+}
+
+.product-sticky-atc__button[disabled] {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+/* Recommendations
+   ------------------------------------------------------------------
+   Same horizontal row as the home category rows (spec 07) so the site
+   has one way of showing a shelf of products. */
+
+.product-recommendations {
+  padding-block-end: var(--section-y);
+}
+
+.recommendations {
+  border-top: var(--hairline);
+  padding-block-start: var(--s-6);
+}
+
+.recommendations__title {
+  margin: 0 0 var(--s-4);
+  padding-inline: var(--gutter);
+  font-size: var(--fs-xl);
+}
+
+.recommendations__track {
+  display: flex;
+  gap: var(--s-4);
+  margin: 0;
+  padding: var(--s-3) var(--gutter);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+}
+
+.recommendations__track::-webkit-scrollbar {
+  display: none;
+}
+
+.recommendations__item {
+  flex: 0 0 auto;
+  inline-size: 44vw;
+  scroll-snap-align: start;
+}
+
+/* Two columns from 1024px, where the info column is beside the gallery
+   and the page is wide enough that a phone-sized card reads as a card. */
+@media (min-width: 1024px) {
+  .recommendations__item {
+    inline-size: calc((100% - var(--s-4) * 3) / 4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-gallery__dot::after,
+  .product-gallery__viewer-track,
+  .product-sticky-atc,
+  .product-info__chevron,
+  .product-info__pill {
+    transition: none;
+  }
+}
+
+/* Tablet: the two-column split starts at 1024px, so 768px is the point
+   where the phone layout first needs help. */
+@media (min-width: 768px) {
+  .product-info__row {
+    gap: var(--s-4);
+  }
+
+  .product-info__detail-body {
+    max-inline-size: 68ch;
+  }
+}
+
+/* Desktop: two columns. The gallery scrolls in its own column; the info
+   column is sticky so the button is always in reach while the shopper is
+   still looking at photos.
+
+   The grid lives on `main` because OS 2.0 renders each section of a JSON
+   template as a sibling: there is no wrapper a section could open around
+   another. `product.css` is only loaded by this page's sections, so the
+   rule cannot reach any other template. */
+@media (min-width: 1024px) {
+  main:has(.product-gallery) {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--s-7);
+    align-items: start;
+    max-inline-size: var(--page-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  main:has(.product-gallery) > .shopify-section:has(> .product-gallery) {
+    grid-column: 1;
+  }
+
+  main:has(.product-gallery) > .shopify-section:has(> .product-info) {
+    grid-column: 2;
+    position: sticky;
+    /* JS replaces this with the measured height of the sticky chrome; the
+       token is the no-JS estimate and is deliberately generous. */
+    top: calc(var(--product-chrome-h, 8rem) + var(--s-5));
+  }
+
+  /* A column taller than the viewport pins with its own bottom cut off, so it
+     stops pinning. product-form.js adds the class from a measurement, because
+     "taller than the viewport" is not something a media query can know. */
+  main:has(.product-gallery) > .shopify-section:has(> .product-info.is-tall) {
+    position: static;
+  }
+
+  main:has(.product-gallery) > .shopify-section:has(> .product-recommendations) {
+    grid-column: 1 / -1;
+  }
+
+  /* `main` carries the gutter now, so the three sections stop adding one
+     of their own — the gallery needs a real inset because its photos run
+     to the edge of its column. */
+  .product-info {
+    padding-inline: 0;
+  }
+
+  .product-gallery {
+    padding-inline: var(--gutter);
+  }
+
+  .product-gallery__track {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-1);
+    overflow: visible;
+  }
+
+  /* The first photo is the one the shopper judges the product on, so it
+     takes the full width of the column and the rest pair up under it. */
+  .product-gallery__slide:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .product-gallery__slide {
+    inline-size: auto;
+  }
+
+  /* No dots on desktop: every photo is already on screen. */
+  .product-gallery__dots {
+    display: none;
+  }
+
+  .product-info {
+    padding-block-start: var(--s-6);
+    padding-block-end: var(--s-7);
+  }
+
+  /* Above 1024px the real button is pinned with the column, so the bar
+     would be a second way to do the same thing. */
+  .product-sticky-atc {
+    display: none;
+  }
+}
