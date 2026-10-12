@@ -101,7 +101,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 07 home rows | ✅ | 5223fe8 |
 | 09 product | ✅ | 1828643 |
 | 10 cart | ⚠️ (add-success branch unverified: preview store has no in-stock product — restock & re-run §8.3) | ed02c80 |
-| 11 content pages | ⬜ | — |
+| 11 content pages | ⚠️ (live contact POST not completable from headless QA — store hCaptcha gates automated submits; phone-required + success branch verified, re-test from a real browser) | 359262b |
 | 12 system pages | ⬜ | — |
 | 13 hero frames (Part B) | ⬜ | — |
 | 14 hero scroll | ⬜ | — |
