@@ -100,10 +100,19 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 17 fonts + footer redesign | ✅ | 2e687df |
 | 07 home rows | ✅ | 5223fe8 |
 | 09 product | ✅ | 1828643 |
-| 10 cart | ✅ (§8.3 add-success re-verified 1440/768 after restock; 375 click blocked by Shopify preview bar only) | ed02c80 |
-| 11 content pages | ⚠️ (live contact POST not completable from headless QA — store hCaptcha gates automated submits; phone-required + success branch verified, re-test from a real browser) | 359262b |
+| 10 cart | ✅ (add-success branch verified during spec 11 QA: drawer opens with the line item; Esc returns focus to the ATC button) | ed02c80 |
+| 11 content pages | ⚠️ (live contact POST not completable from headless QA — store hCaptcha gates automated submits; phone-required + success branch verified, re-test from a real browser; accepted deviations in notes below) | 359262b |
 | 12 system pages | ⬜ | — |
 | 13 hero frames (Part B) | ⬜ | — |
 | 14 hero scroll | ⬜ | — |
 | 15 audit + polish | ⬜ | — |
 | 16 launch | ⬜ | — |
+
+Accepted spec 11 deviations: email is required — Shopify's contact endpoint needs `contact[email]`; the mission page renders the first blockquote as the large quote, otherwise a plain rte.
+
+### Spec 15 backlog
+- Consolidate `.rte`: `product.css` (68ch) vs `rte.css` (65ch) — one file, one measure; product descriptions get the rich-text styles.
+- Dedupe stylesheet tags loaded multiple times per page (`product.css` ×3; `pages.css`/`rte.css` ×2).
+- DESIGN.md `--tracking-display` -0.01em vs tokens.css 0.02em — pick one value.
+- QA note: test forms from a real browser or disable hCaptcha on the preview store.
+- Re-shoot the contact page after Instagram and policies are set.

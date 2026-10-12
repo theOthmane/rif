@@ -4,7 +4,8 @@
   `page.content` on `<h3` and renders one native <details> per question, with
   the content before the first heading as an intro. A page with no Heading 3
   falls back to a plain rich-text page, and the FAQPage JSON-LD is built from
-  the same split, so the structured data can never disagree with the page.
+  the same split. Questions whose answer is empty are skipped in the JSON-LD
+  (schema.org needs an acceptedAnswer.text), but still render on the page.
 
   Open and close is the browser's own <details>: keyboard accessible for free,
   no JavaScript, and the optional height animation is CSS-only (pages.css).
@@ -33,7 +34,7 @@
       {%- for part in parts offset: 1 -%}
         {%- assign question_html = part | split: '</h3>' | first -%}
         {%- assign question = question_html | split: '>' | slice: 1, 999 | join: '>' | strip -%}
-        {%- assign answer = part | split: '</h3>' | last -%}
+        {%- assign answer = part | split: '</h3>' | slice: 1, 999 | join: '</h3>' -%}
         <details class="faq__item">
           <summary class="faq__question">
             <span class="faq__question-text t-display">{{ question }}</span>
@@ -49,18 +50,24 @@
         "@context": "https://schema.org",
         "@type": "FAQPage",
         "mainEntity": [
+          {%- assign json_count = 0 -%}
           {%- for part in parts offset: 1 -%}
             {%- assign question_html = part | split: '</h3>' | first -%}
             {%- assign question = question_html | split: '>' | slice: 1, 999 | join: '>' | strip -%}
-            {%- assign answer = part | split: '</h3>' | last -%}
-            {
-              "@type": "Question",
-              "name": {{ question | strip_html | strip | json }},
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": {{ answer | replace: '</p>', ' ' | replace: '</li>', ' ' | replace: '<br>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | json }}
+            {%- assign answer = part | split: '</h3>' | slice: 1, 999 | join: '</h3>' -%}
+            {%- assign answer_text = answer | replace: '</p>', ' ' | replace: '</li>', ' ' | replace: '<br>', ' ' | replace: '<br />', ' ' | replace: '&nbsp;', ' ' | strip_html | strip_newlines | strip -%}
+            {%- if answer_text != blank -%}
+              {%- if json_count > 0 -%},{%- endif -%}
+              {
+                "@type": "Question",
+                "name": {{ question | strip_html | strip | json }},
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": {{ answer_text | json }}
+                }
               }
-            }{% unless forloop.last %},{% endunless %}
+              {%- assign json_count = json_count | plus: 1 -%}
+            {%- endif -%}
           {%- endfor -%}
         ]
       }

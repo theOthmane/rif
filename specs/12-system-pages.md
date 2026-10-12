@@ -17,11 +17,11 @@ Centred: monogram 64px, "Page introuvable", "Le temps est précieux, ne le perde
 
 ## Password page ("Bientôt")
 Full-viewport, `--c-bg`, centred column:
-lockup logo → Bodoni "Bientôt." → `rifano.tagline_*` → `rifano.welcome` small → email signup (`{% form 'customer' %}` with `contact[tags]=prospect`, success "Merci, vous serez prévenu en premier.") → small "Accès boutique" `<details>` revealing the password form (`{% form 'storefront_password' %}`).
+lockup logo → Tenor Sans "Bientôt." → `rifano.tagline_*` → `rifano.welcome` small → email signup (`{% form 'customer' %}` with `contact[tags]=prospect`, success "Merci, vous serez prévenu en premier.") → small "Accès boutique" `<details>` revealing the password form (`{% form 'storefront_password' %}`).
 Socials at the bottom. Uses tokens.css + critical.css, no header/footer, no announcement bar.
 
 ## Policies
-Shopify renders policy pages through `theme.liquid` with `.shopify-policy__container`. Style it in `system.css`: max-width 65ch, centred, title in Bodoni, body uses the rte rules from spec 11.
+Shopify renders policy pages through `theme.liquid` with `.shopify-policy__container`. Style it in `system.css`: max-width 65ch, centred, title in Tenor Sans, body uses the rte rules from spec 11.
 
 ## Gift card
 Keep it functional (it's required). Restyle with tokens: dark card, monogram, code in a mono-spaced pill, "Copier le code" button, QR code. Don't over-invest.
