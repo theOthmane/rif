@@ -100,7 +100,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 17 fonts + footer redesign | ✅ | 2e687df |
 | 07 home rows | ✅ | 5223fe8 |
 | 09 product | ✅ | 1828643 |
-| 10 cart | ⬜ | — |
+| 10 cart | ⚠️ (add-success branch unverified: preview store has no in-stock product — restock & re-run §8.3) | ed02c80 |
 | 11 content pages | ⬜ | — |
 | 12 system pages | ⬜ | — |
 | 13 hero frames (Part B) | ⬜ | — |
