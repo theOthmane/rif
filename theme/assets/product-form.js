@@ -54,10 +54,14 @@ if (info) {
     error: info.querySelector('[data-atc-error]'),
     price: info.querySelector('.price'),
     currentPrice: info.querySelector('.price__current'),
-    bar: info.querySelector('[data-sticky-atc-bar]'),
-    stickyButton: info.querySelector('[data-sticky-atc]'),
-    stickyLabel: info.querySelector('[data-sticky-atc-label]'),
-    stickyPrice: info.querySelector('[data-sticky-price]'),
+    // The sticky bar is a sibling of [data-product-info], not a child: the
+    // section renders it after the info column closes, so it is read off the
+    // document. One product template means one bar, so this cannot pick up a
+    // stranger's node.
+    bar: document.querySelector('[data-sticky-atc-bar]'),
+    stickyButton: document.querySelector('[data-sticky-atc]'),
+    stickyLabel: document.querySelector('[data-sticky-atc-label]'),
+    stickyPrice: document.querySelector('[data-sticky-price]'),
     whatsapp: info.querySelector('[data-whatsapp]'),
     fieldsets: Array.from(info.querySelectorAll('[data-option]')),
     cartAddUrl: info.dataset.cartAddUrl,
@@ -188,6 +192,11 @@ function paintPrice(state, variant) {
   if (state.stickyPrice) state.stickyPrice.textContent = variant.price_money;
   if (!state.price || !state.currentPrice) return;
 
+  // The current price is live: the server rendered the first variant's price,
+  // and every later selection overwrites it with that variant's own formatted
+  // money, so the figure beside the button is never one selection behind.
+  state.currentPrice.textContent = variant.price_money;
+
   // The compare-at price is rendered server-side by the `price` snippet and only
   // exists when it is a real markdown, so it is only touched for a variant that
   // actually has one.
@@ -224,7 +233,9 @@ function paintAvailability(state, variant) {
  */
 function paintCombos(state, values) {
   for (const fieldset of state.fieldsets) {
-    const index = Number(fieldset.dataset.option);
+    // `data-option` is the 1-based option position from Liquid; the probe
+    // array is 0-based, so the position is shifted down by one.
+    const index = Number(fieldset.dataset.option) - 1;
     for (const label of fieldset.querySelectorAll('[data-pill]')) {
       const input = label.querySelector('[data-option-input]');
       const flag = label.querySelector('[data-pill-flag]');
@@ -292,13 +303,15 @@ function bindAddToCart(state) {
       const cart = await response.json();
 
       // Spec 10 listens here and opens the drawer. Until it exists nothing
-      // listens, this event stays uncancelled, and that is the signal to send
-      // the shopper to the cart page.
-      const accepted = document.dispatchEvent(
+      // listens, the event stays uncancelled, and that is the signal to send
+      // the shopper to the cart page: `dispatchEvent` returns false only when
+      // a listener called `preventDefault()`, so a `true` return means nobody
+      // handled the add and the redirect is the only feedback the shopper gets.
+      const unhandled = document.dispatchEvent(
         new CustomEvent('cart:added', { detail: { cart, item: line }, cancelable: true })
       );
 
-      if (!accepted && state.cartUrl) window.location.href = state.cartUrl;
+      if (unhandled && state.cartUrl) window.location.href = state.cartUrl;
     } catch (error) {
       if (state.error) state.error.textContent = state.error.dataset.message || '';
     } finally {

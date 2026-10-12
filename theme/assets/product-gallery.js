@@ -93,8 +93,13 @@ function initStrip(gallery, track) {
    * Follow a variant: scroll to the photo that variant ships with. A variant
    * with no `featured_media` inherits the product's first photo, so there is
    * nothing to move and the strip stays where the shopper left it.
+   *
+   * The event is dispatched on `document`, not on the gallery, so it is heard
+   * here on `document`: a listener on the gallery element itself would never
+   * fire, because events dispatched on `document` do not travel back down to
+   * its descendants.
    */
-  gallery.addEventListener('product:variant', (event) => {
+  document.addEventListener('product:variant', (event) => {
     const mediaId = event.detail && event.detail.featured_media;
     if (!mediaId) return;
     const slide = track.querySelector(`[data-media-id="${mediaId}"]`);
@@ -124,10 +129,13 @@ function initViewer(gallery) {
 
   const setCounter = (index) => {
     if (!counter || index < 0) return;
-    const text = counter.dataset.template || '';
+    // The template is the locale string rendered without params, so the
+    // placeholders keep their Liquid spacing: `{{ index }}`, not `{index}`.
+    // The attribute is `data-viewer-count-template`, hence the long dataset key.
+    const text = counter.dataset.viewerCountTemplate || '';
     counter.textContent = text
-      .replace('{index}', String(index + 1))
-      .replace('{total}', String(slides.length));
+      .replace('{{ index }}', String(index + 1))
+      .replace('{{ total }}', String(slides.length));
   };
 
   const goTo = (index) => {

@@ -70,7 +70,7 @@
   fill: var(--c-silver-3);
 }
 
-/* Dots: navigation, not decoration. Each dot is a 44px target around a
+/* Dots: navigation, not decoration. Each dot is a 48px target around a
    6px mark, and the dots are the only control between the strip and the
    info column, so they are the one silver moment on the gallery. */
 .product-gallery__dots {
@@ -84,8 +84,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: calc(var(--s-7) - var(--s-2));
-  block-size: calc(var(--s-7) - var(--s-2));
+  inline-size: var(--s-7);
+  block-size: var(--s-7);
   padding: 0;
   background: transparent;
   border: 0;
@@ -194,7 +194,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-5);
-  max-inline-size: var(--s-9);
 }
 
 .product-info__eyebrow {
@@ -380,8 +379,11 @@
   block-size: var(--s-4);
 }
 
-/* `type=number` brings spinner buttons that duplicate ours. */
-.product-info__qty-input {
+/* `type=number` brings spinner buttons that duplicate ours. The doubled
+   selector outranks base.css `input[type="number"]` (width: 100%), which
+   would otherwise size the stepper by the browser's default ~20-character
+   width and push the add-to-cart off the viewport. */
+.product-info__qty .product-info__qty-input {
   inline-size: calc(var(--s-8) - var(--s-3));
   min-height: var(--s-7);
   padding: 0;
