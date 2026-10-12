@@ -175,6 +175,7 @@
     "password_label": "Mot de passe",
     "password_enter": "Entrer",
     "gift_copy": "Copier le code",
-    "gift_copied": "Code copié"
+    "gift_copied": "Code copié",
+    "gift_back_home": "Accueil"
   }
 }

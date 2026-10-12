@@ -118,7 +118,6 @@ Accepted spec 12 deviations: `layout/theme.liquid` loads `system.css` only when 
 - DESIGN.md `--tracking-display` -0.01em vs tokens.css 0.02em — pick one value.
 - QA note: test forms from a real browser or disable hCaptcha on the preview store.
 - Re-shoot the contact page after Instagram and policies are set.
-- `snippets/image.liquid` orphaned by the spec-12 search rewrite (its last `render 'image'` usage is gone; theme check warns OrphanedSnippet) — delete it or find it a caller.
 - Gift card never browser-QA'd (needs a real gift-card code URL) — verify QR, "Copier le code" and the Apple Wallet pass from a real session.
 - Search mixed-results subheadings ("Produits"/"Pages") never rendered live — the 1-product preview store can't produce a mixed page; verify on a stocked store.
 - Password email-signup success branch never posted live (would create a customer) — verify from a real browser; same hCaptcha caveat as spec 11.
