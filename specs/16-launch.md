@@ -21,11 +21,14 @@ Store: **TBD (owner decides before spec 16; `xpziwn-tw` not accessible)**. Every
   - `footer` (Boutique column): the 3 collections + Boutique
   - `footer-help` (Aide column): FAQ, Contact & SAV, Livraison (shipping policy), Retours (refund policy)
   - `accueil-rangees`: the 3 collections in display order
+- [ ] **Packs** (spec 21): install Shopify Bundles; create the packs with your real prices (set a compare-at price only if you want a saving shown); collection `packs`; product metafields `custom.pack_contents` (list of products) + `custom.pack_gift` (product); page "Packs" → template `page.packs`; add it to `main-menu` (and to `accueil-rangees` for a Packs row on home).
+- [ ] **Brand safety**: no product image shows another brand's watch or logo.
 - [ ] **Theme settings → RIFANO**: real WhatsApp (digits, e.g. 2126XXXXXXXX), Instagram, TikTok, email, delivery/warranty/returns texts, `home_rows_menu` = `accueil-rangees`, `hero_poster` = the poster from spec 13.
 
 ## Deploy
 - [ ] 🤖 `npx @shopify/cli@latest theme push --path theme --store <LAUNCH STORE>` → share the preview link
-- [ ] Owner: full test on your phone: home → row → product → add → drawer → Commander → checkout shows **Paiement à la livraison** and **Livraison gratuite** → place a test order → cancel/archive it.
+- [ ] Owner: real-phone check (iPhone + mid-range Android) of the hero scrub and depth layers: smooth, "Be RIFANO." readable, no horizontal scroll.
+- [ ] Owner: full test on your phone: home → row → product → add → drawer → Commander → checkout shows **Paiement à la livraison** and **Livraison gratuite** → place a test order → cancel/archive it. Repeat once with a pack.
 - [ ] Owner: Online Store → Themes → **Publish** the RIFANO theme.
 - [ ] Owner: when ready, turn password protection **off**.
 - [ ] 🤖 Tag the release: `git tag v1.0.0 && git push --tags`; mark spec 16 ✅ in AGENTS.md Progress.

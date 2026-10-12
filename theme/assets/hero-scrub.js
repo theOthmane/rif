@@ -1,8 +1,11 @@
-/** RIFANO hero scrub — spec 14. Scroll-scrubbed WebP frame sequence on canvas.
-    Own engine (not scroll-craft): a passive scroll handler only stores progress
-    and rAF draws only when the frame index changes; coarse-to-fine loading
-    (every 8th, 4th, 2nd, then all) with at most 6 concurrent decodes; the
-    poster stays in the DOM as LCP and fallback. Vanilla, no dependencies. */
+/** RIFANO hero scrub — spec 18. Scroll-scrubbed WebP frame sequence on canvas.
+    Own engine (not scroll-craft): a passive scroll handler only stores raw
+    progress, a rAF loop eases a smoothed playhead toward it (frame-rate
+    independent, tau 140ms fine / 90ms coarse) and stops at idle; the frame
+    between two decoded neighbours is blended on top of the base one;
+    coarse-to-fine loading (every 8th, 4th, 2nd, then all) with at most 6
+    concurrent decodes; the poster stays in the DOM as LCP and fallback.
+    Vanilla, no dependencies. */
 (() => {
   const root = document.querySelector('hero-scrub');
   const hero = root && root.querySelector('[data-hero]');
@@ -73,9 +76,21 @@
   let inflight = 0;
   let failed = 0;
   let framed = false;
-  let lastIdx = -1;
-  let lastP = -1;
   const geom = { start: 0, travel: 1 };
+
+  /* Chase constants (spec 18). Touch momentum is already smooth, so a coarse
+     pointer gets the shorter time constant and stays connected to the finger;
+     a mouse gets the longer one, which is what turns a 100px wheel notch into
+     a few frames of motion instead of one 15-frame jump. */
+  const TAU = window.matchMedia('(pointer: fine)').matches ? 140 : 90;
+  const SNAP = 0.0005;
+  /* raw = the scroll position, smooth = the published playhead. */
+  let raw = -1;
+  let smooth = -1;
+  let lastPub = -1;
+  let key = '';
+  let raf = 0;
+  let lastT = 0;
 
   /* Scroll position where the sticky pins (hero top minus the sticky offset)
      over the pinned travel (runway minus sticky viewport): the spec formula
@@ -89,68 +104,115 @@
 
   const progress = () => Math.min(1, Math.max(0, (window.scrollY - geom.start) / geom.travel));
 
-  /* Rotation window p 0.15–0.55 sweeps the whole set; both ends hold. The
-     window closes before the peak so the watch is parked on the front view
-     while "Be RIFANO." rises (p 0.55–0.85), per the spec's peak rule:
-     nothing but line 2 may move there. */
-  const target = (p) => {
-    const t = Math.min(1, Math.max(0, (p - 0.15) / 0.4));
-    return Math.round(t * (urls.length - 1));
+  /* Choreography (spec 18), read from the smoothed playhead:
+     - p 0 → 0.05: start frame, "Be different." at 1, "Be RIFANO." still out.
+     - p 0.05 → 0.60: the rotation sweeps the whole set; line 1 holds until
+       0.30 then eases to 0.6 by 0.50, and line 2 rises 16px and fades in over
+       that same 0.30 → 0.50.
+     - p 0.60 → 0.75: the front frame holds and the floor tightens 1.15 → 1.
+     - p 0.75 → 1: the CTA fades in 0.75 → 0.90 and goes live at p >= 0.90.
+     The frame index is a float, not an integer: the neighbours blend, so the
+     rotation reads as motion rather than as steps. */
+  const frameAt = (s) => {
+    const t = Math.min(1, Math.max(0, (s - 0.05) / 0.55));
+    return t * (urls.length - 1);
   };
 
-  const nearest = (idx) => {
-    if (store.has(idx)) return store.get(idx);
+  const nearestIdx = (idx) => {
+    if (store.has(idx)) return idx;
     for (let d = 1; d < urls.length; d += 1) {
-      if (idx - d >= 0 && store.has(idx - d)) return store.get(idx - d);
-      if (idx + d < urls.length && store.has(idx + d)) return store.get(idx + d);
+      if (idx - d >= 0 && store.has(idx - d)) return idx - d;
+      if (idx + d < urls.length && store.has(idx + d)) return idx + d;
     }
-    return null;
+    return -1;
   };
 
-  /* The canvas is never cleared while waiting: fill + draw happen in the same
-     task once the frame is decoded, so the last frame stays up until then. */
-  const paint = (img) => {
+  /* One bitmap, centred and contained. globalAlpha is set and reset here so a
+     blend never leaks into the next paint. */
+  const blit = (img, alpha) => {
     const w = canvas.width;
     const h = canvas.height;
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, w, h);
     const s = Math.min(w / img.naturalWidth, h / img.naturalHeight);
     const dw = img.naturalWidth * s;
     const dh = img.naturalHeight * s;
+    ctx.globalAlpha = alpha;
     ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    ctx.globalAlpha = 1;
+  };
+
+  /* Paints whenever the playhead lands somewhere new: a different base frame,
+     a different blend partner, or a blend weight that moved enough to see.
+     The alpha is bucketed to 1/64 so a chase still inside one pair does not
+     redraw two bitmaps for an invisible difference.
+     The canvas is never cleared while waiting for a frame: fill and draw
+     happen in the same task, so the last frame stays up until then. */
+  const paint = (s) => {
+    if (!inview) return;
+    const f = frameAt(s);
+    const lo = Math.floor(f);
+    const hi = Math.min(urls.length - 1, lo + 1);
+    const frac = f - lo;
+    const base = nearestIdx(lo);
+    const blend = frac > 0.05 && frac < 0.95 && store.has(hi) ? hi : -1;
+    const alpha = blend < 0 ? 1 : Math.round(frac * 64) / 64;
+    const next = base + ':' + blend + ':' + alpha;
+    if (base < 0 || next === key) return;
+    key = next;
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    blit(store.get(base), 1);
+    if (blend >= 0) blit(store.get(blend), alpha);
     if (!framed) {
       framed = true;
       hero.classList.add('is-framed');
     }
   };
 
-  const update = (force) => {
-    if (dead) return;
-    const p = progress();
-    const idx = target(p);
-    /* Publish whenever the frame index OR the progress moved. Gating on the
-       index alone froze --hero-p through the peak (the rotation parks at
-       p 0.55, the tagline still has to rise until 0.85) and through the
-       0.85–1 floor/CTA tail. 1/1000 of progress is below what a scroll
-       frame can produce, so this costs one style write per scrolling frame. */
-    if (!force && idx === lastIdx && Math.abs(p - lastP) < 0.001) return;
-    lastIdx = idx;
-    lastP = p;
-    hero.style.setProperty('--hero-p', p.toFixed(4));
-    cta.classList.toggle('is-live', p >= 0.98);
-    maybePaint(idx);
+  /* Both the text and the frame index come from the same number, so the
+     tagline can never drift out of sync with the watch. */
+  const publish = (s) => {
+    if (s === lastPub) return;
+    lastPub = s;
+    hero.style.setProperty('--hero-p', s.toFixed(4));
+    /* Gated in JS, not only in CSS: no focusable, clickable CTA parked
+       invisible. */
+    cta.classList.toggle('is-live', s >= 0.9);
   };
 
-  /* Paints whenever a better frame is available for the current index —
-     including when a decode lands without any scroll movement (first paint,
-     coarse-to-fine refinement). */
-  let painted = null;
-  const maybePaint = (idx) => {
-    const img = nearest(idx);
-    if (img && img !== painted && inview) {
-      painted = img;
-      paint(img);
+  /* Jump straight to the scroll position: activation, a resize that moves the
+     runway, and coming back into view. Anywhere else the playhead chases. */
+  const sync = () => {
+    raw = progress();
+    smooth = raw;
+    publish(smooth);
+    paint(smooth);
+  };
+
+  const tick = (now) => {
+    raf = 0;
+    if (dead || !inview) {
+      lastT = 0;
+      return;
     }
+    const dt = lastT ? Math.min(64, now - lastT) : 16.7;
+    lastT = now;
+    smooth += (raw - smooth) * (1 - Math.exp(-dt / TAU));
+    if (Math.abs(raw - smooth) <= SNAP) {
+      smooth = raw;
+      publish(smooth);
+      paint(smooth);
+      lastT = 0;
+      return;
+    }
+    publish(smooth);
+    paint(smooth);
+    raf = window.requestAnimationFrame(tick);
+  };
+
+  const kick = () => {
+    if (dead || !inview || raf) return;
+    lastT = 0;
+    raf = window.requestAnimationFrame(tick);
   };
 
   const abort = () => {
@@ -177,8 +239,10 @@
         .then(() => {
           inflight -= 1;
           store.set(i, img);
-          if (!dead) maybePaint(target(progress()));
-          update(false);
+          /* A decode that lands under the current playhead is worth a repaint
+             even with no scrolling: first paint, coarse-to-fine refinement,
+             or a neighbour arriving to blend with. */
+          if (!dead) paint(smooth);
           pump();
         })
         .catch(() => {
@@ -201,15 +265,12 @@
     }
   };
 
-  let raf = 0;
   window.addEventListener(
     'scroll',
     () => {
-      if (dead || !inview || raf) return;
-      raf = window.requestAnimationFrame(() => {
-        raf = 0;
-        update(false);
-      });
+      if (dead || !inview) return;
+      raw = progress();
+      kick();
     },
     { passive: true }
   );
@@ -218,9 +279,9 @@
      resize (mobile address bar, desktop window drag) resizes the box, and
      leaving the old backing store in place stretches the frame vertically.
      fit() is a no-op when the pixel size is unchanged, so this cannot cost a
-     repaint on its own; painted = null forces the nearest decoded frame to be
-     drawn again into the new store in the same task (no flash, no reset).
-     Only a width change re-picks the frame set. */
+     repaint on its own; clearing the paint key forces the nearest decoded
+     frame to be drawn again into the new store in the same task (no flash, no
+     reset). Only a width change re-picks the frame set. */
   let lastW = window.innerWidth;
   let lastH = canvas.clientHeight;
   let resizeTimer = 0;
@@ -243,21 +304,21 @@
         pump();
       }
       fit();
-      painted = null;
+      key = '';
       /* A fresh set may have nothing near the current frame yet: show the
          poster until its first frame is ready instead of a blank canvas. */
-      if (!nearest(target(progress())) && framed) {
+      if (nearestIdx(Math.floor(frameAt(smooth))) < 0 && framed) {
         framed = false;
         hero.classList.remove('is-framed');
       }
-      update(true);
+      sync();
     }, 150);
   });
 
   const io = new IntersectionObserver((entries) => {
     inview = entries[0].isIntersecting;
     if (inview && !dead) {
-      update(true);
+      sync();
       pump();
     }
   });
@@ -266,7 +327,9 @@
   const begin = () => {
     started = true;
     measure();
+    raw = progress();
     pump();
+    kick();
   };
   if (document.readyState === 'complete') {
     if ('requestIdleCallback' in window) window.requestIdleCallback(begin, { timeout: 1000 });
@@ -286,11 +349,14 @@
   measure();
   fit();
   buildQueue();
-  update(true);
+  sync();
   /* Webfonts can shift the chrome/tagline heights after first measure. */
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
-      if (!dead) measure();
+      if (dead) return;
+      measure();
+      raw = progress();
+      kick();
     });
   }
 })();

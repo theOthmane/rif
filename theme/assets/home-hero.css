@@ -270,34 +270,37 @@
   opacity: 0;
 }
 
-/* Choreography, all driven by --hero-p (0..1) published on .hero:
-   - p 0 → 0.15: "Be different." holds fully visible, watch at start frame.
-   - p 0.15 → 0.55: rotation; line 1 settles to 40%. Deviation from the spec
-     text (0.15 → 0.85): the fade ends before the peak, so that during
-     p 0.55 → 0.85 nothing but "Be RIFANO." moves (spec's bolded peak rule
-     and the acceptance check).
-   - p 0.55 → 0.85: the peak — "Be RIFANO." rises 16px and fades in, with the
-     most scroll room and nothing else animating.
-   - p 0.85 → 1: front frame holds, the floor tightens, the CTA arrives. */
+/* Choreography (spec 18), all driven by the smoothed --hero-p (0..1) that
+   hero-scrub.js publishes from its eased playhead:
+   - p 0 → 0.05: the start frame, "Be different." at 1, "Be RIFANO." still out.
+   - p 0.05 → 0.60: the rotation sweeps the whole set. Line 1 holds at 1 until
+     0.30, then eases to 0.6 by 0.50; line 2 rises 16px and fades in across that
+     same 0.30 → 0.50.
+   - p 0.60 → 0.75: the front frame holds and the floor tightens 1.15 → 1.
+   - p 0.75 → 1: the CTA fades in 0.75 → 0.90 and becomes clickable at p >= 0.90.
+   "Be RIFANO." is fully readable from p 0.50 to 1 — half the runway, and the
+   peak the hero is built around: there the watch is parked and only the floor
+   and the CTA arrive. Line 1 never drops below 0.6, so both lines still read
+   as one tagline. */
 .hero.is-scrub .hero__line:first-child {
-  opacity: clamp(0.4, calc(1 - (var(--hero-p, 0) - 0.15) * 1.5), 1);
+  opacity: clamp(0.6, calc(1.6 - var(--hero-p, 0) * 2), 1);
 }
 
 .hero.is-scrub .hero__line--accent {
-  opacity: clamp(0, calc((var(--hero-p, 0) - 0.55) / 0.3), 1);
-  transform: translateY(calc((1 - clamp(0, calc((var(--hero-p, 0) - 0.55) / 0.3), 1)) * var(--s-4)));
+  opacity: clamp(0, calc((var(--hero-p, 0) - 0.3) / 0.2), 1);
+  transform: translateY(calc((1 - clamp(0, calc((var(--hero-p, 0) - 0.3) / 0.2), 1)) * var(--s-4)));
 }
 
 .hero.is-scrub .hero__floor {
-  scale: calc(1.15 - clamp(0, calc((var(--hero-p, 0) - 0.85) / 0.15), 1) * 0.15);
+  scale: calc(1.15 - clamp(0, calc((var(--hero-p, 0) - 0.6) / 0.15), 1) * 0.15);
 }
 
 .hero.is-scrub .hero__cta {
-  opacity: clamp(0, calc((var(--hero-p, 0) - 0.85) / 0.15), 1);
+  opacity: clamp(0, calc((var(--hero-p, 0) - 0.75) / 0.15), 1);
   visibility: hidden;
 }
 
-/* Gated in JS at p >= 0.98: no focusable, clickable CTA parked invisible. */
+/* Gated in JS at p >= 0.90: no focusable, clickable CTA parked invisible. */
 .hero.is-scrub .hero__cta.is-live {
   visibility: visible;
 }
