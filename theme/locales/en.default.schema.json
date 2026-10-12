@@ -57,7 +57,10 @@
     "cart_type": "Cart type",
     "cart_show_note": "Show order note field",
     "cart_empty_montres": "Empty cart: watches collection",
-    "cart_empty_colliers": "Empty cart: necklaces collection"
+    "cart_empty_colliers": "Empty cart: necklaces collection",
+    "hero_scrub_enabled": "Hero scroll scrub",
+    "hero_frames_desktop": "Hero frames (desktop)",
+    "hero_frames_mobile": "Hero frames (mobile)"
   },
   "options": {
     "alignment": {

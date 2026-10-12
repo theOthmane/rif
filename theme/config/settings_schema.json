@@ -100,6 +100,24 @@
         "type": "image_picker",
         "id": "hero_poster",
         "label": "Hero poster"
+      },
+      {
+        "type": "checkbox",
+        "id": "hero_scrub_enabled",
+        "label": "t:labels.hero_scrub_enabled",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "hero_frames_desktop",
+        "label": "t:labels.hero_frames_desktop",
+        "default": 96
+      },
+      {
+        "type": "number",
+        "id": "hero_frames_mobile",
+        "label": "t:labels.hero_frames_mobile",
+        "default": 72
       }
     ]
   },

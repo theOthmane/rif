@@ -181,3 +181,102 @@
     padding-block: var(--s-7) var(--s-8);
   }
 }
+
+/* Spec 14 — scroll scrub. hero-scrub.js adds .is-scrub only when the
+   activation gate passes (switch on, motion OK, no save-data, enough memory).
+   Without it the section stays the spec 06 poster version at normal height. */
+
+/* The runway: the pinned viewport below gets 160svh of scroll travel on
+   desktop, 120svh below 768px. Mobile-first: the short runway is the base. */
+.hero.is-scrub {
+  height: 220svh;
+}
+
+@media (min-width: 768px) {
+  .hero.is-scrub {
+    height: 260svh;
+  }
+}
+
+/* The pinned viewport: full screen minus the sticky chrome. The top offset
+   is the existing --hero-chrome-h estimate, not a hardcoded pixel value. */
+.hero.is-scrub .hero__sticky {
+  position: sticky;
+  top: var(--hero-chrome-h);
+  height: calc(100svh - var(--hero-chrome-h));
+  overflow: clip;
+}
+
+/* Scrub mode owns the lines from p = 0: the load-in animations (fill-mode
+   both) would otherwise override the --hero-p-driven values below. */
+.hero.is-scrub .hero__line,
+.hero.is-scrub .hero__stage {
+  animation: none;
+}
+
+/* The canvas only exists in scrub mode: display:none keeps it out of layout
+   (and out of LCP consideration) in the poster version. */
+.hero__canvas {
+  display: none;
+}
+
+.hero.is-scrub .hero__canvas {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* PM decision 6: the frame bitmaps sit at up to 3/255 against the pure
+     black page, so the canvas edges get a short feather (mask only — the
+     watch glow starts further in, verified on disk: content is >= 40px from
+     the bitmap edge, the feather ends at var(--s-5)). */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, black var(--s-5), black calc(100% - var(--s-5)), transparent),
+    linear-gradient(to bottom, transparent, black var(--s-5), black calc(100% - var(--s-5)), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, black var(--s-5), black calc(100% - var(--s-5)), transparent),
+    linear-gradient(to bottom, transparent, black var(--s-5), black calc(100% - var(--s-5)), transparent);
+  mask-composite: intersect;
+}
+
+/* The poster stays as LCP and fallback; it fades once the first frame draws. */
+.hero.is-scrub .hero__poster {
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+
+.hero.is-scrub.is-framed .hero__poster {
+  opacity: 0;
+}
+
+/* Choreography, all driven by --hero-p (0..1) published on .hero:
+   - p 0 → 0.15: "Be different." holds fully visible, watch at start frame.
+   - p 0.15 → 0.55: rotation; line 1 settles to 40%. Deviation from the spec
+     text (0.15 → 0.85): the fade ends before the peak, so that during
+     p 0.55 → 0.85 nothing but "Be RIFANO." moves (spec's bolded peak rule
+     and the acceptance check).
+   - p 0.55 → 0.85: the peak — "Be RIFANO." rises 16px and fades in, with the
+     most scroll room and nothing else animating.
+   - p 0.85 → 1: front frame holds, the floor tightens, the CTA arrives. */
+.hero.is-scrub .hero__line:first-child {
+  opacity: clamp(0.4, calc(1 - (var(--hero-p, 0) - 0.15) * 1.5), 1);
+}
+
+.hero.is-scrub .hero__line--accent {
+  opacity: clamp(0, calc((var(--hero-p, 0) - 0.55) / 0.3), 1);
+  transform: translateY(calc((1 - clamp(0, calc((var(--hero-p, 0) - 0.55) / 0.3), 1)) * var(--s-4)));
+}
+
+.hero.is-scrub .hero__floor {
+  scale: calc(1.15 - clamp(0, calc((var(--hero-p, 0) - 0.85) / 0.15), 1) * 0.15);
+}
+
+.hero.is-scrub .hero__cta {
+  opacity: clamp(0, calc((var(--hero-p, 0) - 0.85) / 0.15), 1);
+  visibility: hidden;
+}
+
+/* Gated in JS at p >= 0.98: no focusable, clickable CTA parked invisible. */
+.hero.is-scrub .hero__cta.is-live {
+  visibility: visible;
+}

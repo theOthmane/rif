@@ -1,7 +1,8 @@
 {% comment %}
   RIFANO home intro: "Be different / Be RIFANO" over the watch stage.
-  Poster version — spec 14 mounts the canvas inside .hero__stage later, so the
-  class names below are its contract and must not be renamed. This section is
+  Poster version by default; spec 14 mounts the canvas scrub inside
+  .hero__stage when hero-scrub.js adds .is-scrub, so the class names below
+  are its contract and must not be renamed. This section is
   the home page's only <h1>.
 {% endcomment %}
 
@@ -14,16 +15,23 @@
   else
     assign poster_alt = hero_poster.alt
   endif
+  assign scrub_enabled = settings.hero_scrub_enabled
+  if scrub_enabled == nil
+    assign scrub_enabled = true
+  endif
+  assign frames_desktop = settings.hero_frames_desktop | default: 96
+  assign frames_mobile = settings.hero_frames_mobile | default: 72
 %}
 
-<section class="hero" data-hero>
+<hero-scrub>
+<section class="hero" data-hero data-scrub="{{ scrub_enabled }}">
   <div class="hero__sticky">
     <h1 class="hero__title t-display">
       <span class="hero__line">{{ 'rifano.tagline_1' | t }}</span>
       <span class="hero__line hero__line--accent">{{ 'rifano.tagline_2' | t }}</span>
     </h1>
 
-    <div class="hero__stage{% if hero_poster == blank %} hero__stage--placeholder{% endif %}">
+    <div class="hero__stage">
       {% if hero_poster != blank %}
         <img
           class="hero__poster"
@@ -36,7 +44,23 @@
           fetchpriority="high"
           loading="eager"
         >
+      {% else %}
+        {% comment %}
+          Spec 14 deviation (PM decision 1): no merchant poster is set, so the
+          front view frame doubles as the poster/LCP image instead of the
+          placeholder ring. 1280x720 measured on disk (spec 13).
+        {% endcomment %}
+        <img
+          class="hero__poster"
+          src="{{ 'hero-d-096.webp' | asset_url }}"
+          width="1280"
+          height="720"
+          alt="{{ poster_alt | escape }}"
+          fetchpriority="high"
+          loading="eager"
+        >
       {% endif %}
+      <canvas class="hero__canvas" aria-hidden="true"></canvas>
       <div class="hero__floor" aria-hidden="true"></div>
     </div>
 
@@ -46,7 +70,31 @@
   </div>
 </section>
 
+{% if scrub_enabled %}
+  {%- capture urls_d -%}
+    {%- for i in (1..frames_desktop) -%}
+      {%- assign n = '00' | append: i | slice: -3, 3 -%}
+      "{{- 'hero-d-' | append: n | append: '.webp' | asset_url -}}"
+      {%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- capture urls_m -%}
+    {%- for i in (1..frames_mobile) -%}
+      {%- assign n = '00' | append: i | slice: -3, 3 -%}
+      "{{- 'hero-m-' | append: n | append: '.webp' | asset_url -}}"
+      {%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  <script type="application/json" data-frames>
+    {"desktop":[{{ urls_d }}],"mobile":[{{ urls_m }}]}
+  </script>
+{% endif %}
+</hero-scrub>
+
 <script src="{{ 'home-hero.js' | asset_url }}" type="module" defer></script>
+{% if scrub_enabled %}
+  <script src="{{ 'hero-scrub.js' | asset_url }}" type="module" defer></script>
+{% endif %}
 
 {% schema %}
 {
