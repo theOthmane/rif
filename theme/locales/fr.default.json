@@ -108,6 +108,8 @@
     "rows_track": "{{ title }} : défiler avec les flèches",
     "rows_plus": "Plus",
     "rows_all": "Toute la boutique",
+    "rows_empty": "La sélection arrive bientôt.",
+    "rows_empty_cta": "Voir la boutique",
     "product_coming_soon": "Produit à venir",
     "sold_out": "Épuisé",
     "percent_off": "-{{ percent }} %",

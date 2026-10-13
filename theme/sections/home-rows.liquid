@@ -1,14 +1,19 @@
 {% comment %}
-  RIFANO home category rows + "Plus" (spec 07).
+  RIFANO home category rows + "Plus" (spec 07; empty-on-live rule spec 19).
 
   Menu-driven: every link in settings.home_rows_menu that points to a collection
-  becomes one row, in menu order, titled by the link and showing that
-  collection's first 10 products. Rows past settings.rows_visible render with
-  the `hidden` attribute and wait behind the "Plus" control below the group.
+  with at least one product becomes one row, in menu order, titled by the link
+  and showing that collection's first 10 products. Rows past
+  settings.rows_visible render with the `hidden` attribute and wait behind the
+  "Plus" control below the group; both the cutoff and the control count
+  rendered rows only, so an empty collection never consumes a slot or leaves a
+  gap.
 
-  No menu — or a menu without a single collection link — falls back to three
-  placeholder rows; a collection with no products shows placeholder cards (spec
-  05). The home page therefore never renders an empty row.
+  Live storefront (not request.design_mode): a collection without products
+  renders no row at all, and with no row left the section shows one "coming
+  soon" line and a Boutique button. Theme editor: empty collections still
+  render one row with four placeholder cards, and a menu without a single
+  collection link falls back to the three sketch categories.
 
   The row title carries the row's id: it is what `aria-labelledby` points at,
   and it is where "Plus" moves focus when it reveals the hidden rows.
@@ -20,22 +25,33 @@
   assign rows_menu = settings.home_rows_menu
   assign rows_visible = settings.rows_visible | default: 3
 
-  # Only links that point to a collection are rows; anything else in the menu
-  # (front page, catalog, search, external URLs) is skipped.
-  assign collection_links = 0
+  # Placeholder cards are an editor tool: live they look like products that
+  # cannot be clicked, so they only ever render in the theme editor.
+  assign show_placeholders = request.design_mode
+
+  # A link becomes a row only if it points to a collection with products — or
+  # always, in the editor, so an empty collection can still be laid out.
+  # Nested conditions, not one `and`/`or` chain: Liquid evaluates mixed
+  # operators right to left.
+  assign rows_total = 0
   if rows_menu != blank
     for link in rows_menu.links
       if link.type == 'collection_link' and link.object != blank
-        assign collection_links = collection_links | plus: 1
+        if link.object.products_count > 0 or show_placeholders
+          assign rows_total = rows_total | plus: 1
+        endif
       endif
     endfor
   endif
 
-  if collection_links > 0
-    assign rows_total = collection_links
-  else
+  # No menu, or no collection link at all. The editor keeps the three sketch
+  # categories; live that is the empty state below.
+  assign use_fallback_rows = false
+  if rows_total == 0 and show_placeholders
+    assign use_fallback_rows = true
     assign rows_total = 3
   endif
+
   assign rows_hidden = rows_total | minus: rows_visible
 
   # Three vertical dots, drawn once and reused by both Plus controls.
@@ -45,78 +61,48 @@
 %}
 
 <div class="rows" data-home-rows>
-  <div class="rows__list" id="rows-{{ section.id }}">
-    {% if collection_links > 0 %}
-      {% assign row_number = 0 %}
-      {% for link in rows_menu.links %}
-        {% if link.type == 'collection_link' and link.object != blank %}
-          {% assign row_number = row_number | plus: 1 %}
-          {% assign row_collection = link.object %}
+  {% if rows_total > 0 %}
+    <div class="rows__list" id="rows-{{ section.id }}">
+      {% if use_fallback_rows %}
+        {%- comment -%}
+          Editor with no menu (or no collection links): the three categories
+          from the owner's sketch, each with its icon and four placeholder
+          cards.
+        {%- endcomment -%}
+        {% for i in (1..3) %}
+          {% case i %}
+            {% when 1 %}
+              {% assign row_title = 'rifano.rows_montres' | t %}
+              {% assign row_icon = 'watch' %}
+            {% when 2 %}
+              {% assign row_title = 'rifano.rows_colliers' | t %}
+              {% assign row_icon = 'necklace' %}
+            {% else %}
+              {% assign row_title = 'rifano.rows_pochettes' | t %}
+              {% assign row_icon = 'pouch' %}
+          {% endcase %}
 
-          {%- comment -%}
-            Icon by collection handle (spec 07). A handle that matches nothing
-            ships without an icon: a wrong glyph is worse than none.
-          {%- endcomment -%}
-          {% assign row_handle = row_collection.handle | downcase %}
-          {% assign row_icon = '' %}
-          {% if row_handle contains 'montre' or row_handle contains 'watch' %}
-            {% assign row_icon = 'watch' %}
-          {% elsif row_handle contains 'collier' or row_handle contains 'necklace' %}
-            {% assign row_icon = 'necklace' %}
-          {% elsif row_handle contains 'pochette' or row_handle contains 'sac' or row_handle contains 'bag' %}
-            {% assign row_icon = 'pouch' %}
-          {% endif %}
-
-          {% assign row_id = section.id | append: '-row-' | append: row_number %}
-          {% assign row_title = link.title %}
+          {% assign row_id = section.id | append: '-row-' | append: i %}
           {% assign row_hidden = false %}
-          {% if row_number > rows_visible %}
+          {% if i > rows_visible %}
             {% assign row_hidden = true %}
           {% endif %}
 
           <section class="row" aria-labelledby="{{ row_id }}"{% if row_hidden %} hidden{% endif %}>
             <div class="row__head">
               <h2 class="row__title t-display" id="{{ row_id }}"{% if row_hidden %} tabindex="-1"{% endif %}>
-                {%- if row_icon != blank -%}
-                  {% render 'icon', name: row_icon, class: 'row__icon' %}
-                {%- endif -%}
+                {% render 'icon', name: row_icon, class: 'row__icon' %}
                 <span class="row__title-text">{{ row_title }}</span>
               </h2>
-              {%- comment -%}
-                Every row ships the same "Voir tout", so the accessible name carries
-                the row's title as well: three identically-named links on one page
-                are indistinguishable to a screen reader.
-              {%- endcomment -%}
-              <a class="row__all t-label" href="{{ link.url }}">
-                {{ 'rifano.rows_view_all' | t }}
-                <span class="visually-hidden"> — {{ row_title }}</span>
-                {% render 'icon', name: 'arrow-right', class: 'row__all-icon' %}
-              </a>
             </div>
 
             <div class="row__viewport">
               <ul class="row__track" data-row-track tabindex="0" aria-label="{{ 'rifano.rows_track' | t: title: row_title }}">
-                {% if row_collection.products.size > 0 %}
-                  {% for product in row_collection.products limit: 10 %}
-                    <li class="row__item">
-                      {%- comment -%}
-                        Only the first row's first two images load eagerly: they
-                        are the pair a phone shows without scrolling.
-                      {%- endcomment -%}
-                      {% if row_number == 1 and forloop.index <= 2 %}
-                        {% render 'product-card', product: product, sizes: '(min-width: 1200px) 22vw, (min-width: 768px) 30vw, 46vw', loading: 'eager' %}
-                      {% else %}
-                        {% render 'product-card', product: product, sizes: '(min-width: 1200px) 22vw, (min-width: 768px) 30vw, 46vw' %}
-                      {% endif %}
-                    </li>
-                  {% endfor %}
-                {% else %}
-                  {% for i in (1..4) %}
-                    <li class="row__item">
-                      {% render 'product-card', placeholder_index: i %}
-                    </li>
-                  {% endfor %}
-                {% endif %}
+                {% for j in (1..4) %}
+                  <li class="row__item">
+                    {% render 'product-card', placeholder_index: j %}
+                  </li>
+                {% endfor %}
               </ul>
 
               <div class="row__nav">
@@ -129,92 +115,140 @@
               </div>
             </div>
           </section>
-        {% endif %}
-      {% endfor %}
+        {% endfor %}
 
-    {% else %}
-      {%- comment -%}
-        No menu (or no collection links): the three categories from the owner's
-        sketch, each with its icon and four placeholder cards.
-      {%- endcomment -%}
-      {% for i in (1..3) %}
-        {% case i %}
-          {% when 1 %}
-            {% assign row_title = 'rifano.rows_montres' | t %}
-            {% assign row_icon = 'watch' %}
-          {% when 2 %}
-            {% assign row_title = 'rifano.rows_colliers' | t %}
-            {% assign row_icon = 'necklace' %}
-          {% else %}
-            {% assign row_title = 'rifano.rows_pochettes' | t %}
-            {% assign row_icon = 'pouch' %}
-        {% endcase %}
+      {% else %}
+        {% assign row_number = 0 %}
+        {% for link in rows_menu.links %}
+          {% if link.type == 'collection_link' and link.object != blank %}
+            {% if link.object.products_count > 0 or show_placeholders %}
+              {% assign row_number = row_number | plus: 1 %}
+              {% assign row_collection = link.object %}
 
-        {% assign row_id = section.id | append: '-row-' | append: i %}
-        {% assign row_hidden = false %}
-        {% if i > rows_visible %}
-          {% assign row_hidden = true %}
-        {% endif %}
+              {%- comment -%}
+                Icon by collection handle (spec 07). A handle that matches
+                nothing ships without an icon: a wrong glyph is worse than none.
+              {%- endcomment -%}
+              {% assign row_handle = row_collection.handle | downcase %}
+              {% assign row_icon = '' %}
+              {% if row_handle contains 'montre' or row_handle contains 'watch' %}
+                {% assign row_icon = 'watch' %}
+              {% elsif row_handle contains 'collier' or row_handle contains 'necklace' %}
+                {% assign row_icon = 'necklace' %}
+              {% elsif row_handle contains 'pochette' or row_handle contains 'sac' or row_handle contains 'bag' %}
+                {% assign row_icon = 'pouch' %}
+              {% endif %}
 
-        <section class="row" aria-labelledby="{{ row_id }}"{% if row_hidden %} hidden{% endif %}>
-          <div class="row__head">
-            <h2 class="row__title t-display" id="{{ row_id }}"{% if row_hidden %} tabindex="-1"{% endif %}>
-              {% render 'icon', name: row_icon, class: 'row__icon' %}
-              <span class="row__title-text">{{ row_title }}</span>
-            </h2>
-          </div>
+              {% assign row_id = section.id | append: '-row-' | append: row_number %}
+              {% assign row_title = link.title %}
+              {% assign row_hidden = false %}
+              {% if row_number > rows_visible %}
+                {% assign row_hidden = true %}
+              {% endif %}
 
-          <div class="row__viewport">
-            <ul class="row__track" data-row-track tabindex="0" aria-label="{{ 'rifano.rows_track' | t: title: row_title }}">
-              {% for j in (1..4) %}
-                <li class="row__item">
-                  {% render 'product-card', placeholder_index: j %}
-                </li>
-              {% endfor %}
-            </ul>
+              <section class="row" aria-labelledby="{{ row_id }}"{% if row_hidden %} hidden{% endif %}>
+                <div class="row__head">
+                  <h2 class="row__title t-display" id="{{ row_id }}"{% if row_hidden %} tabindex="-1"{% endif %}>
+                    {%- if row_icon != blank -%}
+                      {% render 'icon', name: row_icon, class: 'row__icon' %}
+                    {%- endif -%}
+                    <span class="row__title-text">{{ row_title }}</span>
+                  </h2>
+                  {%- comment -%}
+                    Every row ships the same "Voir tout", so the accessible name
+                    carries the row's title as well: three identically-named
+                    links on one page are indistinguishable to a screen reader.
+                  {%- endcomment -%}
+                  <a class="row__all t-label" href="{{ link.url }}">
+                    {{ 'rifano.rows_view_all' | t }}
+                    <span class="visually-hidden"> — {{ row_title }}</span>
+                    {% render 'icon', name: 'arrow-right', class: 'row__all-icon' %}
+                  </a>
+                </div>
 
-            <div class="row__nav">
-              <button type="button" class="row__arrow row__arrow--prev" data-row-prev aria-label="{{ 'rifano.rows_prev' | t }}" disabled>
-                {% render 'icon', name: 'arrow-left' %}
-              </button>
-              <button type="button" class="row__arrow row__arrow--next" data-row-next aria-label="{{ 'rifano.rows_next' | t }}">
-                {% render 'icon', name: 'arrow-right' %}
-              </button>
-            </div>
-          </div>
-        </section>
-      {% endfor %}
-    {% endif %}
-  </div>
+                <div class="row__viewport">
+                  <ul class="row__track" data-row-track tabindex="0" aria-label="{{ 'rifano.rows_track' | t: title: row_title }}">
+                    {% if row_collection.products.size > 0 %}
+                      {% for product in row_collection.products limit: 10 %}
+                        <li class="row__item">
+                          {%- comment -%}
+                            Only the first row's first two images load eagerly:
+                            they are the pair a phone shows without scrolling.
+                          {%- endcomment -%}
+                          {% if row_number == 1 and forloop.index <= 2 %}
+                            {% render 'product-card', product: product, sizes: '(min-width: 1200px) 22vw, (min-width: 768px) 30vw, 46vw', loading: 'eager' %}
+                          {% else %}
+                            {% render 'product-card', product: product, sizes: '(min-width: 1200px) 22vw, (min-width: 768px) 30vw, 46vw' %}
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    {% else %}
+                      {% for i in (1..4) %}
+                        <li class="row__item">
+                          {% render 'product-card', placeholder_index: i %}
+                        </li>
+                      {% endfor %}
+                    {% endif %}
+                  </ul>
 
-  {%- comment -%}
-    "Plus": a button while rows are hidden behind it, otherwise the same
-    control as a link to the whole boutique. aria-controls points at the group
-    the hidden rows live in (the rows list), which is where they reappear.
-  {%- endcomment -%}
-  <div class="rows-plus">
-    {% if rows_hidden > 0 %}
-      <button type="button" class="rows-plus__button" data-plus-button aria-expanded="false" aria-controls="rows-{{ section.id }}">
-        {{ rows_dots }}
-        <span class="rows-plus__label t-label">{{ 'rifano.rows_plus' | t }}</span>
-      </button>
-      {%- comment -%}
-        Rendered next to the button and kept `hidden` until "Plus" has been used.
-        The wrapper is the only element carrying the group's bottom rhythm, so it
-        cannot be removed with the button, and the section keeps one permanent
-        exit to the whole boutique once there is nothing left to reveal.
-      {%- endcomment -%}
-      <a class="rows-plus__button" href="{{ routes.collections_url }}" data-plus-fallback hidden>
-        {{ rows_dots }}
-        <span class="rows-plus__label t-label">{{ 'rifano.rows_all' | t }}</span>
-      </a>
-    {% else %}
-      <a class="rows-plus__button" href="{{ routes.collections_url }}">
-        {{ rows_dots }}
-        <span class="rows-plus__label t-label">{{ 'rifano.rows_all' | t }}</span>
-      </a>
-    {% endif %}
-  </div>
+                  <div class="row__nav">
+                    <button type="button" class="row__arrow row__arrow--prev" data-row-prev aria-label="{{ 'rifano.rows_prev' | t }}" disabled>
+                      {% render 'icon', name: 'arrow-left' %}
+                    </button>
+                    <button type="button" class="row__arrow row__arrow--next" data-row-next aria-label="{{ 'rifano.rows_next' | t }}">
+                      {% render 'icon', name: 'arrow-right' %}
+                    </button>
+                  </div>
+                </div>
+              </section>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {%- comment -%}
+      "Plus": a button while rows are hidden behind it, otherwise the same
+      control as a link to the whole boutique. aria-controls points at the
+      group the hidden rows live in (the rows list), which is where they
+      reappear.
+    {%- endcomment -%}
+    <div class="rows-plus">
+      {% if rows_hidden > 0 %}
+        <button type="button" class="rows-plus__button" data-plus-button aria-expanded="false" aria-controls="rows-{{ section.id }}">
+          {{ rows_dots }}
+          <span class="rows-plus__label t-label">{{ 'rifano.rows_plus' | t }}</span>
+        </button>
+        {%- comment -%}
+          Rendered next to the button and kept `hidden` until "Plus" has been
+          used. The wrapper is the only element carrying the group's bottom
+          rhythm, so it cannot be removed with the button, and the section
+          keeps one permanent exit to the whole boutique once there is nothing
+          left to reveal.
+        {%- endcomment -%}
+        <a class="rows-plus__button" href="{{ routes.collections_url }}" data-plus-fallback hidden>
+          {{ rows_dots }}
+          <span class="rows-plus__label t-label">{{ 'rifano.rows_all' | t }}</span>
+        </a>
+      {% else %}
+        <a class="rows-plus__button" href="{{ routes.collections_url }}">
+          {{ rows_dots }}
+          <span class="rows-plus__label t-label">{{ 'rifano.rows_all' | t }}</span>
+        </a>
+      {% endif %}
+    </div>
+
+  {% else %}
+    {%- comment -%}
+      Live storefront with nothing to show: one sentence and the Boutique
+      button, inside the same .rows wrapper so the section rhythm holds. No
+      Plus control — there is no hidden row to reveal.
+    {%- endcomment -%}
+    <div class="rows-empty">
+      <p class="rows-empty__text">{{ 'rifano.rows_empty' | t }}</p>
+      <a class="btn btn--ghost" href="{{ routes.collections_url }}">{{ 'rifano.rows_empty_cta' | t }}</a>
+    </div>
+  {% endif %}
 </div>
 
 <script src="{{ 'home-rows.js' | asset_url }}" type="module" defer></script>
