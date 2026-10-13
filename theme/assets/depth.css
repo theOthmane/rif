@@ -1,0 +1,145 @@
+/** RIFANO depth layers — spec 20.
+    The page is a stack of planes moving at different speeds. The hero (spec 18)
+    is the slow anchor; everything below is a secondary depth layer with its own
+    tempo, so the site reads as 3D space instead of a static sheet.
+
+    Engine: CSS scroll-driven animations (view()/scroll()). They run off the main
+    thread, so a slow phone does not lag. This file owns the shared custom
+    properties and keyframes; each component file attaches them to its own
+    selectors, gated by `@supports (animation-timeline: view())` and
+    `@media (prefers-reduced-motion: no-preference)`. A browser without the
+    engine (e.g. Firefox today) and a reduced-motion visitor therefore get the
+    static final state — the element's own layout, never a transformed one — and
+    the page still reads completely.
+
+    Everything is scrubbed by scroll position, so scrolling back up reverses it
+    naturally: nothing re-triggers, nothing loops, and text is still while it is
+    read (the ranges end before a moving line crosses the middle of the
+    viewport). Tokens live in tokens.css; travel comes from its spacing scale,
+    and the angles and tempos — which have no token equivalent — live here. */
+
+:root {
+  /* One viewing distance for every 3D turn, expressed from the spacing scale. */
+  --depth-perspective: calc(var(--s-9) * 10); /* 60rem, a 960px viewing distance */
+
+  /* The tempo map (spec 20). Travel is a spacing token; degrees are the map's. */
+  --depth-handoff-travel: var(--s-8); /* 2 — first row track rise */
+  --depth-handoff-tilt: 8deg;
+  --depth-title-travel: var(--s-6);   /* 3 — row title drift */
+  --depth-icon-turn: -40deg;          /* 3 — row icon turn */
+  --depth-card-travel: var(--s-5);    /* 4 — card wave rise */
+  --depth-card-lag: 0%;               /* 4 — per-card stagger, set by nth-child */
+  --depth-track-tilt: 4deg;           /* 5 — track coverflow (mobile) */
+  --depth-tilt-max: 4deg;             /* 6 — pointer tilt, per axis */
+  --depth-lift: var(--s-3);           /* 6 — photo translateZ lift */
+  --depth-unfold-tilt: 12deg;         /* 7 — "Plus" unfold */
+  --depth-gallery-scale: 1.04;        /* 8 — main photo */
+  --depth-gallery-travel: var(--s-5);
+  --depth-monogram-turn: -35deg;      /* 9 — footer monogram */
+}
+
+@media (min-width: 768px) {
+  :root {
+    --depth-track-tilt: 6deg; /* 5 — desktop coverflow, ±6° */
+  }
+}
+
+/* Keyframes
+   ------------------------------------------------------------------
+   Each keyframe declares only the `from` state: the `to` state is the element's
+   own layout, so "settled" always means "exactly where CSS puts it". */
+
+/* 2 — first row track rises out of the hero's settle. */
+@keyframes depth-handoff {
+  from {
+    transform: translateY(var(--depth-handoff-travel)) rotateX(var(--depth-handoff-tilt));
+  }
+}
+
+/* 3 — row title drifts up; the icon turns to face the reader. */
+@keyframes depth-title {
+  from {
+    transform: translateY(var(--depth-title-travel));
+  }
+}
+
+@keyframes depth-icon {
+  from {
+    transform: rotateY(var(--depth-icon-turn));
+  }
+}
+
+/* 4 — cards rise, staggered by --depth-card-lag. */
+@keyframes depth-card {
+  from {
+    transform: translateY(var(--depth-card-travel));
+  }
+}
+
+/* 5 — coverflow-lite: a card in a row turns toward flat as it reaches the
+   centre of the track's own viewport, the way a held object squares up. The
+   flat zone covers the middle 60% — where a card is actually read — so a track
+   too short to swipe rests flat, and only a card crossing the outer edges
+   turns. */
+@keyframes depth-sway {
+  from {
+    transform: rotateY(var(--depth-track-tilt));
+  }
+
+  20%,
+  80% {
+    transform: rotateY(0deg);
+  }
+
+  to {
+    transform: rotateY(calc(-1 * var(--depth-track-tilt)));
+  }
+}
+
+/* 7 — a row hidden behind "Plus" unfolds as it comes back. */
+@keyframes depth-unfold {
+  from {
+    transform: perspective(var(--depth-perspective)) rotateX(var(--depth-unfold-tilt));
+  }
+}
+
+/* 8 — the main photo settles as its column enters. */
+@keyframes depth-gallery {
+  from {
+    transform: scale(var(--depth-gallery-scale)) translateY(var(--depth-gallery-travel));
+  }
+}
+
+/* 9 — the closing beat: the monogram turns to front view. */
+@keyframes depth-monogram {
+  from {
+    transform: rotateY(var(--depth-monogram-turn));
+  }
+}
+
+/* Where the engine runs, the spec-07 class entrances stand down: those one-shot
+   fades would double up with the scrubbed layers on the same elements. Without
+   the engine the class entrance is what the page keeps. */
+@supports (animation-timeline: view()) {
+  [data-depth-rows] .row--reveal {
+    animation: none;
+  }
+}
+
+/* Reduced motion: every layer off, nothing but the page's own layout. The
+   scroll-layer assignments are already behind `no-preference`; this restates
+   the spec's rule for the one time-based layer (the "Plus" unfold) and for a
+   browser that flips the preference while the page is open. */
+@media (prefers-reduced-motion: reduce) {
+  [data-depth-rows] .row,
+  [data-depth-rows] .row__track,
+  [data-depth-rows] .row__title,
+  [data-depth-rows] .icon.row__icon,
+  [data-depth-rows] .row__item,
+  [data-depth-rows] .row__track .card,
+  [data-depth-footer] .footer__monogram,
+  [data-depth-gallery] .product-gallery__slide:first-child .product-gallery__image {
+    animation: none;
+    transform: none;
+  }
+}

@@ -150,7 +150,9 @@ Four rules on top of that:
 1. **Subtle.** If a flourish needs attention to be noticed, it does not ship.
    Nothing loops. Nothing pulses. Nothing announces itself. Motion is
    information — where you are, what changed, what opened — and never
-   entertainment.
+   entertainment. Subtlety bans attention-seeking effects, not depth: the
+   stacked planes below are quiet by construction — transform and opacity only,
+   no bounce, no loop, and nothing that exists only under the pointer.
 2. **Realistic.** Things move the way the physical thing would. A drawer slides,
    a panel eases, an object settles. No springs, no overshoot, no elastic
    easing, no scale-and-bounce entrances.
@@ -159,9 +161,29 @@ Four rules on top of that:
    re-trigger an entrance every time a section re-enters the viewport. A
    section that animates in once and then resets when you scroll back up reads
    as a template.
-4. **One authored moment per screen, not scattered effects.** One thing on the
-   page moves with intent; everything else is still. It is worse to add
-   animation to every section than to add none.
+4. **One conductor, many tempos.** The hero is the slow anchor and sets the
+   page's pace. Secondary depth layers are allowed — a page may carry several,
+   each scrubbed by its own scroll range at its own speed — but every layer
+   comes from the tempo map below, and only the hero is authored. Layering is
+   depth, not decoration: scroll-linked, transform/opacity only, reversible,
+   and nothing re-triggers when a section re-enters the viewport.
+
+**The tempo map.** Speeds are relative to the scroll. Each layer is built in
+`assets/depth.css` from `tokens.css`, and a moving line reaches its final
+position before it crosses the middle of the viewport. Nothing that is not in
+this table moves.
+
+| # | Layer | Tempo | Motion |
+|---|---|---|---|
+| 1 | Hero watch | slowest, weighty | scrubbed frame sequence (spec 18), unchanged |
+| 2 | Hero → rows handoff | slow | first row track rises `--s-8` + `rotateX(8deg)` to flat |
+| 3 | Row titles + icons | slow | title drifts `--s-6` → 0; icon turns into place a beat ahead |
+| 4 | Cards in a row | medium, staggered | cards rise on lagged ranges, arriving like a wave |
+| 5 | Row track | fast, follows the finger | cards turn ±6° (±4° on mobile) from their place in the track |
+| 6 | Card pointer tilt | instant | ≤ 4° toward the cursor + a photo lift; fine pointers only |
+| 7 | "Plus" reveal | medium, one-shot | revealed rows unfold `rotateX(12deg)` → 0 on the click |
+| 8 | Product gallery | slow | main photo settles from `scale(1.04)` + `--s-5`; the info column is still |
+| 9 | Footer monogram | slowest, the closing beat | monogram turns to front view as the footer enters |
 
 **Reduced motion is not a downgrade.** Under `prefers-reduced-motion` the page
 must still read completely: the hero shows its poster, accordions still open,

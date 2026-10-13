@@ -852,3 +852,24 @@ body.has-sticky-atc {
     display: block;
   }
 }
+
+/* Depth layer (spec 20) — product gallery, layer 8: the main photo settles from
+   a touch oversized and a step low as its column enters. The info column does
+   not move — the buy area stays still. The viewport publishes the timeline,
+   because the strip is a horizontal scroller and would otherwise key an image's
+   own view() to the strip box. Gated, so the photo is simply in place when the
+   engine or motion is off. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-depth-gallery] .product-gallery__viewport {
+      view-timeline-name: --depth-gallery;
+      view-timeline-axis: block;
+    }
+
+    [data-depth-gallery] .product-gallery__slide:first-child .product-gallery__image {
+      animation: depth-gallery auto linear both;
+      animation-timeline: --depth-gallery;
+      animation-range: entry 0% cover 100%;
+    }
+  }
+}

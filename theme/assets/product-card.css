@@ -140,3 +140,39 @@
     font-size: var(--fs-lg);
   }
 }
+
+/* Depth layer (spec 20) — pointer tilt, layer 6. depth-tilt.js writes the tilt
+   on the link and toggles `.is-tilting`; the viewing distances come from
+   depth.css. Fine pointers only, so touch never fires a false hover, and a
+   reduced-motion visitor gets neither the rotation nor the lift. The card
+   carries the viewing distance for the link; the link carries it for the
+   photo, which lifts toward the viewer on `translateZ`. */
+@media (hover: hover) and (pointer: fine) {
+  .card {
+    perspective: var(--depth-perspective);
+  }
+
+  .card__link {
+    perspective: var(--depth-perspective);
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+
+  .card__media {
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+
+  .card.is-tilting .card__media {
+    transform: translateZ(var(--depth-lift));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card__link,
+  .card__media {
+    transition: none;
+  }
+
+  .card.is-tilting .card__media {
+    transform: none;
+  }
+}

@@ -271,3 +271,93 @@
   margin: 0;
   color: var(--c-text-2);
 }
+
+/* Depth layers (spec 20) — the home rows' tempos. The custom properties and
+   keyframes live in depth.css. Gated so a browser without scroll-driven
+   timelines, or a reduced-motion visitor, keeps the static final state: every
+   animation starts from an offset and settles to the element's own layout. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* 7 — "Plus": a revealed row unfolds as it comes back. Declared on every
+       row, so a row that starts `hidden` has no box to run on and plays on the
+       click that reveals it, while a row already on screen runs it off-screen
+       at page load: the fold-in is never seen twice. */
+    [data-depth-rows] .row {
+      animation: depth-unfold var(--dur-3) var(--ease-out) both;
+      /* The fold pivots just under the row, so the turning plane recedes away
+         from the reader and never projects past the page's own width (a pivot on
+         the element itself still lands a hair past the edge at 768). */
+      transform-origin: 50% 110%;
+    }
+
+    /* 2 — hero → rows handoff: the first row's track rises and settles flat as
+       the hero unpins. The viewport is the nearest stable parent, so it carries
+       the viewing distance. */
+    [data-depth-rows] .row:first-child .row__viewport {
+      perspective: var(--depth-perspective);
+    }
+
+    /* The rise pivots just under the track: the top folds away from the reader,
+       so the turning plane only ever shrinks — a perspective centre would widen
+       a full-bleed track past the page edge. */
+    [data-depth-rows] .row:first-child .row__track {
+      transform-origin: 50% 110%;
+      animation: depth-handoff auto linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 35%;
+    }
+
+    /* 3 — row titles drift up; the icon turns to face the reader a beat ahead.
+       Both settle before the line crosses the middle of the viewport. */
+    [data-depth-rows] .row__title {
+      perspective: var(--depth-perspective);
+      animation: depth-title auto linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 12%;
+    }
+
+    [data-depth-rows] .icon.row__icon {
+      animation: depth-icon auto linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 8%;
+    }
+
+    /* The track is a horizontal scroller, so it is a scroll container on both
+       axes and would key an item's own view() timeline to the track box. The
+       viewport is not a scroller, so it publishes the timeline the items scrub
+       on, and the clip keeps a rotated card off the page edge. */
+    [data-depth-rows] .row__viewport {
+      overflow-x: clip;
+      view-timeline-name: --depth-row;
+      view-timeline-axis: block;
+    }
+
+    /* 4 — the cards arrive like a wave: card n starts 4% later than card n-1,
+       the first three lag, and the rest share the last value. */
+    [data-depth-rows] .row__item {
+      perspective: var(--depth-perspective);
+      animation: depth-card auto linear both;
+      animation-timeline: --depth-row;
+      animation-range: cover var(--depth-card-lag) cover 30%;
+    }
+
+    [data-depth-rows] .row__item:nth-child(2) {
+      --depth-card-lag: 4%;
+    }
+
+    [data-depth-rows] .row__item:nth-child(3) {
+      --depth-card-lag: 8%;
+    }
+
+    [data-depth-rows] .row__item:nth-child(n + 4) {
+      --depth-card-lag: 12%;
+    }
+
+    /* 5 — coverflow-lite: each card turns toward flat as it reaches the centre
+       of the track's own horizontal timeline. */
+    [data-depth-rows] .row__track .card {
+      animation: depth-sway auto linear both;
+      animation-timeline: view(inline);
+    }
+  }
+}

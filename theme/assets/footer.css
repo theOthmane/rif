@@ -213,3 +213,22 @@
     gap: var(--s-4);
   }
 }
+
+/* Depth layer (spec 20) — the closing beat, layer 9: the monogram turns to front
+   view as the footer enters, echoing the hero watch's settle. The brand link is
+   the nearest stable parent, so it carries the viewing distance. Gated: with no
+   scroll-driven timelines, or under reduced motion, the mark is simply already
+   facing the reader. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-depth-footer] .footer__brand {
+      perspective: var(--depth-perspective);
+    }
+
+    [data-depth-footer] .footer__monogram {
+      animation: depth-monogram auto linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}

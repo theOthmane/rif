@@ -67,7 +67,7 @@
   endif
 -%}
 
-<article class="card">
+<article class="card" data-depth-tilt>
   <{{ card_tag }} class="card__link"{% if product %} href="{{ product.url }}"{% endif %}>
     {%- comment -%}
       `media` is only assigned when there is a product, so a product without a

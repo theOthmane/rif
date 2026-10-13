@@ -10,6 +10,7 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'header.css' | asset_url | stylesheet_tag }}
     {{ 'footer.css' | asset_url | stylesheet_tag }}
+    {{ 'depth.css' | asset_url | stylesheet_tag }}
     {%- comment -%}
       Spec 12 deviation (owner-approved): policy pages render through this
       layout with no template of their own, so the system styles reach them
@@ -62,5 +63,12 @@
         {% section 'cart-drawer' %}
       {%- endif -%}
     </div>
+
+    {%- comment -%}
+      Spec 20 depth layers: one module for the pointer tilt. The scroll layers
+      need no JavaScript — they are CSS scroll-driven animations — so this is
+      the whole script for the system, loaded once.
+    {%- endcomment -%}
+    <script src="{{ 'depth-tilt.js' | asset_url }}" type="module" defer></script>
   </body>
 </html>
