@@ -126,8 +126,8 @@
 /* 18px, the same step base.css gives `.icon--sm`. Scoped to the footer because
    header.css also writes `.icon`, and it loads after base.css. */
 .footer__contact .icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
 }
 
 /* Legal bar: hairline, one quiet line, never centred. This is the one compact
@@ -169,7 +169,7 @@
   align-items: center;
   /* 24px minimum target (WCAG 2.2 AA 2.5.8); the footer's top padding pays
      for it so the band stays inside 240px at 1440. */
-  min-height: 1.5rem;
+  min-height: var(--s-5);
   font-family: var(--font-body);
   font-weight: 400;
   font-size: var(--fs-xs);

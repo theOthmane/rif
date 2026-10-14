@@ -3,7 +3,7 @@
     Tenor Sans, silver only on the small accents (bullets, quote rule). */
 
 .rte {
-  max-width: 65ch;
+  max-width: var(--measure);
   font-family: var(--font-body);
   font-size: var(--fs-md);
   line-height: var(--lh-body);
@@ -51,7 +51,7 @@
   text-decoration: underline;
   text-decoration-color: var(--c-line-strong);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
+  text-underline-offset: var(--s-1);
 }
 
 .rte a:hover {

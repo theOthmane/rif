@@ -508,7 +508,7 @@
 /* A merchant's own description is content, so it gets content measure —
    a 90rem line of text is unreadable whatever font it is set in. */
 .rte {
-  max-inline-size: 68ch;
+  max-inline-size: var(--measure);
 }
 
 .product-info__policy-link {
@@ -750,7 +750,7 @@ body.has-sticky-atc {
   }
 
   .product-info__detail-body {
-    max-inline-size: 68ch;
+    max-inline-size: var(--measure);
   }
 }
 
@@ -782,7 +782,7 @@ body.has-sticky-atc {
     position: sticky;
     /* JS replaces this with the measured height of the sticky chrome; the
        token is the no-JS estimate and is deliberately generous. */
-    top: calc(var(--product-chrome-h, 8rem) + var(--s-5));
+    top: calc(var(--product-chrome-h, calc(var(--s-8) * 2)) + var(--s-5));
   }
 
   /* A column taller than the viewport pins with its own bottom cut off, so it

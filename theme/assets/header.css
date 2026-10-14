@@ -18,7 +18,7 @@
 
 .announcement__text {
   margin: 0;
-  max-width: 42rem;
+  max-width: var(--announcement-max);
   font-family: var(--font-body);
   font-weight: 500;
   font-size: var(--fs-sm);
@@ -156,8 +156,8 @@
   font-weight: 400;
   font-synthesis: none;
   font-size: var(--fs-lg);
-  letter-spacing: 0.32em;
-  text-indent: 0.32em;
+  letter-spacing: var(--tracking-wordmark);
+  text-indent: var(--tracking-wordmark);
   text-transform: uppercase;
   line-height: 1;
   background: var(--c-silver);

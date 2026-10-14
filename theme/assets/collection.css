@@ -45,7 +45,7 @@
 }
 
 .collection-description {
-  max-width: 60ch;
+  max-width: var(--measure);
   color: var(--c-text-2);
 }
 

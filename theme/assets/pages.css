@@ -239,7 +239,7 @@ a.contact__sav-link:hover {
 }
 
 .mission__quote {
-  max-width: 24ch;
+  max-width: var(--measure-display);
   margin-block: 0;
   margin-inline: auto;
   font-size: var(--fs-2xl);

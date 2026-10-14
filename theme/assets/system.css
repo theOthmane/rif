@@ -162,7 +162,7 @@
   align-items: center;
   gap: var(--s-4);
   width: 100%;
-  max-width: 42ch;
+  max-width: var(--measure-narrow);
   text-align: center;
 }
 
@@ -282,7 +282,7 @@
    `.shopify-policy__container`. One measure, centred; the title speaks in
    Tenor and the body follows the rte rules from spec 11. */
 .shopify-policy__container {
-  max-width: 65ch;
+  max-width: var(--measure);
   margin-inline: auto;
   padding-block: var(--section-y);
   padding-inline: var(--gutter);
@@ -348,7 +348,7 @@
   text-decoration: underline;
   text-decoration-color: var(--c-line-strong);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
+  text-underline-offset: var(--s-1);
 }
 
 .shopify-policy__body a:hover {
@@ -411,7 +411,7 @@
   align-items: center;
   gap: var(--s-4);
   width: 100%;
-  max-width: 42ch;
+  max-width: var(--measure-narrow);
   text-align: center;
 }
 
@@ -457,7 +457,7 @@
   padding: var(--s-3) var(--s-4);
   font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
   font-size: var(--fs-lg);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-code);
   color: var(--c-text);
   border: 1px solid var(--c-line-strong);
   border-radius: var(--radius-sm);

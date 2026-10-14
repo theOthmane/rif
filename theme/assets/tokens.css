@@ -23,6 +23,10 @@
   --lh-tight: 1.05; --lh-snug: 1.25; --lh-body: 1.6;
   --tracking-label: 0.14em;  /* uppercase body-font labels */
   --tracking-display: 0.02em; /* Tenor reads better slightly open, never negative */
+  --tracking-wordmark: 0.32em; /* the RIFANO wordmark */
+  --tracking-code: 0.08em;     /* gift-card code, mono */
+  /* text measures: one prose measure for every reading column */
+  --measure: 65ch; --measure-narrow: 42ch; --measure-display: 24ch;
 
   /* space: 4px base */
   --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
@@ -35,6 +39,10 @@
   --card-min: 15rem;
   --card-min-compact: 10rem;
   --card-min-full: 17.5rem;
+  --icon-md: 1.5rem; --icon-sm: 1.125rem;
+  --announcement-max: 42rem;
+  --cart-aside-min: 17rem; --cart-aside-max: 22rem;
+  --hero-ring-max: 24rem;
 
   /* brand mark sizes. The monogram is the rarest asset on the site, so its size
      is a decision, not a default: the header mark sits at the same optical weight
@@ -49,6 +57,7 @@
      page black and are divided by this line only, never by a grey band or a shadow.
      One token so the shell can never drift apart. */
   --hairline: 1px solid var(--c-line);
+  --perspective: 60rem; /* a 960px viewing distance for every 3D plane */
   --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -12px rgb(0 0 0 / 0.6);
 
   /* motion */

@@ -20,7 +20,7 @@
 
 :root {
   /* One viewing distance for every 3D turn, expressed from the spacing scale. */
-  --depth-perspective: calc(var(--s-9) * 10); /* 60rem, a 960px viewing distance */
+  --depth-perspective: var(--perspective);
 
   /* The tempo map (spec 20). Travel is a spacing token; degrees are the map's. */
   --depth-handoff-travel: var(--s-8); /* 2 — first row track rise */

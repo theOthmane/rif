@@ -74,7 +74,11 @@ a template. Show it clearly once or twice. Three times is boilerplate.
   `--fs-3xl` is reserved for the hero tagline.
 - Leading: `--lh-tight 1.05` (display), `--lh-snug 1.25`, `--lh-body 1.6`.
 - Tracking: `--tracking-label 0.14em` (uppercase body-font labels),
-  `--tracking-display -0.01em`.
+  `--tracking-display 0.02em` (Tenor reads better slightly open, never
+  negative), `--tracking-wordmark 0.32em` (RIFANO wordmark),
+  `--tracking-code 0.08em` (gift-card code).
+- Measures: `--measure 65ch` (every prose column), `--measure-narrow 42ch`,
+  `--measure-display 24ch` (large quotes).
 
 ### Space
 
@@ -86,7 +90,9 @@ a template. Show it clearly once or twice. Three times is boilerplate.
 
 Component sizes are not spacing tokens and live in their own block:
 `--card-min: 15rem` (product / search grid track), `--card-min-compact: 10rem`,
-`--card-min-full: 17.5rem` (collections grid).
+`--card-min-full: 17.5rem` (collections grid), `--icon-md 1.5rem` /
+`--icon-sm 1.125rem`, `--announcement-max`, `--cart-aside-min/max`,
+`--hero-ring-max`.
 
 ### Shape, depth, motion, layers
 
@@ -95,6 +101,7 @@ Component sizes are not spacing tokens and live in their own block:
   bar, menu drawer and footer share the page black and are divided by this one
   line. Never a grey band, never a shadow, never a fill step standing in for a
   border. One token so the shell cannot drift apart.
+- `--perspective: 60rem` — the one viewing distance for every 3D plane.
 - `--shadow-lift` — single restrained lift shadow.
 - `--ease-out: cubic-bezier(0.2, 0.7, 0.2, 1)`;
   `--dur-1 160ms`, `--dur-2 280ms`, `--dur-3 600ms`.

@@ -78,7 +78,7 @@
   inset-inline: 0;
   margin-inline: auto;
   inset-block-end: var(--s-2);
-  inline-size: min(64%, 24rem);
+  inline-size: min(64%, var(--hero-ring-max));
   block-size: var(--s-3);
   background: radial-gradient(closest-side, color-mix(in srgb, var(--c-silver-3) 25%, transparent), transparent);
   pointer-events: none;
@@ -155,7 +155,7 @@
    is the identity. */
 @media (hover: hover) and (pointer: fine) {
   .hero__stage {
-    transform: perspective(60rem) rotateX(var(--hero-tilt-x, 0deg)) rotateY(var(--hero-tilt-y, 0deg));
+    transform: perspective(var(--perspective)) rotateX(var(--hero-tilt-x, 0deg)) rotateY(var(--hero-tilt-y, 0deg));
     transition: transform var(--dur-2) var(--ease-out);
   }
 }

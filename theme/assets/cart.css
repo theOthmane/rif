@@ -448,7 +448,7 @@ cart-items:defined .cart-page__update-wrap {
 /* Desktop: lines left, totals right (spec 10 §5). */
 @media (min-width: 768px) {
   .cart-page__layout {
-    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+    grid-template-columns: minmax(0, 1fr) minmax(var(--cart-aside-min), var(--cart-aside-max));
     gap: var(--s-7);
     align-items: start;
   }
