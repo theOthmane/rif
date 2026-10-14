@@ -869,7 +869,7 @@ body.has-sticky-atc {
     [data-depth-gallery] .product-gallery__slide:first-child .product-gallery__image {
       animation: depth-gallery auto linear both;
       animation-timeline: --depth-gallery;
-      animation-range: entry 0% cover 100%;
+      animation-range: entry 0% exit 30%;
     }
   }
 }

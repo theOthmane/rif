@@ -228,7 +228,9 @@
     [data-depth-footer] .footer__monogram {
       animation: depth-monogram auto linear both;
       animation-timeline: view();
-      animation-range: entry 10% cover 40%;
+      /* Entry only: a short footer never reaches `cover 40%` at the page
+         bottom, which left the mark parked mid-turn. */
+      animation-range: entry 0% entry 100%;
     }
   }
 }

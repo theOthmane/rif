@@ -78,7 +78,7 @@
 
 /* 5 — coverflow-lite: a card in a row turns toward flat as it reaches the
    centre of the track's own viewport, the way a held object squares up. The
-   flat zone covers the middle 60% — where a card is actually read — so a track
+   flat zone covers the middle 80% — where a card is actually read — so a track
    too short to swipe rests flat, and only a card crossing the outer edges
    turns. */
 @keyframes depth-sway {
@@ -86,8 +86,8 @@
     transform: rotateY(var(--depth-track-tilt));
   }
 
-  20%,
-  80% {
+  10%,
+  90% {
     transform: rotateY(0deg);
   }
 
