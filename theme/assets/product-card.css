@@ -22,7 +22,9 @@
   position: relative;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  background: var(--c-surface);
+  /* Product on the page black (DESIGN.md Imagery): a lighter box behind a
+     contained black-ground photo shows as hard bars beside the watch. */
+  background: var(--c-bg);
   border-radius: var(--radius-sm);
 }
 

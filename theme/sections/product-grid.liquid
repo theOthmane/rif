@@ -3,6 +3,8 @@
 {{ 'collection.css' | asset_url | stylesheet_tag }}
 
 <div class="collection-grid-section page-width" data-section-id="{{ section.id }}">
+  {%- comment -%} Nothing to sort with fewer than two products. {%- endcomment -%}
+  {%- if collection.products_count > 1 -%}
   <div class="collection-toolbar">
     <form method="get" action="{{ collection.url }}" class="collection-sort" data-sort-form>
       <label class="visually-hidden" for="sort-{{ section.id }}">{{ 'rifano.collection_sort_label' | t }}</label>
@@ -16,6 +18,7 @@
       </noscript>
     </form>
   </div>
+  {%- endif -%}
 
   <div class="collection-results" data-grid-results aria-busy="false">
     {% paginate collection.products by 24 %}

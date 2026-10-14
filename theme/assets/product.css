@@ -46,7 +46,7 @@
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: var(--c-surface);
+  background: var(--c-bg); /* product on the page black (DESIGN.md Imagery) */
   overflow: hidden;
   cursor: zoom-in;
 }

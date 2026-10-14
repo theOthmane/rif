@@ -195,7 +195,7 @@ cart-items {
   display: flex;
   align-items: baseline;
   gap: var(--s-2);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--c-text-2);
 }
 
@@ -226,7 +226,6 @@ cart-items {
   justify-self: start;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-block-size: var(--s-7);
   min-inline-size: var(--s-7);
   font-family: var(--font-body);
