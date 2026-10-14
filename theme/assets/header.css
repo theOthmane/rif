@@ -146,26 +146,6 @@
   text-decoration: none;
 }
 
-/* Silver gradient text: the monogram is the rarest asset on the page and one of
-   the three permitted uses of --c-silver. */
-.header__monogram {
-  display: inline-flex;
-  align-items: center;
-  height: var(--s-6);
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-synthesis: none;
-  font-size: var(--fs-lg);
-  letter-spacing: var(--tracking-wordmark);
-  text-indent: var(--tracking-wordmark);
-  text-transform: uppercase;
-  line-height: 1;
-  background: var(--c-silver);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 .header__logo svg {
   height: var(--s-6);
   width: auto;
@@ -386,13 +366,6 @@
 
 .menu-drawer__social:hover {
   background: var(--c-surface-2);
-}
-
-.menu-drawer__note {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: var(--fs-sm);
-  line-height: var(--lh-body);
 }
 
 @media (min-width: 768px) {

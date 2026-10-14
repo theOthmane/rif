@@ -8,6 +8,7 @@
   @param {object} [product] - The product to render. When nil the card renders in placeholder mode.
   @param {number} [placeholder_index] - Which Shopify placeholder illustration to draw in placeholder mode (1-6)
   @param {string} [sizes] - The `sizes` attribute for the image srcset. Defaults to a generic 2/3/4 column grid.
+  @param {number} [heading_level] - Heading level of the card title (2-6). Defaults to 3.
   @param {string} [loading] - `'lazy'` (default), or `'eager'` for the first row of a grid
 
   @example
@@ -21,6 +22,7 @@
 
 {%- liquid
   assign loading = loading | default: 'lazy'
+  assign heading_level = heading_level | default: 3
   assign sizes = sizes | default: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw'
   assign placeholder_index = placeholder_index | default: 1
   assign card_widths = '360, 540, 720, 960'
@@ -106,10 +108,10 @@
       {%- endif -%}
 
       {%- if product -%}
-        <h3 class="card__title">{{ product.title }}</h3>
+        <h{{ heading_level }} class="card__title">{{ product.title }}</h{{ heading_level }}>
         {% render 'price', variant: card_variant %}
       {%- else -%}
-        <h3 class="card__title">{{ 'rifano.product_coming_soon' | t }}</h3>
+        <h{{ heading_level }} class="card__title">{{ 'rifano.product_coming_soon' | t }}</h{{ heading_level }}>
       {%- endif -%}
     </div>
   </{{ card_tag }}>

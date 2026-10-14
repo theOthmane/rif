@@ -57,6 +57,7 @@
      page black and are divided by this line only, never by a grey band or a shadow.
      One token so the shell can never drift apart. */
   --hairline: 1px solid var(--c-line);
+  --focus-ring: 2px; /* the focus ring, not a hairline */
   --perspective: 60rem; /* a 960px viewing distance for every 3D plane */
   --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -12px rgb(0 0 0 / 0.6);
 

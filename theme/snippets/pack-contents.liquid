@@ -10,6 +10,7 @@
   list is styled wherever it appears.
 
   @param {object} product - The pack product to read `metafields.custom.pack_contents` and `metafields.custom.pack_gift` from.
+  @param {boolean} [skip_css] - Pass true when the caller already loads `packs.css`. Defaults to false (the snippet loads it).
   @param {number} [max] - Entries shown before the "+N" count. Defaults to 4.
 
   @example
@@ -23,7 +24,9 @@
 -%}
 
 {%- if contents != blank or gift != blank -%}
-  {{ 'packs.css' | asset_url | stylesheet_tag }}
+  {%- unless skip_css -%}
+    {{ 'packs.css' | asset_url | stylesheet_tag }}
+  {%- endunless -%}
   <div class="pack-contents">
     {%- if contents != blank -%}
       <p class="pack-contents__title t-label">{{ 'rifano.packs_contents' | t }}</p>

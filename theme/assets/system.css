@@ -293,12 +293,20 @@
   font-family: var(--font-display);
   font-weight: 400;
   font-synthesis: none;
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-xl);
   letter-spacing: var(--tracking-display);
   line-height: var(--lh-snug);
   color: var(--c-text);
   text-align: center;
   text-wrap: balance;
+  hyphens: auto;
+  overflow-wrap: normal;
+}
+
+@media (min-width: 768px) {
+  .shopify-policy__title {
+    font-size: var(--fs-2xl);
+  }
 }
 
 .shopify-policy__body {

@@ -64,9 +64,7 @@
         {%- endfor -%}
 
         {%- if has_products -%}
-          {%- if has_text -%}
-            <h2 class="search__subtitle t-label">{{ 'rifano.search_products' | t }}</h2>
-          {%- endif -%}
+          <h2 class="search__subtitle t-label{% unless has_text %} visually-hidden{% endunless %}">{{ 'rifano.search_products' | t }}</h2>
 
           {%- assign card_index = 0 -%}
           <ul class="collection-grid">

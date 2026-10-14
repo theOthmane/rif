@@ -173,6 +173,10 @@ cart-items {
   line-height: var(--lh-snug);
   color: var(--c-text);
   text-decoration: none;
+  /* 44px hit area: padding grows the target, the negative margin cancels it
+     so the line item layout does not move. */
+  padding-block: var(--s-3);
+  margin-block: calc(var(--s-3) * -1);
 }
 
 .cart-line__title:hover {
@@ -222,7 +226,9 @@ cart-items {
   justify-self: start;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-block-size: var(--s-7);
+  min-inline-size: var(--s-7);
   font-family: var(--font-body);
   font-size: var(--fs-sm);
   color: var(--c-text-2);

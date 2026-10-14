@@ -15,7 +15,6 @@
         aria-label="{{ 'rifano.close' | t }}"
       >
         {% render 'icon', name: 'close' %}
-        <span class="visually-hidden">{{ 'rifano.close' | t }}</span>
       </button>
       <p class="menu-drawer__welcome t-label">{{ 'rifano.welcome' | t }}</p>
     </div>
@@ -126,9 +125,6 @@
           </a>
         {% endif %}
       </div>
-      <p class="menu-drawer__note t-muted">
-        {{ 'rifano.cod_delivery' | t }}{% if settings.delivery_text != blank %} · {{ settings.delivery_text }}{% endif %}
-      </p>
     </div>
   </div>
 </dialog>

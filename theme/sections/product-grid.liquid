@@ -24,9 +24,9 @@
           {% for product in collection.products %}
             <li class="collection-grid__item">
               {% if forloop.index <= 4 %}
-                {% render 'product-card', product: product, loading: 'eager' %}
+                {% render 'product-card', product: product, heading_level: 2, loading: 'eager' %}
               {% else %}
-                {% render 'product-card', product: product %}
+                {% render 'product-card', product: product, heading_level: 2 %}
               {% endif %}
             </li>
           {% endfor %}

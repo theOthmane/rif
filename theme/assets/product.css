@@ -308,7 +308,7 @@
 }
 
 .product-info__pill:has(.product-info__pill-input:focus-visible) {
-  outline: 1px solid var(--c-accent);
+  outline: var(--focus-ring) solid var(--c-accent);
   outline-offset: var(--s-1);
 }
 

@@ -110,6 +110,16 @@
   color: var(--c-text);
 }
 
+.pack-card__title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.pack-card__title-link:hover {
+  text-decoration: underline;
+  text-underline-offset: var(--s-1);
+}
+
 /* Saving: one plain sentence, never a badge (DESIGN.md: silver is earned,
    savings are text). */
 .pack-card__saving {

@@ -63,6 +63,7 @@
     "liquid_tips_3": "Assignez les recherches coûteuses à une variable et réutilisez-la"
   },
   "rifano": {
+    "announcement_label": "Annonce",
     "announcement": "Paiement à la livraison · Livraison gratuite partout au Maroc",
     "tagline_1": "Be different.",
     "tagline_2": "Be RIFANO.",
@@ -90,7 +91,10 @@
     "cod_delivery": "Paiement à la livraison · Livraison gratuite partout au Maroc",
     "collection_home": "Accueil",
     "collection_breadcrumb_label": "Fil d'Ariane",
-    "collection_count": "{{ count }} pièces",
+    "collection_count": {
+      "one": "{{ count }} pièce",
+      "other": "{{ count }} pièces"
+    },
     "collection_empty_title": "Cette collection arrive bientôt.",
     "collection_empty_cta": "Voir toute la boutique",
     "collection_sort_label": "Trier par",

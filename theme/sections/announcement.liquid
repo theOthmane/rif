@@ -7,7 +7,7 @@
   template ticker. Words unchanged.
 {%- endcomment -%}
 
-<div class="announcement">
+<div class="announcement" role="region" aria-label="{{ 'rifano.announcement_label' | t }}">
   <p class="announcement__text">
     {% if settings.announcement_text != blank %}
       {{ settings.announcement_text }}

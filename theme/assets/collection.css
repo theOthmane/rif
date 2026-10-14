@@ -19,7 +19,11 @@
   gap: var(--s-2);
 }
 
+/* Crumbs are small text but full-size targets: 48px tall, the line unchanged. */
 .collection-breadcrumb__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--s-7);
   font-size: var(--fs-sm);
   text-decoration: none;
 }

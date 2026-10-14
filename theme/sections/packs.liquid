@@ -111,7 +111,7 @@
               </div>
 
               <div class="pack-card__body">
-                <h2 class="pack-card__title">{{ product.title }}</h2>
+                <h2 class="pack-card__title"><a class="pack-card__title-link" href="{{ product.url }}">{{ product.title }}</a></h2>
 
                 {% render 'price', variant: card_variant %}
 
@@ -120,7 +120,7 @@
                   <p class="pack-card__saving">{{ 'rifano.packs_saving' | t: amount: saving_money }}</p>
                 {%- endif -%}
 
-                {% render 'pack-contents', product: product %}
+                {% render 'pack-contents', product: product, skip_css: true %}
 
                 <div class="pack-card__actions">
                   {%- comment -%}
