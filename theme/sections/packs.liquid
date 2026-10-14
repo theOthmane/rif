@@ -35,6 +35,10 @@
   endif
 
   assign packs_heading = section.settings.heading
+  # The schema default above is a literal on purpose: Shopify translates only
+  # a setting's label, info and option text — never its default — so a `t:`
+  # default would render as its own key. "Packs" reads the same in French and
+  # English, and a merchant-cleared field still falls back to the locale below.
   if packs_heading == blank
     assign packs_heading = 'rifano.packs_title' | t
   endif
@@ -259,7 +263,7 @@
       "type": "text",
       "id": "heading",
       "label": "t:labels.packs_heading",
-      "default": "t:labels.packs_heading_default"
+      "default": "Packs"
     },
     {
       "type": "richtext",
