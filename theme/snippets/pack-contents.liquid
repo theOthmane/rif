@@ -1,0 +1,58 @@
+{% doc %}
+  "Ce pack contient" — the display contents of a ready-made pack: a small
+  thumbnail and the title for each product in `custom.pack_contents`, up to
+  `max` entries and a "+N" count for the rest, then the optional
+  `custom.pack_gift` line ("Offert : …"). Renders nothing when neither
+  metafield is set, so the packs page and the product page can both call it
+  and let the product data decide.
+
+  Loads `packs.css` itself, like the product card loads its own styles, so the
+  list is styled wherever it appears.
+
+  @param {object} product - The pack product to read `metafields.custom.pack_contents` and `metafields.custom.pack_gift` from.
+  @param {number} [max] - Entries shown before the "+N" count. Defaults to 4.
+
+  @example
+  {% render 'pack-contents', product: product %}
+{% enddoc %}
+
+{%- liquid
+  assign max = max | default: 4
+  assign contents = product.metafields.custom.pack_contents.value
+  assign gift = product.metafields.custom.pack_gift.value
+-%}
+
+{%- if contents != blank or gift != blank -%}
+  {{ 'packs.css' | asset_url | stylesheet_tag }}
+  <div class="pack-contents">
+    {%- if contents != blank -%}
+      <p class="pack-contents__title t-label">{{ 'rifano.packs_contents' | t }}</p>
+      <ul class="pack-contents__list">
+        {%- for item in contents limit: max -%}
+          <li class="pack-contents__item">
+            {%- comment -%}
+              The thumbnail doubles the title beside it, so it is decorative:
+              no alt, hidden from the accessibility tree.
+            {%- endcomment -%}
+            <span class="pack-contents__thumb" aria-hidden="true">
+              {%- if item.featured_image -%}
+                {{ item.featured_image | image_url: width: 120 | image_tag: widths: '96, 120, 180', sizes: '3rem', loading: 'lazy', alt: '', class: 'pack-contents__image' }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'pack-contents__placeholder' }}
+              {%- endif -%}
+            </span>
+            <span class="pack-contents__name">{{ item.title }}</span>
+          </li>
+        {%- endfor -%}
+        {%- assign more = contents.count | minus: max -%}
+        {%- if more > 0 -%}
+          <li class="pack-contents__more">{{ 'rifano.packs_contents_more' | t: count: more }}</li>
+        {%- endif -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if gift != blank -%}
+      <p class="pack-contents__gift">{{ 'rifano.packs_gift' | t: title: gift.title }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}

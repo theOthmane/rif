@@ -178,6 +178,15 @@
     "password_enter": "Entrer",
     "gift_copy": "Copier le code",
     "gift_copied": "Code copié",
-    "gift_back_home": "Accueil"
+    "gift_back_home": "Accueil",
+    "packs_title": "Packs",
+    "packs_saving": "Vous économisez {{ amount }}",
+    "packs_contents": "Ce pack contient",
+    "packs_contents_more": "+{{ count }}",
+    "packs_gift": "Offert : {{ title }}",
+    "packs_view": "Voir le pack",
+    "packs_add": "Ajouter au panier",
+    "packs_empty": "Les packs arrivent bientôt.",
+    "packs_empty_cta": "Voir la boutique"
   }
 }

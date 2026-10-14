@@ -1,0 +1,9 @@
+{
+  "order": ["packs"],
+  "sections": {
+    "packs": {
+      "type": "packs",
+      "settings": {}
+    }
+  }
+}

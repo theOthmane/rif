@@ -60,6 +60,15 @@
       <p class="product-info__price-note t-muted">{{ 'rifano.product_price_note' | t }}</p>
     </div>
 
+    {%- comment -%}
+      A ready-made pack (spec 21) carries its contents and its optional gift in
+      product metafields; the snippet renders nothing when they are absent, so
+      a normal product is unchanged. Only the metafield gates the call.
+    {%- endcomment -%}
+    {%- if product.metafields.custom.pack_contents != blank -%}
+      {% render 'pack-contents', product: product %}
+    {%- endif -%}
+
     {% form 'product', product, class: 'product-info__form' %}
       {%- comment -%}
         The variant id input carries no `name` until product-form.js gives it one.

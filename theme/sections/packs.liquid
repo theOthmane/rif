@@ -1,0 +1,277 @@
+{% comment %}
+  Packs page (spec 21): ready-made packs from one collection — Shopify Bundles
+  products, one price each, so a pack is a normal product with a normal add.
+  The card shows only what the product data carries: the struck-through
+  compare-at (via the `price` snippet), the saving line, the contents list and
+  the gift line all hide themselves when their data is absent, and nothing here
+  invents a discount, a saving or a gift.
+
+  The collection is read from the section setting; when the setting is empty
+  the page falls back to the collection with the handle `packs`, so the
+  template works the moment the collection exists. With no collection (or an
+  empty one) the live storefront shows one sentence and the Boutique button —
+  the spec-19 pattern — while the editor shows three placeholder cards to lay
+  the grid out.
+
+  Quick add renders only for a single-variant, available pack and reuses the
+  product page's add path: a real product form (no JS → native POST, and
+  `page` cart type stays native), intercepted in drawer mode to POST
+  `/cart/add.js` under the `cart:before-add` / `cart:added` contract, so
+  cart.js enriches the request with the Section Rendering bundle, opens the
+  drawer with this button as the trigger, and every piece of cart logic stays
+  where it already lives. The card reuses the spec-20 depth layers: layer 6
+  through `[data-depth-tilt]` / `.card__link` (depth-tilt.js) and layer 4
+  through the same `depth-card` keyframe and lag variables as the home row
+  cards.
+{% endcomment %}
+
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+{{ 'packs.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign packs_collection = section.settings.collection
+  if packs_collection == blank
+    assign packs_collection = collections['packs']
+  endif
+
+  assign packs_heading = section.settings.heading
+  if packs_heading == blank
+    assign packs_heading = 'rifano.packs_title' | t
+  endif
+
+  # Placeholder cards are an editor tool, exactly like the home rows: live they
+  # would look like packs that cannot be opened.
+  assign show_placeholders = request.design_mode
+
+  assign packs_count = 0
+  if packs_collection != blank
+    assign packs_count = packs_collection.products_count
+  endif
+-%}
+
+<div class="packs page-width">
+  <header class="packs__header">
+    <h1 class="packs__title t-page-title">{{ packs_heading }}</h1>
+    {%- if section.settings.intro != blank -%}
+      <div class="packs__intro rte">{{ section.settings.intro }}</div>
+    {%- endif -%}
+  </header>
+
+  {%- if packs_count == 0 -%}
+    {%- if show_placeholders -%}
+      <ul class="packs__grid">
+        {%- for i in (1..3) -%}
+          <li class="packs__item">
+            <article class="pack-card">
+              <div class="pack-card__media">
+                {{ 'product-' | append: i | placeholder_svg_tag: 'card__placeholder' }}
+              </div>
+            </article>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <div class="packs-empty">
+        <p class="packs-empty__text">{{ 'rifano.packs_empty' | t }}</p>
+        <a class="btn btn--ghost" href="{{ routes.collections_url }}">{{ 'rifano.packs_empty_cta' | t }}</a>
+      </div>
+    {%- endif -%}
+  {%- else -%}
+    <ul class="packs__grid">
+      {%- for product in packs_collection.products -%}
+        {%- liquid
+          # `product.price` and `product.compare_at_price` are each the minimum
+          # over ALL variants, so comparing them can print a saving that does
+          # not exist. Read both from one variant, like the product card does.
+          assign card_variant = product.selected_or_first_available_variant
+
+          assign saving = 0
+          if card_variant.compare_at_price > card_variant.price
+            assign saving = card_variant.compare_at_price | minus: card_variant.price
+          endif
+
+          assign quick_add = false
+          if product.variants.size == 1 and card_variant.available
+            assign quick_add = true
+          endif
+        -%}
+        <li class="packs__item">
+          <article class="pack-card" data-depth-tilt>
+            <div class="card__link">
+              <div class="pack-card__media">
+                {%- if product.featured_image -%}
+                  {{ product.featured_image | image_url: width: 960 | image_tag: widths: '360, 540, 720, 960', sizes: '(min-width: 1200px) 30vw, (min-width: 768px) 45vw, 92vw', loading: 'lazy', alt: '', class: 'pack-card__image' }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'card__placeholder' }}
+                {%- endif -%}
+              </div>
+
+              <div class="pack-card__body">
+                <h2 class="pack-card__title">{{ product.title }}</h2>
+
+                {% render 'price', variant: card_variant %}
+
+                {%- if saving > 0 -%}
+                  {%- assign saving_money = saving | money -%}
+                  <p class="pack-card__saving">{{ 'rifano.packs_saving' | t: amount: saving_money }}</p>
+                {%- endif -%}
+
+                {% render 'pack-contents', product: product %}
+
+                <div class="pack-card__actions">
+                  {%- comment -%}
+                    Three identically-named "Voir le pack" links on one page are
+                    indistinguishable to a screen reader, so the accessible name
+                    carries the pack's title — the rows' "Voir tout" pattern.
+                  {%- endcomment -%}
+                  <a class="btn pack-card__view" href="{{ product.url }}">
+                    {{- 'rifano.packs_view' | t -}}
+                    <span class="visually-hidden"> — {{ product.title }}</span>
+                  </a>
+
+                  {%- if quick_add -%}
+                    {%- comment -%}
+                      A real product form: with no JavaScript it posts natively
+                      to /cart/add and the shopper lands on the cart page, the
+                      same fallback the product page has. The hidden id is the
+                      one variant the pack has.
+                    {%- endcomment -%}
+                    <form
+                      class="pack-card__form"
+                      action="{{ routes.cart_add_url }}"
+                      method="post"
+                      data-quick-add
+                      data-cart-add-url="{{ routes.cart_add_url }}"
+                      data-cart-url="{{ routes.cart_url }}"
+                      data-cart-type="{{ settings.cart_type }}"
+                    >
+                      <input type="hidden" name="id" value="{{ card_variant.id }}">
+                      <button type="submit" class="btn btn--ghost pack-card__add" data-quick-add-button>
+                        {{- 'rifano.packs_add' | t -}}
+                        <span class="visually-hidden"> — {{ product.title }}</span>
+                      </button>
+                    </form>
+                  {%- endif -%}
+                </div>
+
+                {%- comment -%}
+                  Empty on purpose; `p:empty` in critical.css keeps it from
+                  reserving a line, and an always-present `role="alert"` node
+                  announces its own text the moment it changes. The message is
+                  rendered here, not in JS, so it is the store's language.
+                {%- endcomment -%}
+                <p
+                  class="pack-card__error"
+                  data-quick-add-error
+                  role="alert"
+                  data-message="{{ 'rifano.product_add_error' | t | escape }}"
+                ></p>
+              </div>
+            </div>
+          </article>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- comment -%}
+      Quick add. The spec's file list carries no JS module, and the add path
+      already exists: cart.js owns the request enrichment (`cart:before-add`
+      adds the Section Rendering bundle), the drawer, the refresh, the focus
+      return and the announcement. What is left is the request shaper
+      product-form.js gives the product page's drawer branch — same endpoint,
+      same events, same native fallback — scoped to this section. No cart
+      logic is duplicated here, and an injected re-render never needs it
+      (cart mutations refresh the drawer and the header only).
+    {%- endcomment -%}
+    <script type="module">
+      for (const form of document.querySelectorAll('[data-quick-add]')) {
+        form.addEventListener('submit', async (event) => {
+          const addUrl = form.dataset.cartAddUrl;
+          const cartUrl = form.dataset.cartUrl;
+          // `page` mode (and no JavaScript at all) keeps the form native,
+          // exactly like the product page: the browser posts to /cart/add
+          // and lands the shopper on the cart page.
+          if (!addUrl || form.dataset.cartType === 'page') return;
+
+          const input = form.querySelector('input[name="id"]');
+          const button = form.querySelector('[data-quick-add-button]');
+          const card = form.closest('.pack-card');
+          const error = card ? card.querySelector('[data-quick-add-error]') : null;
+          if (!input) return;
+
+          event.preventDefault();
+          if (error) error.textContent = '';
+
+          const request = { items: [{ id: Number(input.value), quantity: 1 }] };
+          // cart.js listens here and adds `sections` (drawer, header), so the
+          // response already carries the rendered HTML the drawer opens with.
+          document.dispatchEvent(new CustomEvent('cart:before-add', { detail: { body: request } }));
+
+          if (button) {
+            button.setAttribute('aria-busy', 'true');
+            button.disabled = true;
+          }
+
+          try {
+            const response = await fetch(addUrl + '.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+              body: JSON.stringify(request),
+            });
+            if (!response.ok) throw new Error(String(response.status));
+
+            const cart = await response.json();
+
+            // cart.js listens here too: it applies the fresh section HTML,
+            // opens the drawer with this button as the trigger — so Esc lands
+            // focus back on it — and announces the change. `unhandled` stays
+            // true only when no drawer exists on the page.
+            const unhandled = document.dispatchEvent(
+              new CustomEvent('cart:added', {
+                detail: { cart, item: request.items[0], trigger: button },
+                cancelable: true,
+              })
+            );
+
+            if (unhandled && cartUrl) window.location.href = cartUrl;
+          } catch (addError) {
+            if (error) error.textContent = error.dataset.message || '';
+          } finally {
+            if (button) {
+              button.setAttribute('aria-busy', 'false');
+              button.disabled = false;
+            }
+          }
+        });
+      }
+    </script>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Packs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.packs_heading",
+      "default": "t:labels.packs_heading_default"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "t:labels.packs_intro"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:labels.packs_collection"
+    }
+  ],
+  "presets": [{ "name": "Packs" }]
+}
+{% endschema %}

@@ -60,7 +60,11 @@
     "cart_empty_colliers": "Empty cart: necklaces collection",
     "hero_scrub_enabled": "Hero scroll scrub",
     "hero_frames_desktop": "Hero frames (desktop)",
-    "hero_frames_mobile": "Hero frames (mobile)"
+    "hero_frames_mobile": "Hero frames (mobile)",
+    "packs_heading": "Heading",
+    "packs_heading_default": "Packs",
+    "packs_intro": "Introduction",
+    "packs_collection": "Collection"
   },
   "options": {
     "alignment": {

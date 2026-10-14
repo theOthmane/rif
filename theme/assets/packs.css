@@ -1,0 +1,284 @@
+/** RIFANO packs page (spec 21) — the ready-made packs grid, their cards and the
+    "Ce pack contient" list shared with the product page. Tokens live in
+    tokens.css. The card reuses product-card.css (`.price`, `.card__placeholder`)
+    and the spec-20 depth layers: layer 6 through `[data-depth-tilt]` /
+    `.card__link` (depth-tilt.js writes the tilt), layer 4 by replaying the home
+    rows' wave with the same `depth-card` keyframe and lag variables from
+    depth.css. */
+
+/* Page: centred title + one optional intro, like the Boutique header. */
+.packs {
+  padding-block-start: var(--s-5);
+  padding-block-end: var(--section-y);
+}
+
+.packs__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  text-align: center;
+}
+
+.packs__title {
+  margin: 0;
+}
+
+.packs__intro {
+  max-width: 60ch;
+  margin-inline: auto;
+  color: var(--c-text-2);
+}
+
+/* Grid: 1 / 2 / 3 columns at 375 / 768 / 1200. */
+.packs__grid {
+  list-style: none;
+  margin: 0;
+  padding: var(--s-5) 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6) var(--s-5);
+}
+
+@media (min-width: 768px) {
+  .packs__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .packs__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.packs__item {
+  min-width: 0;
+}
+
+/* Empty state (live storefront with no pack to show): one sentence and the
+   Boutique ghost button, centred — the spec-19 pattern. */
+.packs-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  padding-block: var(--s-7);
+  text-align: center;
+}
+
+.packs-empty__text {
+  margin: 0;
+  color: var(--c-text-2);
+}
+
+/* Card */
+.pack-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Media: the 4:5 box, the image contained on the page black — never cropped. */
+.pack-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--c-bg);
+  border-radius: var(--radius-sm);
+}
+
+.pack-card__image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.pack-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding-block-start: var(--s-3);
+}
+
+.pack-card__title {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-md);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+/* Saving: one plain sentence, never a badge (DESIGN.md: silver is earned,
+   savings are text). */
+.pack-card__saving {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+}
+
+/* Actions: the primary "Voir le pack" with the quick add under it, full width
+   at every column count. */
+.pack-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding-block-start: var(--s-2);
+}
+
+.pack-card__form {
+  display: flex;
+}
+
+.pack-card__view,
+.pack-card__add {
+  inline-size: 100%;
+}
+
+/* The quick-add error line: empty by default (`p:empty` in critical.css hides
+   it), one danger sentence when the request fails. */
+.pack-card__error {
+  font-size: var(--fs-sm);
+  color: var(--c-danger);
+}
+
+/* "Ce pack contient" — shared by the packs page and the product page, so the
+   block is context-free. */
+.pack-contents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.pack-contents__title {
+  margin: 0;
+}
+
+.pack-contents__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.pack-contents__item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.pack-contents__thumb {
+  position: relative;
+  flex: none;
+  inline-size: var(--s-7);
+  block-size: var(--s-7);
+  overflow: hidden;
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+}
+
+.pack-contents__image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.pack-contents__placeholder {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: var(--s-1);
+  fill: var(--c-silver-3);
+}
+
+.pack-contents__name {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+}
+
+/* "+N": aligned with the names column so the count reads as one more entry. */
+.pack-contents__more {
+  padding-inline-start: calc(var(--s-7) + var(--s-3));
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+}
+
+.pack-contents__gift {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+}
+
+/* Depth layer 6 (spec 20) — pointer tilt. The keyframe-less half: depth-tilt.js
+   writes the rotation on `.card__link` and toggles `.is-tilting`; the viewing
+   distance comes from depth.css, and only the covering element differs from
+   the product card (`.pack-card`). Fine pointers only, so touch never fires a
+   false hover. */
+@media (hover: hover) and (pointer: fine) {
+  .pack-card {
+    perspective: var(--depth-perspective);
+  }
+
+  .pack-card .card__link {
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+
+  .pack-card__media {
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+
+  .pack-card.is-tilting .pack-card__media {
+    transform: translateZ(var(--depth-lift));
+  }
+}
+
+/* Depth layer 4 (spec 20) — the cards arrive like a wave: each item's own
+   view() timeline, card n starting 4% later than card n-1. Gated so a browser
+   without scroll-driven timelines, or a reduced-motion visitor, keeps the
+   static final state. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .packs__item {
+      perspective: var(--depth-perspective);
+      animation: depth-card auto linear both;
+      animation-timeline: view();
+      animation-range: entry var(--depth-card-lag) cover 30%;
+    }
+
+    .packs__item:nth-child(2) {
+      --depth-card-lag: 4%;
+    }
+
+    .packs__item:nth-child(3) {
+      --depth-card-lag: 8%;
+    }
+
+    .packs__item:nth-child(n + 4) {
+      --depth-card-lag: 12%;
+    }
+  }
+}
+
+/* Reduced motion: every layer off, the page keeps its own layout. */
+@media (prefers-reduced-motion: reduce) {
+  .packs__item {
+    animation: none;
+    transform: none;
+  }
+
+  .pack-card .card__link,
+  .pack-card__media {
+    transition: none;
+  }
+
+  .pack-card.is-tilting .pack-card__media {
+    transform: none;
+  }
+}
