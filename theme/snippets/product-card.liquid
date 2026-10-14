@@ -2,8 +2,8 @@
   The RIFANO product card: one link wrapping the media and the info (badge,
   title, price). With no product it renders a placeholder card instead.
 
-  Loads `product-card.css` and `product-card.js` itself, so a card is styled
-  and behaves wherever it is used without the layout having to know about it.
+  The calling section loads `product-card.css` and `product-card.js` once;
+  loading them here emitted one tag pair per card.
 
   @param {object} [product] - The product to render. When nil the card renders in placeholder mode.
   @param {number} [placeholder_index] - Which Shopify placeholder illustration to draw in placeholder mode (1-6)
@@ -17,11 +17,14 @@
   {% render 'product-card', placeholder_index: 1 %}
 {% enddoc %}
 
-{{ 'product-card.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'product-card.js' | asset_url }}" type="module" defer></script>
 
 {%- liquid
   assign loading = loading | default: 'lazy'
+  # An eager card is in the first row, where the collection LCP lives.
+  assign fetchpriority = 'auto'
+  if loading == 'eager'
+    assign fetchpriority = 'high'
+  endif
   assign heading_level = heading_level | default: 3
   assign sizes = sizes | default: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw'
   assign placeholder_index = placeholder_index | default: 1
@@ -82,7 +85,7 @@
       {% unless product %}aria-hidden="true"{% endunless %}
     >
       {%- if media -%}
-        {{ media | image_url: width: 960 | image_tag: widths: card_widths, sizes: sizes, loading: loading, alt: '', class: 'card__image card__image--base' }}
+        {{ media | image_url: width: 960 | image_tag: widths: card_widths, sizes: sizes, loading: loading, fetchpriority: fetchpriority, alt: '', class: 'card__image card__image--base' }}
         {%- if second_srcset != blank -%}
           <img
             class="card__image card__image--alt"

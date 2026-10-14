@@ -11,8 +11,10 @@
   no JavaScript, and the optional height animation is CSS-only (pages.css).
 {% endcomment %}
 
-{{ 'pages.css' | asset_url | stylesheet_tag }}
-{{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- unless template.name == 'page' -%}
+  {{ 'pages.css' | asset_url | stylesheet_tag }}
+  {{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 
 {%- liquid
   assign content = page.content

@@ -4,7 +4,9 @@
   title typography lives in one place and `main-page` keeps only the content.
 {% endcomment %}
 
-{{ 'pages.css' | asset_url | stylesheet_tag }}
+{%- unless template.name == 'page' -%}
+  {{ 'pages.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 
 <div class="page-header page-width">
   <p class="page-header__eyebrow t-label">RIFANO</p>

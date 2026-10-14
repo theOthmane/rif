@@ -6,7 +6,11 @@
   never renders bare. No predictive search in v1.
 {% endcomment %}
 
-{{ 'collection.css' | asset_url | stylesheet_tag }}
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-card.js' | asset_url }}" type="module" defer></script>
+{%- unless template.name == 'collection' or template.name == 'list-collections' or template.name == 'search' -%}
+  {{ 'collection.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 {{ 'system.css' | asset_url | stylesheet_tag }}
 
 {%- capture search_suggestions -%}

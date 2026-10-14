@@ -9,8 +9,10 @@
   milestones) is invented here — the page is the owner's words only.
 {% endcomment %}
 
-{{ 'pages.css' | asset_url | stylesheet_tag }}
-{{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- unless template.name == 'page' -%}
+  {{ 'pages.css' | asset_url | stylesheet_tag }}
+  {{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 
 {%- liquid
   assign content = page.content | strip

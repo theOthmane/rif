@@ -17,7 +17,11 @@
   the fetch above can still fill the block in.
 {% endcomment %}
 
-{{ 'product.css' | asset_url | stylesheet_tag }}
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-card.js' | asset_url }}" type="module" defer></script>
+{%- unless template.name == 'product' -%}
+  {{ 'product.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 
 {%- liquid
   assign rec_limit = 4

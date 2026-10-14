@@ -19,6 +19,22 @@
     {%- if request.page_type == 'policy' -%}
       {{ 'system.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
+    {%- comment -%}
+      Stylesheets shared by several sections of one template load once, here.
+      Each of those sections still loads its file itself when it is placed on
+      another template (guarded by the same template names). rte.css comes
+      before product.css so the product accordion keeps its own sizing.
+    {%- endcomment -%}
+    {%- case template.name -%}
+      {%- when 'product' -%}
+        {{ 'rte.css' | asset_url | stylesheet_tag }}
+        {{ 'product.css' | asset_url | stylesheet_tag }}
+      {%- when 'page' -%}
+        {{ 'pages.css' | asset_url | stylesheet_tag }}
+        {{ 'rte.css' | asset_url | stylesheet_tag }}
+      {%- when 'collection', 'list-collections', 'search' -%}
+        {{ 'collection.css' | asset_url | stylesheet_tag }}
+    {%- endcase -%}
 
     {% # Inlined CSS Variables. Must render after tokens.css so the merchant overrides of --page-max / --gutter win the cascade. %}
     {% render 'css-variables' %}

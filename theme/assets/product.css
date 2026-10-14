@@ -505,12 +505,6 @@
   margin-block-end: 0;
 }
 
-/* A merchant's own description is content, so it gets content measure —
-   a 90rem line of text is unreadable whatever font it is set in. */
-.rte {
-  max-inline-size: var(--measure);
-}
-
 .product-info__policy-link {
   color: var(--c-text);
   text-underline-offset: var(--s-1);

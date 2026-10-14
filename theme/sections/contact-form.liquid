@@ -13,8 +13,10 @@
   send button. Phone is required too — it is the channel RIFANO's buyers use.
 {% endcomment %}
 
-{{ 'pages.css' | asset_url | stylesheet_tag }}
-{{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- unless template.name == 'page' -%}
+  {{ 'pages.css' | asset_url | stylesheet_tag }}
+  {{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 
 {%- liquid
   assign wa_number = settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-'

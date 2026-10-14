@@ -1,6 +1,8 @@
 {% comment %}Boutique: all-collection tiles — 4/5 media, gradient title, count.{% endcomment %}
 
-{{ 'collection.css' | asset_url | stylesheet_tag }}
+{%- unless template.name == 'collection' or template.name == 'list-collections' or template.name == 'search' -%}
+  {{ 'collection.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 
 <div class="boutique page-width">
   <h1 class="boutique-title t-page-title">{{ 'rifano.footer_shop' | t }}</h1>

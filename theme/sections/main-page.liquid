@@ -4,8 +4,10 @@
   and nothing at all when the page is empty.
 {% endcomment %}
 
-{{ 'pages.css' | asset_url | stylesheet_tag }}
-{{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- unless template.name == 'page' -%}
+  {{ 'pages.css' | asset_url | stylesheet_tag }}
+  {{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 
 {%- if page.content != blank -%}
   <div class="page-content page-width">

@@ -19,6 +19,8 @@
   and it is where "Plus" moves focus when it reveals the hidden rows.
 {% endcomment %}
 
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-card.js' | asset_url }}" type="module" defer></script>
 {{ 'home-rows.css' | asset_url | stylesheet_tag }}
 
 {% liquid

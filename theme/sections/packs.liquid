@@ -27,6 +27,9 @@
 
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
 {{ 'packs.css' | asset_url | stylesheet_tag }}
+{%- unless template.name == 'page' -%}
+  {{ 'rte.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
 
 {%- liquid
   assign packs_collection = section.settings.collection

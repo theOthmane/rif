@@ -15,7 +15,6 @@
   rather than a half-rendered embed.
 {% endcomment %}
 
-{{ 'product.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'product-gallery.js' | asset_url }}" type="module" defer></script>
 
 {%- liquid
@@ -49,7 +48,6 @@
         {%- for media in product.media -%}
           {%- if media.media_type == 'image' -%}
             {%- assign photo_index = photo_index | plus: 1 -%}
-            {%- assign photo_position = photo_index | append: ' sur ' | append: photo_total -%}
             <li class="product-gallery__slide" data-gallery-slide data-media-id="{{ media.id }}">
               {%- comment -%}
                 The button owns the accessible name ("Agrandir la photo 2 sur 5"),
@@ -60,12 +58,21 @@
                 type="button"
                 class="product-gallery__frame"
                 data-gallery-zoom="{{ photo_index | minus: 1 }}"
-                aria-label="{{ 'rifano.product_image_zoom' | t: position: photo_position }}"
+                aria-label="{{ 'rifano.product_image_zoom' | t: position: photo_index, total: photo_total }}"
               >
+                {%- comment -%} The first photo is the LCP: fetch it first; the rest wait their turn. {%- endcomment -%}
+                {%- if photo_index == 1 -%}
+                  {%- assign photo_loading = 'eager' -%}
+                  {%- assign photo_priority = 'high' -%}
+                {%- else -%}
+                  {%- assign photo_loading = 'lazy' -%}
+                  {%- assign photo_priority = 'auto' -%}
+                {%- endif -%}
                 {{ media | image_url: width: 2000 | image_tag:
                   widths: photo_widths,
                   sizes: '(min-width: 1024px) 56vw, 100vw',
-                  loading: 'eager',
+                  loading: photo_loading,
+                  fetchpriority: photo_priority,
                   alt: '',
                   class: 'product-gallery__image'
                 }}
@@ -86,12 +93,11 @@
   {%- if photo_total > 1 -%}
     <div class="product-gallery__dots" data-gallery-dots>
       {%- for i in (1..photo_total) -%}
-        {%- assign dot_position = i | append: ' sur ' | append: photo_total -%}
         <button
           type="button"
           class="product-gallery__dot"
           data-gallery-dot="{{ i | minus: 1 }}"
-          aria-label="{{ 'rifano.product_image_position' | t: position: dot_position }}"
+          aria-label="{{ 'rifano.product_image_position' | t: position: i, total: photo_total }}"
           aria-current="{% if i == 1 %}true{% else %}false{% endif %}"
         ></button>
       {%- endfor -%}
