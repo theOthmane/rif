@@ -299,14 +299,25 @@
   color: var(--c-text);
   text-align: center;
   text-wrap: balance;
-  hyphens: auto;
-  overflow-wrap: normal;
+  /* No auto-hyphens: with `balance` the browser hyphenates just to even the
+     lines ("confi- / dentialité" at 1440). Break a word only if it cannot fit. */
+  hyphens: manual;
+  overflow-wrap: break-word;
 }
 
 @media (min-width: 768px) {
   .shopify-policy__title {
     font-size: var(--fs-2xl);
   }
+}
+
+/* Shopify nests an <h1> inside the title div; without this it takes the UA
+   `font-size: 2em` and its margins — twice the intended size, which pushed
+   "confidentialité" past the column. The div owns the type. */
+.shopify-policy__title h1 {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
 }
 
 .shopify-policy__body {
