@@ -1,49 +1,12 @@
 {
   "general": {
-    "404": "Not found",
-    "article": "Article",
-    "block": "Block",
-    "blog": "Blog",
-    "cart": "Cart",
-    "collection": "Collection",
-    "collections": "Collections",
-    "collection_card": "Collection card",
-    "collections_grid": "Collections grid",
-    "colors": "Colors",
-    "column": "Column",
-    "container": "Container",
-    "content": "Content",
-    "fonts": "Fonts",
     "footer": "Footer",
-    "group": "Group",
-    "header": "Header",
-    "hello_world": "Hello world",
-    "layout": "Layout",
-    "liquid_tips": "Liquid tips",
-    "main": "Main",
-    "page": "Page",
-    "password": "Password",
-    "primary": "Primary",
-    "product": "Product",
-    "row": "Row",
-    "search": "Search",
-    "secondary": "Secondary",
-    "settings": "Settings",
-    "sidebar": "Sidebar",
-    "theme": "Theme",
-    "typography": "Typography"
+    "layout": "Layout"
   },
   "labels": {
-    "alignment": "Alignment",
-    "grid_gap": "Grid spacing",
-    "grid_item_width": "Grid item width",
-    "layout_direction": "Layout direction",
     "menu": "Menu",
-    "customer_account_menu": "Customer account menu",
-    "padding": "Padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
-    "show_payment_icons": "Show payment icons",
     "announcement_text": "Announcement text",
     "whatsapp_number": "WhatsApp number (digits only, wa.me format)",
     "instagram_url": "Instagram URL",
@@ -66,15 +29,6 @@
     "packs_collection": "Collection"
   },
   "options": {
-    "alignment": {
-      "left": "Left",
-      "center": "Center",
-      "right": "Right"
-    },
-    "direction": {
-      "horizontal": "Horizontal",
-      "vertical": "Vertical"
-    },
     "page_width": {
       "narrow": "Narrow",
       "wide": "Wide"
@@ -82,10 +36,6 @@
     "cart_type": {
       "drawer": "Drawer",
       "page": "Cart page"
-    },
-    "size": {
-      "large": "Large",
-      "small": "Small"
     }
   }
 }

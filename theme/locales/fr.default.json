@@ -24,17 +24,6 @@
     "error": "Mise à jour impossible. Réessayez.",
     "note_label": "Note de commande"
   },
-  "customers": {
-    "login": {
-      "email": "E-mail",
-      "password": "Mot de passe",
-      "submit": "Se connecter",
-      "title": "Connexion"
-    }
-  },
-  "collections": {
-    "title": "Collections"
-  },
   "gift_card": {
     "add_to_apple_wallet": "Ajouter à Apple Wallet",
     "card": "Carte cadeau",
@@ -42,25 +31,6 @@
     "expired": "Cette carte cadeau a expiré",
     "expires_on": "Expire le {{ expires_on }}",
     "use_at_checkout": "Utilisez cette carte cadeau au moment du paiement"
-  },
-  "hello_world": {
-    "title": "Bonjour !",
-    "intro": "Le thème Skeleton est un thème Shopify minimal et soigneusement structuré pour démarrer rapidement. Conçu avec modularité, maintenabilité et les bonnes pratiques de Shopify.",
-    "description": "Les thèmes façonnent l'expérience de la boutique en ligne pour les marchands et leurs clients. Créez des thèmes rapides et flexibles à grande échelle avec Liquid, le langage de modèles de Shopify, ainsi que HTML, CSS, JavaScript et JSON.",
-    "key_concepts_title": "Concepts clés",
-    "key_concepts_body": "Les thèmes Shopify sont un ensemble de modèles, de blocs et d'assets. Utilisez ces blocs pour créer des thèmes modulaires et personnalisables.",
-    "key_concepts_link": "En savoir plus sur les concepts clés",
-    "liquid_title": "Liquid",
-    "liquid_body": "Le langage de modèles Liquid est l'épine dorsale des thèmes Shopify et sert à charger du contenu dynamique. Étendez les objets Liquid avec les méta-champs.",
-    "liquid_link": "Voir la référence Liquid",
-    "best_practices_title": "Bonnes pratiques",
-    "best_practices_body": "Pour optimiser votre expérience de développement, Shopify a établi des bonnes pratiques à suivre pour développer votre thème et configurer vos outils.",
-    "best_practices_link": "Suivre les bonnes pratiques",
-    "liquid_tips_title": "Astuces Liquid",
-    "liquid_tips_refresh": "Afficher une autre astuce",
-    "liquid_tips_1": "Préférez le contrôle des espaces avec {%- -%} pour un HTML propre",
-    "liquid_tips_2": "Utilisez la balise render plutôt que include pour isoler chaque extrait",
-    "liquid_tips_3": "Assignez les recherches coûteuses à une variable et réutilisez-la"
   },
   "rifano": {
     "announcement_label": "Annonce",
@@ -88,7 +58,6 @@
     "email_label": "E-mail",
     "footer_nav": "Navigation du pied de page",
     "footer_shop": "Boutique",
-    "cod_delivery": "Paiement à la livraison · Livraison gratuite partout au Maroc",
     "collection_home": "Accueil",
     "collection_breadcrumb_label": "Fil d'Ariane",
     "collection_count": {
