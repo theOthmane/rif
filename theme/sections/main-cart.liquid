@@ -8,8 +8,9 @@
   alive (cart-items:defined).
 {% endcomment %}
 
-{{ 'cart.css' | asset_url | stylesheet_tag }}
+{%- comment -%} In drawer mode the layout's drawer already loads both files. {%- endcomment -%}
 {%- unless settings.cart_type == 'drawer' -%}
+  {{ 'cart.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'cart.js' | asset_url }}" type="module" defer></script>
 {%- endunless -%}
 

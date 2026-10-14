@@ -173,6 +173,7 @@ cart-items {
   line-height: var(--lh-snug);
   color: var(--c-text);
   text-decoration: none;
+  overflow-wrap: anywhere; /* an unbroken long title wraps instead of overflowing */
   /* 44px hit area: padding grows the target, the negative margin cancels it
      so the line item layout does not move. */
   padding-block: var(--s-3);
@@ -207,12 +208,15 @@ cart-items {
   grid-area: controls;
   display: flex;
   align-items: center;
+  flex-wrap: wrap; /* a long price drops under the stepper, never squeezes it */
   justify-content: space-between;
   gap: var(--s-3);
 }
 
 .cart-line__line-price {
   margin: 0;
+  margin-inline-start: auto;
+  white-space: nowrap;
   font-family: var(--font-display);
   font-weight: 400;
   font-synthesis: none;

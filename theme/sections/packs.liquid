@@ -93,7 +93,7 @@
           assign card_variant = product.selected_or_first_available_variant
 
           assign saving = 0
-          if card_variant.compare_at_price > card_variant.price
+          if card_variant.compare_at_price > card_variant.price and card_variant.price > 0
             assign saving = card_variant.compare_at_price | minus: card_variant.price
           endif
 
