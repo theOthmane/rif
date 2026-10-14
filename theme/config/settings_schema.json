@@ -42,19 +42,19 @@
         "type": "text",
         "id": "delivery_text",
         "label": "t:labels.delivery_text",
-        "default": "Livraison 24–72h"
+        "default": "Livraison 24–48h"
       },
       {
         "type": "text",
         "id": "warranty_text",
         "label": "t:labels.warranty_text",
-        "default": "Garantie 12 mois"
+        "default": "Garantie 3 mois"
       },
       {
         "type": "text",
         "id": "returns_text",
         "label": "t:labels.returns_text",
-        "default": "Retours sous 7 jours"
+        "default": "Retours sous 14 jours"
       },
       {
         "type": "link_list",
