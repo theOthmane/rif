@@ -194,6 +194,32 @@ function initViewer(gallery) {
     if (event.target === viewer) viewer.close();
   });
 
+  // Focus trap: showModal() makes the page inert but Tab can still leave the
+  // dialog to browser chrome/body. Wrap at both ends, as the menu drawer does.
+  // The listener lives on the dialog itself, so it goes with it.
+  viewer.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab') return;
+    const items = Array.from(
+      viewer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+    ).filter((node) => !node.disabled && !node.hidden && node.getClientRects().length > 0);
+    if (items.length === 0) {
+      event.preventDefault();
+      return;
+    }
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (items.length === 1) {
+      event.preventDefault();
+      first.focus();
+    } else if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
   viewer.addEventListener('close', () => {
     document.documentElement.style.overflow = '';
     if (opener) {

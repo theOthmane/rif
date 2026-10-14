@@ -303,8 +303,8 @@ function bindAddToCart(state) {
     const quantity = state.quantity ? Number(state.quantity.value) || 1 : 1;
     const line = { id, quantity };
 
-    // Captured before the buttons are disabled: a disabled element loses
-    // focus, and the drawer hands focus back to this element on close.
+    // Captured before the busy state: the drawer hands focus back to this
+    // element on close.
     const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : state.atc;
 
     // Spec 10's cart module listens here and adds `sections` (drawer,
@@ -360,17 +360,13 @@ function setBusy(state, busy) {
   for (const button of [state.atc, state.stickyButton]) {
     if (!button) continue;
     button.setAttribute('aria-busy', busy ? 'true' : 'false');
-    // Disabled while pending (spec 10): a second submit mid-request would
-    // add a second line. The pre-request state is remembered and restored,
-    // so a sold-out button comes back disabled rather than being re-enabled
-    // by this function — the variant picker is the only thing allowed to
-    // change a button's availability.
-    if (busy) {
-      button.dataset.wasDisabled = button.disabled ? 'true' : 'false';
-      button.disabled = true;
-    } else {
-      button.disabled = button.dataset.wasDisabled === 'true';
-    }
+    // `aria-disabled`, not `disabled`, while pending: a disabled button drops
+    // focus to <body> for the whole request. The re-entrancy guard
+    // (`state.pending` in the submit handler) is what stops a second line
+    // being added. `disabled` stays owned by the variant picker, so a
+    // sold-out button is never touched here.
+    if (busy) button.setAttribute('aria-disabled', 'true');
+    else button.removeAttribute('aria-disabled');
   }
 }
 
