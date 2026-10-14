@@ -54,7 +54,7 @@ Constraints:
 - Out of scope for v1: blog, reviews, customer accounts, order tracking, multi-language.
 - Spain expansion is deferred.
 
-Policy and contact copy is placeholders in this record and must stay marked as such until the owner supplies final text: delivery 24–72h [PH], warranty 12 months [PH], returns 7 days [PH]. Contact placeholders [PH]: WhatsApp `+212 6 00 00 00 00`, Instagram `@rifano.ma`, TikTok `@rifano.ma`, email `contact@rifano.ma`.
+Policy and contact values confirmed by the owner (2026-10-14): delivery 24–48h, warranty 3 months, returns within 14 days. Contact: WhatsApp `+212 6 58 25 05 49`, Instagram `@rifano.ma`, TikTok `@rifano.ma`. Still a placeholder [PH]: email `contact@rifano.ma` (no support email supplied yet).
 
 Undecided product facts: the real catalogue (products, variants, prices, photography) is TBD; whether COD is already switched on in the live store admin is TBD; shipping zones, rates, and carrier are TBD.
 
