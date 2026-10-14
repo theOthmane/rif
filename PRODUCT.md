@@ -28,7 +28,7 @@ The mechanism that a neighbouring store could not truthfully copy is positioning
 
 ## Operating Context
 
-- Store: Shopify Basic, launch store **TBD (owner decides before spec 16; `xpziwn-tw` not accessible from this login)**; preview/test store `fexgzv-pq`. Currency MAD.
+- Store: Shopify Basic, launch (main) store **`xpziwn-tw`** (not open yet, password on; owner/staff access confirmed 2026-10-14); dev/preview store `fexgzv-pq`, where all development and QA happens. Currency MAD.
 - Launch market: Morocco. Spain is planned later and is explicitly out of scope for v1.
 - Commerce: Cash on Delivery only, free delivery everywhere in Morocco, native Shopify checkout with COD enabled.
 - UI language: French. Darija is permitted only for small brand touches (e.g. "Mrehba bik"). Tagline: "Be different. Be RIFANO."
@@ -77,7 +77,7 @@ from Instagram or TikTok has to believe a real merchant stands behind the order 
 - Motion: subtle, realistic and scroll-linked; reduced motion is a supported path, never a stripped one.
 - Silver is earned: primary buttons, the RF monogram, and 1px accent hairlines only. Never a filled badge, pill or surface — counts are numerals.
 
-Assets on hand: `brand/rifano-logo.PNG`, and `brand/watches/Watch-1.png` through `Watch-4.png` (moved unmodified).
+Assets on hand: `brand/rifano-logo.PNG`, and `brand/watches/Watch-1.png` through `Watch-5.png` (third-party reference renders, never shipped or shown; Watch-5 added 2026-10-14).
 
 Anti-references, to be avoided: cluttered Moroccan dropshipping stores, mixed French/English UI, cheap badge spam, purple gradients.
 
@@ -85,9 +85,9 @@ Reference studied: maisonduhype.com. Keep its persistent COD announcement bar an
 
 ## Evidence on Hand
 
-What exists: the brand logo and four watch renders listed above; the OS 2.0 theme in `theme/` (sections + JSON templates + section groups) with its shipped templates; progress in AGENTS.md §7.
+What exists: the brand logo and the five reference watch renders listed above; the OS 2.0 theme in `theme/` (sections + JSON templates + section groups) with its shipped templates; progress in AGENTS.md §7.
 
-What does not exist and must never be fabricated: product photography and product data beyond the four watch renders, customer testimonials or reviews, press, benchmarks, delivery or warranty records, or sales figures. No product listings have been confirmed to exist in the store. `brand/watches/*.png` show third-party brands (AP, Emporio Armani, Rolex, Casio). Reference only; never shipped or shown.
+What does not exist and must never be fabricated: product photography and product data beyond the reference watch renders, customer testimonials or reviews, press, benchmarks, delivery or warranty records, or sales figures. No product listings have been confirmed to exist in the store. `brand/watches/*.png` show third-party brands (AP, Emporio Armani, Rolex, Casio). Reference only; never shipped or shown.
 
 ## Product Principles
 

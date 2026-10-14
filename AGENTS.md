@@ -67,7 +67,10 @@ config/                → settings_schema.json (RIFANO group), settings_data.js
 - **Preview store** `fexgzv-pq`, smoke theme `rifano-smoke` id `185969639647`.
   Preview URL: `https://fexgzv-pq.myshopify.com/?preview_theme_id=185969639647`.
   Storefront password: `STOREFRONT_PASSWORD` in the local `.env` (gitignored). Never write it into any tracked file.
-- **Launch store:** TBD by the owner before spec 16. Never touch `xpziwn-tw`.
+- **Main (launch) store** `xpziwn-tw`. **All development, every spec's Gate B and Gate C stay on `fexgzv-pq`.**
+  An agent touches `xpziwn-tw` only in spec 16 (theme push), spec 22 (content via Admin API, owner-supplied values only) or a session where the owner explicitly asks for a **release** (§6b).
+  Never publish or delete a theme. Never change payments, checkout, shipping, taxes, languages, domains, apps or billing on `xpziwn-tw`: those are owner actions.
+  Main storefront password: `MAIN_STOREFRONT_PASSWORD` in `.env`, same rules as above.
 
 ## 6. Workflow for every spec
 1. Read the spec. List the files you will create or edit.
@@ -75,7 +78,7 @@ config/                → settings_schema.json (RIFANO group), settings_data.js
 3. **Gate A** `npx @shopify/cli@latest theme check --path theme` → 0 errors (fix warnings in files you touched).
 4. **Gate B** push smoke → 0 errors:
    `npx @shopify/cli@latest theme push --path theme --store fexgzv-pq --theme 185969639647 --no-input`
-   Always this theme id. Never `--unpublished`, never create themes. If the theme is gone, stop and tell the owner.
+   Always this theme id. Never `--unpublished`, never create themes (sole exception: the first push to `xpziwn-tw` in spec 16). If the theme is gone, stop and tell the owner.
 5. **Gate C** visual QA with agent-browser on the preview URL (enter the storefront password if asked):
    - Screenshot every page the spec touched at **375×812, 768×1024, 1440×900** → `tools/shots/NN-<page>-<width>.png` (gitignored).
    - Check: no console errors, `document.documentElement.scrollWidth === clientWidth` (no horizontal overflow), no "translation missing", fonts render (not fallback), interactive parts of the spec actually work (open/close, click, keyboard Tab/Esc).
@@ -87,6 +90,20 @@ config/                → settings_schema.json (RIFANO group), settings_data.js
 9. Reply: files changed, gate results, acceptance checklist, owner admin to-dos. Then stop.
 
 If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with a one-line reason, stop. Never fake a pass.
+
+## 6b. Release to the main store (after spec 16, only when the owner asks)
+Owner decisions: releases go through a staging theme the owner publishes; the main store's theme editor owns its settings.
+1. Preconditions: working tree clean, Gate A 0 errors, and the code to release already pushed + QA'd on `fexgzv-pq`.
+2. The owner duplicates the live theme in `xpziwn-tw` admin and names it `rifano-staging`. A duplicate carries the live settings. Find its id read-only:
+   `npx @shopify/cli@latest theme list --store xpziwn-tw --name rifano-staging`. No such theme → stop and ask. Never create one.
+3. List JSON changes since the last release tag: `git diff --name-status <last vX.Y.Z>..HEAD -- theme/templates theme/sections/*.json theme/config`.
+   - `config/settings_data.json` **never** goes to `xpziwn-tw`.
+   - **Added** template/group JSON files are pushed (they don't exist there yet).
+   - **Modified** ones are pushed only after the owner says yes. Tell them which files, and that editor changes to those templates on the main store will be reset.
+4. Push code: `npx @shopify/cli@latest theme push --path theme --store xpziwn-tw --theme <staging id> --nodelete --no-input --ignore "config/settings_data.json" --ignore "templates/*.json" --ignore "sections/*.json"`,
+   then the approved/added JSON files with a second push using `--only <file>` (same store, theme, `--nodelete`). 0 errors on both.
+5. Give the owner the staging preview link. Gate C on staging is read-only, 375/768/1440 home + one product → `tools/shots/rel-vX.Y.Z-*.png`.
+6. The owner previews and clicks **Publish**. Wait for them to say "published". Then `git tag vX.Y.Z && git push --tags`, and add one line to Progress (`release vX.Y.Z | ✅ | <hash>`).
 
 ## 7. Progress
 | Spec | Status | Commit |
@@ -113,6 +130,7 @@ If blocked: commit what passes Gates A+B, mark the spec ⚠️ in Progress with 
 | 21 packs page | ⚠️ (store unfrozen — Gate A 0 errors (58 files), Gate B pushed 0 errors. Fixed a real H1 bug: the schema default was `t:labels.packs_heading_default`, but Shopify translates only label/info/option text, never a setting default, so the literal key would have rendered as the page title; default is now literal "Packs" (identical FR/EN) with the blank→`rifano.packs_title` fallback kept + code comment; dead schema key removed. Gate C: live regression clean — home 375/768/1440 overflow 0, console clean (HotReload info only), Tenor+Hanken live, no translation-missing; PDP absence verified (0 `.pack-contents`, no "Ce pack contient"/"Offert"); `/pages/packs` + `/collections/packs` 404 (no Packs page/collection/test-pack in admin; none created without owner approval). Populated + empty + binder re-verified in local harness (pushed bytes MD5-identical, binder byte-verbatim): grid 1/2/3 cols, overflow 0, fonts live, focus outline solid; saving/gift/4-thumbs/+N only from data, card B (no compare/gift/contents) and card C (2 variants, no quick add) clean; binder success (POST add.js {id, qty 1} + sections enrichment, cart:added trigger=button, busy cycle), error (French message, button restored), page-mode (0 fetches, stays native). Shots tools/shots/21-packs-{375,768,1440}.png, 21-packs-empty-375.png, 21-product-pack-375.png (harness) + 21-live-home-{375,768,1440}.png, 21-live-product-375.png (live). Deviations as before: (1) inline binder, zero cart logic (cart.js owns drawer/refresh/focus/announce); (2) collection falls back to handle `packs`; (3) card media --c-bg, thumbs --c-surface; (4) double packs.css load (spec-15 dedupe debt); (5) remote contact→packs QA repoint still to restore. Live CAN'T VERIFY: populated page, live empty state, PDP contents block, drawer open + Esc focus, editor placeholders.) | ba37cea |
 | 15 audit + polish | ⚠️ (all sweeps clean; packs Lighthouse + live page CAN'T VERIFY — no Packs page on the preview store. Lighthouse mobile median Perf/A11y/BP: home 91/96/100, product 86/96/100, collection 84/96/100 (A11y 96 = Shopify preview-bar `frame-title` only). Impeccable audit/polish/harden done by hand (skill not invoked): 0 critical/high. theme check 58 files 0 errors 0 warnings; every push 0 errors. axe 0 theme violations on 6 pages @375/1440; keyboard walkthrough PASS (gallery viewer trap + ATC focus fixed). Gate C 375/768/1440 on home, product, collection, boutique, cart, drawer, contact, search(+empty), 404, policy, password, menu: console 0, overflow 0, translation-missing 0, fonts live — tools/shots/15-*.png. Code backlog closed (.rte one file/one measure, stylesheet dedupe, --tracking-display, policy title, collection_count plural); deferred items closed (announcement region, .header__monogram, unused locale keys, drawer close name, 2px focus ring, cart-count OK, COD ≤2 per viewport). Owner-only items remain in the backlog list below. CAN'T VERIFY: variant radios/gallery arrows (1-variant, 1-image product), FAQ live (404)) | c9210fc, 34d2bb9, 976cddd, 8160010, 27f8034, c7b1738, 2f6677d, 6f38b8c, 905662c |
 | 16 launch | ⬜ | — |
+| 22 main-store content + dev mirror (runs between spec 16's push and its publish) | ⬜ | — |
 
 Accepted spec 11 deviations: email is required — Shopify's contact endpoint needs `contact[email]`; the mission page renders the first blockquote as the large quote, otherwise a plain rte.
 
