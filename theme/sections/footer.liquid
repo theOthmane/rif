@@ -1,8 +1,8 @@
 {% comment %}
-  RIFANO footer — one calm band: brand left, nav and contact right, then a
-  hairline and the legal bar. The COD + free-delivery promise is deliberately
-  not repeated here: the announcement bar already carries it, and the old
-  promise strip made it the third repeat on the same screen.
+  RIFANO footer (spec 24): the name as a monument. Four small columns on top
+  (brand mark, navigation, contact, legal), then the RIFANO wordmark across the
+  full width of the page. The COD + free-delivery promise is deliberately not
+  repeated here: the announcement bar and the closing band already carry it.
 {% endcomment %}
 
 {%- liquid
@@ -53,9 +53,9 @@
   if settings.whatsapp_number != blank or settings.support_email != blank or settings.instagram_url != blank or settings.tiktok_url != blank
     assign has_contact = true
   endif
-  assign has_footer_right = false
-  if footer_nav != blank or has_contact
-    assign has_footer_right = true
+  assign has_policies = false
+  if shop.privacy_policy != blank or shop.refund_policy != blank or shop.shipping_policy != blank or shop.terms_of_service != blank
+    assign has_policies = true
   endif
 -%}
 
@@ -64,63 +64,54 @@
     <div class="footer__top">
       <a class="footer__brand" href="{{ routes.root_url }}" aria-label="RIFANO — {{ shop.name }}">
         {% render 'logo', variant: 'monogram', class: 'footer__monogram' %}
-        <span class="logo__wordmark" aria-hidden="true">RIFANO</span>
       </a>
 
-      {%- if has_footer_right -%}
-      <div class="footer__right">
-        {%- if footer_nav != blank -%}
-          <nav class="footer__nav" aria-label="{{ 'rifano.footer_nav' | t }}">
-            <ul class="footer__nav-list">
-              {{ footer_nav }}
-            </ul>
-          </nav>
-        {%- endif -%}
-
-        {%- if has_contact -%}
-          <ul class="footer__contact">
-            {%- if settings.whatsapp_number != blank -%}
-              <li class="footer__contact-item">
-                <a class="footer__contact-link" href="https://wa.me/{{ settings.whatsapp_number }}">
-                  {% render 'icon', name: 'whatsapp' %}
-                  <span>{{ 'rifano.whatsapp' | t }}</span>
-                </a>
-              </li>
-            {%- endif -%}
-            {%- if settings.support_email != blank -%}
-              <li class="footer__contact-item">
-                <a class="footer__contact-link" href="mailto:{{ settings.support_email }}">
-                  {% render 'icon', name: 'mail' %}
-                  <span>{{ settings.support_email }}</span>
-                </a>
-              </li>
-            {%- endif -%}
-            {%- if settings.instagram_url != blank -%}
-              <li class="footer__contact-item">
-                <a class="footer__contact-link" href="{{ settings.instagram_url }}">
-                  {% render 'icon', name: 'instagram' %}
-                  <span>{{ 'rifano.instagram' | t }}</span>
-                </a>
-              </li>
-            {%- endif -%}
-            {%- if settings.tiktok_url != blank -%}
-              <li class="footer__contact-item">
-                <a class="footer__contact-link" href="{{ settings.tiktok_url }}">
-                  {% render 'icon', name: 'tiktok' %}
-                  <span>{{ 'rifano.tiktok' | t }}</span>
-                </a>
-              </li>
-            {%- endif -%}
+      {%- if footer_nav != blank -%}
+        <nav class="footer__nav" aria-label="{{ 'rifano.footer_nav' | t }}">
+          <ul class="footer__nav-list">
+            {{ footer_nav }}
           </ul>
-        {%- endif -%}
-      </div>
+        </nav>
       {%- endif -%}
-    </div>
 
-    <div class="footer__legal">
-      <p class="footer__copy">&copy; {{ 'now' | date: '%Y' }} RIFANO · {{ 'rifano.tagline_1' | t }} {{ 'rifano.tagline_2' | t }}</p>
+      {%- if has_contact -%}
+        <ul class="footer__contact">
+          {%- if settings.whatsapp_number != blank -%}
+            <li class="footer__contact-item">
+              <a class="footer__contact-link" href="https://wa.me/{{ settings.whatsapp_number }}">
+                {% render 'icon', name: 'whatsapp' %}
+                <span>{{ 'rifano.whatsapp' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.support_email != blank -%}
+            <li class="footer__contact-item">
+              <a class="footer__contact-link" href="mailto:{{ settings.support_email }}">
+                {% render 'icon', name: 'mail' %}
+                <span>{{ settings.support_email }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.instagram_url != blank -%}
+            <li class="footer__contact-item">
+              <a class="footer__contact-link" href="{{ settings.instagram_url }}">
+                {% render 'icon', name: 'instagram' %}
+                <span>{{ 'rifano.instagram' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.tiktok_url != blank -%}
+            <li class="footer__contact-item">
+              <a class="footer__contact-link" href="{{ settings.tiktok_url }}">
+                {% render 'icon', name: 'tiktok' %}
+                <span>{{ 'rifano.tiktok' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
 
-      {%- if shop.privacy_policy != blank or shop.refund_policy != blank or shop.shipping_policy != blank or shop.terms_of_service != blank -%}
+      {%- if has_policies -%}
         <ul class="footer__policies">
           {%- if shop.privacy_policy != blank -%}
             <li>
@@ -144,6 +135,13 @@
           {%- endif -%}
         </ul>
       {%- endif -%}
+    </div>
+
+    <div class="footer__monument">
+      <svg class="footer__wordmark" viewBox="0 0 1000 190" aria-hidden="true" focusable="false">
+        <text x="0" y="182" font-size="238" textLength="1000" lengthAdjust="spacing">RIFANO</text>
+      </svg>
+      <p class="footer__copy">&copy; {{ 'now' | date: '%Y' }} RIFANO · {{ 'rifano.tagline_1' | t }} {{ 'rifano.tagline_2' | t }}</p>
     </div>
   </div>
 </footer>

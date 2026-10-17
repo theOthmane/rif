@@ -20,6 +20,7 @@
   --fs-xl: clamp(1.375rem, 1.1rem + 1.2vw, 1.75rem);
   --fs-2xl: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
   --fs-3xl: clamp(2.5rem, 1.6rem + 4.5vw, 4.75rem);   /* hero tagline */
+  --fs-display: clamp(2.5rem, 1.2rem + 6vw, 6rem);    /* row titles: poster scale */
   --lh-tight: 1.05; --lh-snug: 1.25; --lh-body: 1.6;
   --tracking-label: 0.14em;  /* uppercase body-font labels */
   --tracking-display: 0.02em; /* Tenor reads better slightly open, never negative */

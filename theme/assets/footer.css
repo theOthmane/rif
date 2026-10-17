@@ -1,7 +1,7 @@
-/** RIFANO footer — one calm band: brand left, nav + contact right, hairline, legal bar.
-    Tokens live in tokens.css. */
+/** RIFANO footer (spec 24): the name as a monument. Four small columns above, the
+    wordmark across the full width below. Tokens live in tokens.css. */
 
-/* One black, one hairline. No grey band, no shadow, no raised surface. */
+/* One black. Regions are told apart by space and scale, never by a line. */
 .site-footer {
   /* 44px, assembled from spacing tokens (0.75 + 1 + 1 rem): the WCAG tap target. */
   --footer-target: calc(var(--s-3) + var(--s-4) + var(--s-4));
@@ -9,118 +9,83 @@
   display: block;
   margin-top: 0;
   background: var(--c-bg);
-  border-top: var(--hairline);
-  /* Top step is --s-6, not --s-7: the legal links carry a 24px minimum target
-     (WCAG 2.2 AA 2.5.8), so the air above pays for it and the band keeps its
-     240px budget at 1440. */
-  padding-block: var(--s-6) var(--s-5);
+  padding-block: var(--s-7) var(--s-5);
   color: var(--c-text-2);
 }
 
+/* A whole viewport on a roomy screen: columns at the top, the monument at the
+   bottom, air between. On a short window it simply grows with its content. */
 .site-footer__inner {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 80svh;
   width: 100%;
   max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
-/* Mobile: one column, everything left-aligned, one rhythm between the two rows. */
+/* Mobile: two by two. Brand mark, navigation, contact, legal. */
 .footer__top {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-5);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--s-5);
+  row-gap: var(--s-6);
+  align-items: start;
 }
 
-/* Brand mark: the one deliberate pause in the band. The monogram is a tracing
-   from the owner's logo, so its size is a decision — 28px keeps it the quiet
-   anchor of the footer rather than the loudest thing on the page. */
 .footer__brand {
   display: inline-flex;
   align-items: center;
-  gap: var(--s-3);
   min-height: var(--footer-target);
   text-decoration: none;
 }
 
 .footer__monogram {
-  --logo-size: calc(var(--s-4) + var(--s-3)); /* 28px */
+  --logo-size: var(--logo-footer);
 }
 
-/* The wordmark beside it: display face, uppercase, 0.32em — the brand lockup.
-   Tenor Sans has one weight and no italic, so synthesis stays off. */
-.footer__brand .logo__wordmark {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-synthesis: none;
-  font-size: var(--fs-sm);
-  line-height: var(--lh-snug);
-}
-
-/* Everything right of the brand: nav above contact, stacked. */
-.footer__right {
+.footer__nav-list,
+.footer__contact,
+.footer__policies {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--s-3);
+  align-items: flex-start;
 }
 
-/* Nav: two columns on mobile so five links read as a list, not a ribbon. */
-.footer__nav-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--s-5);
-}
-
-.footer__nav-link {
+.footer__nav-link,
+.footer__contact-link,
+.footer__policy-link {
   display: flex;
-  align-items: center;
-  min-height: var(--footer-target);
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: var(--fs-sm);
-  line-height: var(--lh-snug);
-  color: var(--c-text);
-  text-decoration: none;
-}
-
-.footer__nav-link:hover {
-  text-decoration: underline;
-  text-underline-offset: var(--s-1);
-  text-decoration-thickness: 1px;
-}
-
-/* Contact channels: quieter than the nav, so the promise stays with the
-   announcement bar and the shop links stay the loudest row here. */
-.footer__contact {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s-4);
-}
-
-.footer__contact-link {
-  display: inline-flex;
   align-items: center;
   gap: var(--s-2);
   min-height: var(--footer-target);
   font-family: var(--font-body);
-  font-weight: 400;
   font-size: var(--fs-sm);
   line-height: var(--lh-snug);
-  color: var(--c-text-2);
   text-decoration: none;
+  transition: color var(--dur-1) var(--ease-out);
 }
 
-.footer__contact-link:hover {
+/* The first column of links carries the full ink; the rest stay quiet. */
+.footer__nav-link {
+  font-weight: 500;
   color: var(--c-text);
-  text-decoration: underline;
-  text-underline-offset: var(--s-1);
-  text-decoration-thickness: 1px;
+}
+
+.footer__contact-link,
+.footer__policy-link {
+  font-weight: 400;
+  color: var(--c-text-2);
+}
+
+.footer__nav-link:hover,
+.footer__contact-link:hover,
+.footer__policy-link:hover {
+  color: var(--c-silver-1);
 }
 
 /* 18px, the same step base.css gives `.icon--sm`. Scoped to the footer because
@@ -130,20 +95,26 @@
   height: var(--icon-sm);
 }
 
-/* Legal bar: hairline, one quiet line, never centred. This is the one compact
-   row in the band — `--fs-xs` on `--lh-snug` keeps the whole legal line at a
-   single text line so the footer stays inside its 240px budget at 1440. */
-.footer__legal {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-1);
-  margin-top: var(--s-6);
-  border-top: var(--hairline);
-  padding-top: var(--s-4);
+/* The monument: the name returns at the full width of the page, on one line.
+   The SVG scales as one piece, so the width is the layout. The legal line sits
+   under it, small. */
+.footer__monument {
+  align-self: end;
+  margin-block-start: var(--s-9);
+}
+
+.footer__wordmark {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  fill: var(--c-silver-1);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
 }
 
 .footer__copy {
-  margin: 0;
+  margin: var(--s-4) 0 0;
   font-family: var(--font-body);
   font-weight: 400;
   font-size: var(--fs-xs);
@@ -151,66 +122,15 @@
   color: var(--c-text-2);
 }
 
-.footer__policies {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: var(--s-4);
-  row-gap: var(--s-1);
-}
-
-.footer__policy-link {
-  /* `flex`, not `inline-flex`: inside a flex item the inline box keeps a 25.6px
-     strut from the body line-height, which would cost the band its budget. */
-  display: flex;
-  align-items: center;
-  /* 24px minimum target (WCAG 2.2 AA 2.5.8); the footer's top padding pays
-     for it so the band stays inside 240px at 1440. */
-  min-height: var(--s-5);
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: var(--fs-xs);
-  line-height: var(--lh-snug);
-  color: var(--c-text-2);
-  text-decoration: none;
-}
-
-.footer__policy-link:hover {
-  color: var(--c-text);
-  text-decoration: underline;
-  text-underline-offset: var(--s-1);
-  text-decoration-thickness: 1px;
-}
-
-/* Desktop: brand left, nav + contact right and aligned to the same edge, then a
-   legal bar that keeps the axis instead of re-centring. */
 @media (min-width: 1024px) {
+  /* The whole footer, padding included, is exactly one viewport tall, so the
+     columns and the wordmark are on screen together. */
+  .site-footer__inner {
+    min-height: calc(100svh - var(--s-7) - var(--s-5));
+  }
+
   .footer__top {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--s-8);
-  }
-
-  .footer__right {
-    align-items: flex-end;
-  }
-
-  .footer__nav-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    column-gap: var(--s-5);
-  }
-
-  .footer__legal {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: var(--s-4);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

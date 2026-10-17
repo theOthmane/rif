@@ -25,7 +25,7 @@ History lives in git (`git log`), not in docs.
 | Packs | Ready-made packs = Shopify Bundles products in a `packs` collection, shown on `page.packs`. Offer values come only from product data, never invented (spec 21) |
 | Hero watch | Original RIFANO watch only. `brand/watches/*` are third-party brands: reference only, never shipped or shown |
 | JS | Vanilla ES modules + custom elements. No jQuery, frameworks or CDNs |
-| Skill priority | PRODUCT.md > DESIGN.md > Impeccable > scroll-craft (hero + depth layers) > taste-skill (optional polish) |
+| Skill priority | PRODUCT.md > DESIGN.md > Impeccable > scroll-craft (hero + depth layers) > taste-skill (optional polish; **owner-approved composition direction for specs 24–31 on branch `redesign/taste-v2`**, guardrails in `specs/24-monument.md`: brand type + palette stay, protected buy path stays) |
 
 ## 3. Theme architecture (OS 2.0)
 ```
@@ -132,6 +132,14 @@ Owner decisions: releases go through a staging theme the owner publishes; the ma
 | 16 launch | ⬜ (push + Gate C done on xpziwn-tw RIFANO v1.0.0 #189060677884; rollback Horizon #188534423804; waiting for spec 23 + owner publish) | — |
 | 23 launch readiness (go / no-go) | ⚠️ (Part A done: fact defaults 24–48h / 3 mois / 14 jours, Gate A 0 errors (58 files), Gate B 0 errors, Gate C dev 375/768/1440 overflow 0, console 0, fonts live, tools/shots/23-dev-*.png; RIFANO v1.0.0 #189060677884 was already live, so the code went via §6b to rifano-staging #189063823612, 0 errors, schema byte-identical, live untouched. Part B ⚠️ waiting for products: on the rifano-staging preview Colliers / Pochettes & Sacs / Packs show 0 products, /pages/packs empty state; the only product (Montres) is titled and photographed as a Rolex — third-party brand, launch blocker; no cart/checkout/Lighthouse run. Storefront found public (password off) on 2026-10-14. Evidence tools/shots/23-main-*.png. Specs 15/21 stay ⚠️) | e93655e |
 | 22 main-store content + dev mirror (runs between spec 16's push and its publish) | ⚠️ (main store done, dev mirror not run — owner chose main-only: fexgzv-pq `store auth` failed, the CLI account has no access to it. xpziwn-tw already held the 4 French menus, 4 pages (contact handle stays `contact`, owner-approved; FAQ + mission kept as is), 4 empty published collections, both pinned pack metafield definitions and hero-poster.webp; this session wrote the 4 policies (shipping, refund 14 days, terms incl. 3-month warranty, contact info; privacy untouched), the contact intro, footer-help + Livraison/Retours, and the RIFANO v1.0.0 #189060677884 settings via pull-edit-push of its own settings_data.json (WhatsApp, Instagram, TikTok, delivery 24–48h, warranty 3 mois, returns 14 jours; email blank). Gate C main preview: home/packs/faq/mission/contact/3 policies + footer at 375/768/1440 → tools/shots/22-main-*.png, overflow 0, no translation-missing, no [PH]/placeholder phone/email, fonts live, console clean; home LCP = hero-poster.webp 616 ms @375 / 688 ms @1440. Packs: no bundles yet → empty state only, Lighthouse not run; spec 15 ⚠️ stays) | cab0f68 |
+| 24 monument (footer wordmark, closing band, row titles) | ⚠️ (branch `redesign/taste-v2`, uncommitted; Gate A 0 errors, Gate B pushed 0 errors, Gate C 375/768/1440 on the preview: overflow 0, console 0, fonts live; two fixes (footer one-viewport height, CTA instant swap) pushed after that run and not re-shot; favicon + footer menu are owner admin to-dos) | — |
+| 25 poster page titles | ⬜ | — |
+| 26 boutique + collection | ⬜ | — |
+| 27 product page (high risk) | ⬜ | — |
+| 28 content pages | ⬜ | — |
+| 29 system pages | ⬜ | — |
+| 30 menu drawer | ⬜ | — |
+| 31 integration + release prep | ⬜ | — |
 
 Accepted spec 11 deviations: email is required — Shopify's contact endpoint needs `contact[email]`; the mission page renders the first blockquote as the large quote, otherwise a plain rte.
 

@@ -1,0 +1,27 @@
+{% comment %}
+  RIFANO home closing band (spec 24): one word is the button. The whole band is
+  one link to the boutique; the word is drawn as SVG text fitted to the band's
+  width so it can never wrap. The sentence says what happens next.
+{% endcomment %}
+
+{{ 'home-cta.css' | asset_url | stylesheet_tag }}
+
+<section class="cta" aria-label="{{ 'rifano.cta_word' | t }}">
+  <a class="cta__link" href="{{ routes.collections_url }}">
+    <p class="cta__line">{{ 'rifano.cta_line' | t }}</p>
+    <svg class="cta__arrow" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      <path d="M12 36 36 12M16 12h20v20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"/>
+    </svg>
+    <svg class="cta__word" viewBox="0 0 1000 140" aria-hidden="true" focusable="false">
+      <text x="0" y="134" font-size="178" textLength="1000" lengthAdjust="spacing">{{ 'rifano.cta_word' | t | upcase }}</text>
+    </svg>
+  </a>
+</section>
+
+{% schema %}
+{
+  "name": "Home closing band",
+  "settings": [],
+  "presets": [{ "name": "Home closing band" }]
+}
+{% endschema %}
