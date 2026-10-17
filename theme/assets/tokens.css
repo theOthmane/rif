@@ -68,8 +68,69 @@
 
   /* layers */
   --z-header: 50; --z-drawer: 100; --z-toast: 150;
+
+  /* Semantic layer (spec 24+). Roles, not new values: every line below is built
+     from the primitives above, so a change to a primitive still moves the whole
+     theme. Components reference these names; never the literal they resolve to.
+     Breakpoints cannot be custom properties (media queries do not read them),
+     so the three the theme uses are listed here as the one source of truth:
+     768px, 1024px, 1200px (mobile first, `min-width` only). */
+
+  /* colour roles */
+  --c-field: var(--c-silver-1);      /* flat filled surface: closing band, row arrows */
+  --c-on-field: var(--c-bg);         /* ink on --c-field (17.6:1) */
+  --c-monument: var(--c-silver-1);   /* the full-width RIFANO wordmark */
+
+  /* type roles */
+  --fs-statement: clamp(1.5rem, 1.2rem + 1vw, 2.25rem); /* a sentence set large: 24px phone, 36px desktop, never a headline */
+  --lh-none: 1;                      /* single-line glyph boxes: logo, icons */
+  --lh-hero: 1.1;                    /* the hero tagline */
+  --lh-poster: var(--lh-tight);      /* --fs-display titles */
+
+  /* touch targets: WCAG 2.2 floor, theme default, and the large control */
+  --target-min: 2.75rem;             /* 44px */
+  --target: var(--s-7);              /* 48px */
+  --target-lg: var(--s-8);           /* 64px */
+
+  /* focus ring offsets: text and controls, cards, and inside a full-bleed link */
+  --focus-offset: var(--s-1);
+  --focus-offset-card: var(--s-2);
+  --focus-offset-inset: calc(var(--s-2) * -1);
+
+  /* gaps: card grids, the airy desktop grid row, and the pause between home rows */
+  --gap-grid: var(--s-5);
+  --gap-grid-lg: var(--s-7);
+  --gap-row: var(--s-9);
+
+  /* viewport-relative sizes (one unit, small viewport, so mobile bars never jump) */
+  --screen: 100svh;
+  --band-h: 46svh;                   /* closing band; grows at 768px */
+  --footer-min-h: 80svh;             /* footer content; one screen minus padding at 1024px */
+
+  /* opacity */
+  --opacity-disabled: 0.5;
+  --opacity-dim: 0.7;
+
+  /* transitions: duration + ease as one value, fast / base / slow */
+  --t-fast: var(--dur-1) var(--ease-out);
+  --t-base: var(--dur-2) var(--ease-out);
+  --t-slow: var(--dur-3) var(--ease-out);
 }
 @media (prefers-reduced-motion: reduce) { :root { --dur-1: 0ms; --dur-2: 0ms; --dur-3: 0ms; } }
+
+@media (min-width: 768px) {
+  :root {
+    --band-h: 60svh;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    /* The whole footer, padding included, is one screen: columns and the
+       wordmark are visible together. 7 + 5 = the footer's block padding. */
+    --footer-min-h: calc(var(--screen) - var(--s-7) - var(--s-5));
+  }
+}
 
 @media (min-width: 1200px) {
   :root {

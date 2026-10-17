@@ -4,7 +4,7 @@
 /* One black. Regions are told apart by space and scale, never by a line. */
 .site-footer {
   /* 44px, assembled from spacing tokens (0.75 + 1 + 1 rem): the WCAG tap target. */
-  --footer-target: calc(var(--s-3) + var(--s-4) + var(--s-4));
+  --footer-target: var(--target-min);
 
   display: block;
   margin-top: 0;
@@ -18,7 +18,7 @@
 .site-footer__inner {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  min-height: 80svh;
+  min-height: var(--footer-min-h);
   width: 100%;
   max-width: var(--page-max);
   margin-inline: auto;
@@ -67,7 +67,7 @@
   font-size: var(--fs-sm);
   line-height: var(--lh-snug);
   text-decoration: none;
-  transition: color var(--dur-1) var(--ease-out);
+  transition: color var(--t-fast);
 }
 
 /* The first column of links carries the full ink; the rest stay quiet. */
@@ -107,7 +107,7 @@
   display: block;
   inline-size: 100%;
   block-size: auto;
-  fill: var(--c-silver-1);
+  fill: var(--c-monument);
   font-family: var(--font-display);
   font-weight: 400;
   font-synthesis: none;
@@ -123,12 +123,6 @@
 }
 
 @media (min-width: 1024px) {
-  /* The whole footer, padding included, is exactly one viewport tall, so the
-     columns and the wordmark are on screen together. */
-  .site-footer__inner {
-    min-height: calc(100svh - var(--s-7) - var(--s-5));
-  }
-
   .footer__top {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }

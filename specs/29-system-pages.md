@@ -20,6 +20,8 @@ Cart line items, quantity controls, totals, checkout button and the `cart.js` Se
 3. **Cart page:** title via `.t-page-title--poster` only if it stays on one line at 375 for "Votre panier"; otherwise keep the current size. Nothing else on the page changes.
 4. **Search:** result headings and the empty state keep their structure; title uses the spec 25 class (already applied there) — this spec only verifies it.
 
+Token adoption: replace `min-height: 100svh` in `system.css` (lines ~154, ~422) with `var(--screen)`.
+
 ## Acceptance
 - A. 0 errors. B. smoke 0 errors.
 - C. 375/768/1440: `/this-does-not-exist` (404), `/cart` empty and with an item, `/search` empty + query + no-result, the password page (view it on a theme preview with the password enabled, or in a local harness, and say which). No overflow, no console errors, buttons keyboard reachable.

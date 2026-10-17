@@ -12,7 +12,7 @@
 }
 
 .row + .row {
-  margin-block-start: var(--s-9);
+  margin-block-start: var(--gap-row);
 }
 
 .row__head {
@@ -127,7 +127,7 @@
 /* Entrance: 16px fade-up, once, at 15% visible. home-rows.js adds the class;
    without it (no JS) the rows are simply there. */
 .row--reveal {
-  animation: row-reveal var(--dur-3) var(--ease-out) both;
+  animation: row-reveal var(--t-slow) both;
 }
 
 @keyframes row-reveal {
@@ -167,16 +167,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    inline-size: calc(var(--s-8) - var(--s-4));
-    block-size: calc(var(--s-8) - var(--s-4));
-    background: var(--c-silver-1);
-    color: var(--c-bg);
+    inline-size: var(--target);
+    block-size: var(--target);
+    background: var(--c-field);
+    color: var(--c-on-field);
     border: 0;
     border-radius: var(--radius-pill);
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--dur-2) var(--ease-out), color var(--dur-1) var(--ease-out);
+    transition: opacity var(--t-base), color var(--t-fast);
   }
 
   /* At an end there is nothing left to scroll to, so the arrow is gone
@@ -212,7 +212,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--s-2);
-  min-height: calc(var(--s-8) - var(--s-4));
+  min-height: var(--target);
   padding: var(--s-2) var(--s-4);
   color: var(--c-text-2);
   text-decoration: none;
@@ -220,7 +220,7 @@
   border: 0;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: color var(--dur-1) var(--ease-out);
+  transition: color var(--t-fast);
 }
 
 .rows-plus__button:hover {
@@ -277,7 +277,7 @@
        click that reveals it, while a row already on screen runs it off-screen
        at page load: the fold-in is never seen twice. */
     [data-depth-rows] .row {
-      animation: depth-unfold var(--dur-3) var(--ease-out) both;
+      animation: depth-unfold var(--t-slow) both;
       /* The fold pivots just under the row, so the turning plane recedes away
          from the reader and never projects past the page's own width (a pivot on
          the element itself still lands a hair past the edge at 768). */

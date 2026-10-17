@@ -19,6 +19,8 @@ Page titles on browse and content pages take the poster scale the home rows alre
 2. Add the class to the five h1s above. More air above than below (DESIGN.md): keep each page's existing top rhythm, add `--s-6` below the title only where the grid sits too tight.
 3. Long merchant titles must never overflow: test with a 40-character collection title and a one-word 18-character title at 375.
 
+Token adoption: use `--lh-poster` for the title line-height (not a literal).
+
 ## Acceptance
 - A. theme check 0 errors.
 - B. smoke push 0 errors.

@@ -76,7 +76,7 @@
 .contact__channel-icon,
 .contact__channel-arrow {
   color: var(--c-text-2);
-  transition: color var(--dur-1) var(--ease-out);
+  transition: color var(--t-fast);
 }
 
 .contact__channel:hover .contact__channel-icon,
@@ -201,7 +201,7 @@ a.contact__sav-link:hover {
 
 .faq__chevron {
   color: var(--c-text-2);
-  transition: rotate var(--dur-2) var(--ease-out);
+  transition: rotate var(--t-base);
 }
 
 .faq__item[open] .faq__chevron {
@@ -224,7 +224,7 @@ a.contact__sav-link:hover {
     block-size: 0;
     overflow: hidden;
     transition:
-      block-size var(--dur-2) var(--ease-out),
+      block-size var(--t-base),
       content-visibility var(--dur-2) allow-discrete;
   }
 

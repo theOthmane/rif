@@ -21,6 +21,8 @@ Contact form fields, names, hCaptcha/phone-required behaviour and the success/er
 3. **Contact:** the three groups (channels, SAV, form) separated by space and a tone step, not lines; group titles stay readable `--fs-md` sentence case if the uppercase label fails the 4.5:1 / 13px floor, otherwise unchanged.
 4. **Packs:** cards keep the data rules; grid gets the larger row gap; the heading uses spec 25's class.
 
+Token adoption: the mission quote uses `--fs-statement` (a statement, never a headline: ≤ 36px desktop / 24px phone, ≈ 25 words max).
+
 ## Acceptance
 - A. 0 errors. B. smoke 0 errors.
 - C. 375/768/1440 on mission, FAQ, contact, packs (empty state is acceptable) — note any page that 404s on the preview (backlog: faq/mission/sav may not exist): that page is **CAN'T VERIFY**, not a pass. Screenshots `tools/shots/28-*.png`.

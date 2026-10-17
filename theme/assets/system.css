@@ -271,7 +271,7 @@
   min-height: var(--s-8);
   color: var(--c-text-2);
   text-decoration: none;
-  transition: color var(--dur-1) var(--ease-out);
+  transition: color var(--t-fast);
 }
 
 .password__social:hover {

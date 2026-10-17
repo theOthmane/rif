@@ -8,10 +8,10 @@
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr auto;
   align-items: start;
-  min-height: 46svh;
+  min-height: var(--band-h);
   padding: var(--gutter);
-  background: var(--c-silver-1);
-  color: var(--c-bg);
+  background: var(--c-field);
+  color: var(--c-on-field);
   text-decoration: none;
   /* The swap is instant: field and word change together, never a fade. */
   transition: none;
@@ -19,13 +19,13 @@
 
 .cta__link:hover,
 .cta__link:focus-visible {
-  background: var(--c-bg);
-  color: var(--c-silver-1);
+  background: var(--c-on-field);
+  color: var(--c-field);
 }
 
 .cta__link:focus-visible {
-  outline: var(--focus-ring) solid var(--c-silver-1);
-  outline-offset: calc(var(--s-2) * -1);
+  outline: var(--focus-ring) solid var(--c-field);
+  outline-offset: var(--focus-offset-inset);
 }
 
 .cta__line {
@@ -65,10 +65,6 @@
 }
 
 @media (min-width: 768px) {
-  .cta__link {
-    min-height: 60svh;
-  }
-
   .cta__line {
     font-size: var(--fs-lg);
   }

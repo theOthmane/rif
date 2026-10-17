@@ -34,13 +34,13 @@
   inline-size: 100%;
   block-size: 100%;
   object-fit: contain;
-  transition: transform var(--dur-3) var(--ease-out);
+  transition: transform var(--t-slow);
 }
 
 /* The second image sits on top, invisible until the pointer is a fine one. */
 .card__image--alt {
   opacity: 0;
-  transition: opacity var(--dur-2) var(--ease-out);
+  transition: opacity var(--t-base);
 }
 
 /* The placeholder SVG paths carry no fill of their own, so the tint comes from
@@ -89,6 +89,7 @@
 
 /* Price. Prices are one of the two allowed display-font uses (DESIGN.md). */
 .price {
+  font-variant-numeric: tabular-nums lining-nums;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -156,11 +157,11 @@
 
   .card__link {
     perspective: var(--depth-perspective);
-    transition: transform var(--dur-1) var(--ease-out);
+    transition: transform var(--t-fast);
   }
 
   .card__media {
-    transition: transform var(--dur-1) var(--ease-out);
+    transition: transform var(--t-fast);
   }
 
   .card.is-tilting .card__media {

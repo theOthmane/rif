@@ -100,7 +100,7 @@
   block-size: var(--s-1);
   border-radius: var(--radius-pill);
   background: var(--c-line-strong);
-  transition: background var(--dur-1) var(--ease-out), transform var(--dur-1) var(--ease-out);
+  transition: background var(--t-fast), transform var(--t-fast);
 }
 
 .product-gallery__dot[aria-current="true"]::after {
@@ -288,7 +288,7 @@
   border: 1px solid var(--c-line);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: border-color var(--dur-1) var(--ease-out), background var(--dur-1) var(--ease-out);
+  transition: border-color var(--t-fast), background var(--t-fast);
 }
 
 /* The radio itself is the accessible control, so it is the focusable
@@ -367,7 +367,7 @@
   background: transparent;
   border: 0;
   cursor: pointer;
-  transition: color var(--dur-1) var(--ease-out);
+  transition: color var(--t-fast);
 }
 
 .product-info__qty-button:hover {
@@ -482,7 +482,7 @@
 
 .product-info__chevron {
   flex: none;
-  transition: transform var(--dur-1) var(--ease-out);
+  transition: transform var(--t-fast);
 }
 
 .product-info__detail[open] .product-info__chevron {
@@ -584,13 +584,13 @@
      still be transitioned. `hidden` would switch the box off mid-slide. */
   visibility: hidden;
   transform: translateY(100%);
-  transition: transform var(--dur-2) var(--ease-out), visibility 0s linear var(--dur-2);
+  transition: transform var(--t-base), visibility 0s linear var(--dur-2);
 }
 
 .product-sticky-atc.is-visible {
   visibility: visible;
   transform: translateY(0);
-  transition: transform var(--dur-2) var(--ease-out), visibility 0s;
+  transition: transform var(--t-base), visibility 0s;
 }
 
 /* The page is padded, not the footer: the footer keeps its own rhythm and the

@@ -30,12 +30,13 @@ Owner approved (2026-10-17) the taste-skill composition direction for specs 24�
 2. **Touch only the files the spec lists.** If another file is needed, stop and say why.
 3. **Protected, in every spec:** the hero engine (`home-hero.*`, `hero-scrub.js`, hero frames), header markup and behaviour, cart drawer + `cart.js`, the product form and its `@app` COD slot, depth layers' class contract (`data-depth-*`, `depth.css`), every locale key already in use, routes via `routes.*`.
 4. **PRODUCT.md rules stand:** French only, never invent prices, reviews, stats, people or promises; no third-party brand names; COD and free delivery stay clear and are not repeated more than twice per viewport.
-5. **Tokens only.** New sizes go in `tokens.css` first. No raw hex/px in component CSS (SVG viewBox numbers and `textLength` are geometry, not styling).
+5. **Tokens only.** New sizes go in `tokens.css` first, and components use the semantic layer (`--c-field`, `--target*`, `--focus-offset*`, `--gap-*`, `--band-h`, `--t-fast/base/slow`, `--opacity-*`, documented in DESIGN.md). Breakpoints stay 768 / 1024 / 1200. No raw hex/px in component CSS (SVG viewBox numbers and `textLength` are geometry, not styling).
 6. **Kept from the brand, never redrawn:** Tenor Sans + Hanken Grotesk, black / void / brushed silver, the RF monogram, the silver-gradient logo wordmark. The skill's "no gradients / no uppercase tracked labels / no hairlines" rules apply to *new* work and to places a spec names; they never justify touching the logo or the type pair.
 7. **Safety nets that must still hold after each spec:** zero-products safe, empty states intact, no horizontal scroll at 375/768/1440, `prefers-reduced-motion` keeps all content, 44×44 targets, visible `:focus-visible`, 0 theme-check errors.
-8. **Gates:** A theme check → B push to `fexgzv-pq` theme `185969639647` (`--allow-live`, owner logs in) → C screenshots 375/768/1440 into `tools/shots/NN-*.png` (gitignored). A visual item passes only with a screenshot path.
-9. **Verification harness:** for pure layout work, a static page in `tools/shots/` served from the repo root is allowed (see spec 24 session); delete the server when done.
-10. **Stop rule:** if a change breaks a protected item or a gate and cannot be fixed inside the spec's files, revert that spec's edits, mark it ⚠️ in AGENTS.md Progress and stop.
+8. **Direction references:** per AGENTS.md skill priority, `imagegen-frontend-web` leads art direction. It needs an image-generation tool; none is available in the Claude Code session that wrote these specs, so a spec that changes a page starts with one horizontal reference image per section **if the owner supplies a tool or images**, otherwise with the written direction in the spec. Never claim images were generated when they were not.
+9. **Gates:** A theme check → B push to `fexgzv-pq` theme `185969639647` (`--allow-live`, owner logs in) → C screenshots 375/768/1440 into `tools/shots/NN-*.png` (gitignored). A visual item passes only with a screenshot path.
+10. **Verification harness:** for pure layout work, a static page in `tools/shots/` served from the repo root is allowed (see spec 24 session); delete the server when done.
+11. **Stop rule:** if a change breaks a protected item or a gate and cannot be fixed inside the spec's files, revert that spec's edits, mark it ⚠️ in AGENTS.md Progress and stop.
 
 ## Spec map
 | Spec | Area | Risk |

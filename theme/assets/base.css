@@ -1,5 +1,12 @@
 /** RIFANO base CSS — type helpers, buttons, inputs. Tokens live in tokens.css. */
 
+/* Anchor jumps glide, unless the visitor asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 /* Typography helpers */
 
 .t-display {
@@ -50,6 +57,7 @@
    (header, footer, cards, tiles) outrank this element selector. */
 a {
   color: var(--c-text-2);
+  transition: color var(--t-fast);
 }
 
 a:hover {
@@ -149,11 +157,24 @@ a:hover {
   border-radius: var(--radius-sm);
   background: var(--c-silver);
   color: var(--c-bg);
-  transition: filter var(--dur-1) var(--ease-out);
+  transition: filter var(--t-fast), transform var(--t-fast);
 }
 
 .btn:hover {
   filter: brightness(1.08);
+}
+
+/* Pressed: a physical settle, transform and filter only. */
+.btn:active {
+  transform: translateY(1px) scale(0.98);
+  filter: brightness(0.96);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+  transform: none;
 }
 
 .btn--ghost {
@@ -198,6 +219,13 @@ select {
   background: var(--c-surface-2);
   border: 1px solid var(--c-line-strong);
   border-radius: var(--radius-sm);
+  transition: border-color var(--t-fast);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: var(--c-accent);
 }
 
 /* Placeholder text must clear 4.5:1 on --c-surface-2. */
@@ -256,7 +284,7 @@ select {
 .search-results {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr));
-  gap: var(--s-5);
+  gap: var(--gap-grid);
 }
 .search-results .prev,
 .search-results .page,

@@ -20,6 +20,8 @@ Apply the monument direction to browse pages: collection names at poster scale o
 3. **Collection header:** title (spec 25 modifier), product count as one quiet line, sort control aligned to the page grid. No hairline under the header.
 4. **Grid spacing:** `gap` from tokens, larger row gap on desktop (`--s-7`) so cards read as objects, not a table.
 
+Token adoption: grid gaps `--gap-grid` / `--gap-grid-lg`, tile focus ring `--focus-offset-card` (collection.css:199), transitions `--t-*`.
+
 ## Acceptance
 - A. 0 errors. B. smoke 0 errors.
 - C. 375/768/1440 on `/collections`, a collection with the one real product, and an empty collection: no overflow, no console errors, tiles keyboard-focusable with a visible ring, empty states render, count pluralisation correct ("1 pièce"), depth layers still animate (or are static under reduced motion). Screenshots `tools/shots/26-*.png`.

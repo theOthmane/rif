@@ -25,7 +25,7 @@ cart-items {
   background: var(--c-surface);
   color: var(--c-text);
   transform: translateX(100%);
-  transition: transform var(--dur-2) var(--ease-out), display var(--dur-2) allow-discrete;
+  transition: transform var(--t-base), display var(--dur-2) allow-discrete;
 }
 
 .cart-drawer[open] {
@@ -276,7 +276,7 @@ cart-items {
   background: transparent;
   border: 0;
   cursor: pointer;
-  transition: color var(--dur-1) var(--ease-out);
+  transition: color var(--t-fast);
 }
 
 .qty__button:hover {

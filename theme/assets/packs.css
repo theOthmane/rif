@@ -237,11 +237,11 @@
   }
 
   .pack-card .card__link {
-    transition: transform var(--dur-1) var(--ease-out);
+    transition: transform var(--t-fast);
   }
 
   .pack-card__media {
-    transition: transform var(--dur-1) var(--ease-out);
+    transition: transform var(--t-fast);
   }
 
   .pack-card.is-tilting .pack-card__media {

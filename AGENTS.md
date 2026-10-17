@@ -25,7 +25,7 @@ History lives in git (`git log`), not in docs.
 | Packs | Ready-made packs = Shopify Bundles products in a `packs` collection, shown on `page.packs`. Offer values come only from product data, never invented (spec 21) |
 | Hero watch | Original RIFANO watch only. `brand/watches/*` are third-party brands: reference only, never shipped or shown |
 | JS | Vanilla ES modules + custom elements. No jQuery, frameworks or CDNs |
-| Skill priority | PRODUCT.md > DESIGN.md > Impeccable > scroll-craft (hero + depth layers) > taste-skill (optional polish; **owner-approved composition direction for specs 24–31 on branch `redesign/taste-v2`**, guardrails in `specs/24-monument.md`: brand type + palette stay, protected buy path stays) |
+| Skill priority | PRODUCT.md > DESIGN.md + tokens.css > **imagegen-frontend-web** (owner priority 2026-10-17: art direction for any new or redesigned page; when an image tool is available it produces one horizontal reference image per section, which is built from before any code; its brief-to-direction rules yield to PRODUCT.md facts and the brand type + palette) > Impeccable > scroll-craft (hero + depth layers) > taste-skill (optional polish; **owner-approved composition direction for specs 24–31 on branch `redesign/taste-v2`**, guardrails in `specs/24-monument.md`: brand type + palette stay, protected buy path stays) |
 
 ## 3. Theme architecture (OS 2.0)
 ```

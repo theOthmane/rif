@@ -214,7 +214,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: transform var(--dur-3) var(--ease-out);
+  transition: transform var(--t-slow);
 }
 
 .tile__placeholder {

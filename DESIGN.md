@@ -107,6 +107,31 @@ Component sizes are not spacing tokens and live in their own block:
   `--dur-1 160ms`, `--dur-2 280ms`, `--dur-3 600ms`.
 - `--z-header 50`, `--z-drawer 100`, `--z-toast 150`.
 
+### Semantic layer (spec 24+)
+
+Roles built from the primitives above; components reference the role, never the
+literal. Values live only in `tokens.css`.
+
+- **Colour:** `--c-field` (flat silver surface: closing band, row arrows),
+  `--c-on-field` (ink on it), `--c-monument` (the full-width RIFANO wordmark).
+- **Type:** `--fs-display` (row and page titles at poster scale),
+  `--fs-statement` (a sentence set large, 24px phone / 36px desktop, never a
+  headline), `--lh-none` (1, single-line glyph boxes), `--lh-hero` (1.1),
+  `--lh-poster` (= `--lh-tight`).
+- **Touch targets:** `--target-min` 44px (WCAG floor), `--target` 48px (default),
+  `--target-lg` 64px.
+- **Focus offsets:** `--focus-offset` (text, controls), `--focus-offset-card`
+  (cards, tiles), `--focus-offset-inset` (inside a full-bleed link).
+- **Gaps:** `--gap-grid` (card grids), `--gap-grid-lg` (airy desktop grids),
+  `--gap-row` (the pause between home rows).
+- **Viewport sizes:** `--screen` (100svh), `--band-h` (closing band, 46svh →
+  60svh at 768), `--footer-min-h` (80svh → one screen minus padding at 1024).
+- **Opacity:** `--opacity-disabled` 0.5, `--opacity-dim` 0.7.
+- **Transitions:** `--t-fast`, `--t-base`, `--t-slow` = duration + `--ease-out` as
+  one value (reduced motion zeroes them through the `--dur-*` tokens).
+- **Breakpoints** (media queries cannot read custom properties): 768, 1024,
+  1200px, mobile first, `min-width` only. No other breakpoint is introduced.
+
 ## Type pairing and usage rules
 
 - **Tenor Sans (display):** hero tagline, page titles, section/row titles, prices,

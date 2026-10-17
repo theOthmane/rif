@@ -33,6 +33,11 @@
         "label": "t:labels.tiktok_url"
       },
       {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "t:labels.favicon"
+      },
+      {
         "type": "text",
         "id": "support_email",
         "label": "t:labels.support_email",

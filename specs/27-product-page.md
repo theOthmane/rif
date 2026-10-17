@@ -11,7 +11,7 @@ Bring scale and calm to the product page — larger title and price, more air, g
 - `theme/sections/product-info.liquid` — **only** to add a class to the title/price wrappers if CSS alone cannot reach them; no markup moved, no attribute changed
 
 ## Protected (do not change, even whitespace in logic)
-The `<form>` and every input name/id, the variant radios (`.product-info__pill*`), the ATC button and its busy/disabled states, the sticky ATC bar, the **`@app` block slot**, `pack-contents` render, the COD / delivery details block and its text, the gallery viewer `<dialog>` and its focus handling, structured data, `product-form.js`, `product-gallery.js`, `cart.js`.
+The `<form>` and every input name/id, the variant radios (`.product-info__pill*`), the ATC button and its busy/disabled states, the sticky ATC bar, the **`@app` block slot**, `pack-contents` render, the COD / delivery details block and its text, the gallery viewer `<dialog>` and its focus handling, structured data (`product | structured_data` lives in `snippets/meta-tags.liquid`, not in this section — do not touch it), `product-form.js`, `product-gallery.js`, `cart.js`.
 
 ## Changes (CSS-led)
 1. Title: `--fs-2xl`→`--fs-display` upper bound is **not** allowed here; use `--fs-2xl` with `--lh-tight`, `text-wrap: balance`. Price: Tenor at `--fs-xl`, `tabular-nums` already on `.price`.
@@ -19,6 +19,8 @@ The `<form>` and every input name/id, the variant radios (`.product-info__pill*`
 3. Gallery: square corners stay, main image on `--c-bg`, thumbnails strip spacing from tokens; no new borders, no shadows.
 4. Details accordion: question rows lose any hairline in favour of `--s-5` space + tone step (`--c-surface`) when open. Open/close behaviour untouched.
 5. COD/delivery block: keep its text and prominence; it may gain space, never lose size or contrast. Shown once or twice, not more.
+
+Token adoption (value-identical swaps only): `--opacity-dim` at `product.css` opacity 0.7, `--focus-offset` at the pill focus ring, `--screen`-based heights where `100svh` literals appear.
 
 ## Acceptance (the order matters)
 - A. 0 errors. B. smoke 0 errors.

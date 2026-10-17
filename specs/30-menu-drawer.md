@@ -4,7 +4,7 @@
 The hamburger menu becomes a typographic moment: navigation links at display scale, one column, lots of air, no separators. Header markup and the owner's sketch (hamburger / monogram / cart) are not changed.
 
 ## Read first
-`specs/24-monument.md`, `theme/sections/menu-drawer.liquid`, `theme/assets/header.css`, the drawer's JS (find it with `grep -l menu-drawer theme/assets/*.js`), spec 15 backlog notes on focus.
+`specs/24-monument.md`, `theme/sections/menu-drawer.liquid`, `theme/assets/header.css`, `theme/assets/menu-drawer.js` (the drawer is a native `<dialog>`), spec 15 backlog notes on focus.
 
 ## Files (touch only these)
 - `theme/assets/header.css` — drawer rules only (`.menu-drawer__*`)
@@ -18,6 +18,8 @@ The hamburger menu becomes a typographic moment: navigation links at display sca
 2. Remove any hairline between items and between the top bar and list; separate by space.
 3. The welcome label ("Mrehba bik") stays, quiet, above the list.
 4. Panel width unchanged unless the larger type forces a wrap of a real menu title at 375; then allow full width on mobile only.
+
+Token adoption: link targets `--target` (48px), focus ring `--focus-offset`.
 
 ## Acceptance
 - A. 0 errors. B. smoke 0 errors.
