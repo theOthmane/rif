@@ -33,7 +33,7 @@
 
 .contact__grid {
   display: grid;
-  gap: var(--s-8);
+  gap: var(--s-7);
 }
 
 @media (min-width: 1024px) {
@@ -48,20 +48,30 @@
   margin-block-start: var(--s-7);
 }
 
+/* Spec 28 A-7: .t-label at --fs-xs on --c-text-2 passes contrast (8.93:1) but
+   not the 13px size floor — the group titles go sentence case at --fs-md. */
 .contact__title {
   margin-block-end: var(--s-4);
+  font-size: var(--fs-md);
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--c-text);
 }
 
-/* Channels: large tappable rows — icon, label + value, arrow. */
+/* Channels: large tappable rows — icon, label + value, arrow. Spec 28: the
+   list is a --c-surface tile, not a ruled table. */
 .contact__channels {
   list-style: none;
   margin: 0;
   padding: 0;
-  border-block-start: var(--hairline);
+  border-block-start: 0;
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+  padding-inline: var(--s-4);
 }
 
 .contact__channel-item {
-  border-block-end: var(--hairline);
+  border-block-end: 0;
 }
 
 .contact__channel {
@@ -101,16 +111,20 @@
   margin-inline-start: auto;
 }
 
-/* SAV summary: the three promise rows, each linking to its policy. */
+/* SAV summary: the three promise rows, each linking to its policy. Spec 28:
+   a --c-surface tile like the channels. */
 .contact__sav {
   list-style: none;
   margin: 0;
   padding: 0;
-  border-block-start: var(--hairline);
+  border-block-start: 0;
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+  padding-inline: var(--s-4);
 }
 
 .contact__sav-item {
-  border-block-end: var(--hairline);
+  border-block-end: 0;
 }
 
 .contact__sav-link {
@@ -164,9 +178,15 @@ a.contact__sav-link:hover {
   padding-inline-start: var(--s-5);
 }
 
-/* FAQ */
+/* FAQ (spec 28: wide heading on the left, questions indented, no rules — the
+   open row carries the tone as a --c-surface tile under <details>). */
 .faq {
   padding-block-end: var(--section-y);
+}
+
+/* The shared page header goes left on FAQ pages only. */
+body:has(.faq) .page-header {
+  text-align: start;
 }
 
 .faq__intro {
@@ -174,11 +194,11 @@ a.contact__sav-link:hover {
 }
 
 .faq__list {
-  border-block-start: var(--hairline);
+  border-block-start: 0;
 }
 
 .faq__item {
-  border-block-end: var(--hairline);
+  border-block-end: 0;
 }
 
 .faq__question {
@@ -186,8 +206,8 @@ a.contact__sav-link:hover {
   align-items: center;
   justify-content: space-between;
   gap: var(--s-4);
-  min-height: var(--s-8);
-  padding-block: var(--s-4);
+  min-height: var(--target);
+  padding-block: var(--s-5);
   cursor: pointer;
   list-style: none;
 }
@@ -209,8 +229,28 @@ a.contact__sav-link:hover {
   rotate: 180deg;
 }
 
+/* The open row: one flat tile; the question and the answer are inset so the
+   whole row reads inside it (the ::details-content clip box sits outside the
+   item's own padding). */
+.faq__item[open] {
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+}
+
+.faq__item[open] .faq__question,
+.faq__item[open] .faq__answer {
+  padding-inline: var(--s-5);
+}
+
 .faq__answer {
   padding-block-end: var(--s-5);
+  max-inline-size: 48ch;
+}
+
+@media (min-width: 768px) {
+  .faq__list {
+    padding-inline-start: 33.333%; /* questions start at column 5 of 12 */
+  }
 }
 
 /* Height animation only where the browser can interpolate to auto; everywhere
@@ -239,27 +279,29 @@ a.contact__sav-link:hover {
   padding-block-end: var(--section-y);
 }
 
+/* Spec 28: the statement reads left, at --fs-statement (24 -> 36px, never a
+   headline), same --measure-display. `t-display` keeps Tenor + --lh-snug. */
 .mission__quote {
   max-width: var(--measure-display);
   margin-block: 0;
-  margin-inline: auto;
-  font-size: var(--fs-2xl);
-  text-align: center;
+  margin-inline: 0;
+  font-size: var(--fs-statement);
+  text-align: start;
   text-wrap: balance;
 }
 
 .mission__body {
   margin-block-start: var(--s-8);
-  margin-inline: auto;
+  margin-inline: 0;
 }
 
 .mission__lockup {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   gap: var(--s-4);
   margin-block-start: var(--s-9);
-  text-align: center;
+  text-align: start;
 }
 
 .mission__logo {

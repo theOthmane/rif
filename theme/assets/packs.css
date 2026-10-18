@@ -36,7 +36,8 @@
   padding: var(--s-5) 0 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--s-6) var(--s-5);
+  /* Spec 28: one step more air between rows; columns on --gap-grid. */
+  gap: var(--s-7) var(--gap-grid);
 }
 
 @media (min-width: 768px) {
