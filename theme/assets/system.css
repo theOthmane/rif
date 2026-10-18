@@ -130,6 +130,12 @@
 
 .not-found__title {
   margin: 0;
+  /* Spec 29: poster scale, declared here instead of adding the opt-in
+     `.t-page-title--poster` class to the 404 markup. Same recipe as the
+     modifier in base.css — keep the two in sync. */
+  font-size: var(--fs-display);
+  line-height: var(--lh-poster);
+  letter-spacing: var(--tracking-display);
   text-wrap: balance;
 }
 
@@ -151,7 +157,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100svh;
+  min-height: var(--screen);
   padding: var(--s-6) var(--gutter);
   background: var(--c-bg);
 }
@@ -162,13 +168,28 @@
   align-items: center;
   gap: var(--s-4);
   width: 100%;
-  max-width: var(--measure-narrow);
+  max-width: var(--measure);
   text-align: center;
 }
 
 .password__brand {
   color: var(--c-text);
   text-decoration: none;
+  inline-size: 100%;
+}
+
+/* Spec 29: the footer's wordmark technique, re-declared here because
+   system.css is the only sheet the password shell shares (footer.css is not
+   loaded on layout/password.liquid). Geometry (viewBox, textLength) is the
+   markup's; this rule only paints and sets the face. */
+.password__wordmark {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  fill: var(--c-monument);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
 }
 
 .password__title {
@@ -419,7 +440,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100svh;
+  min-height: var(--screen);
   padding: var(--s-6) var(--gutter);
   background: var(--c-bg);
 }
