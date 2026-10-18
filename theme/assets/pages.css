@@ -5,7 +5,8 @@
 /* Page header — shared by every content template (page-header section). */
 .page-header {
   text-align: center;
-  padding-block: var(--section-y) var(--s-6);
+  /* Spec 25: the lower pad is the only space under a poster title. */
+  padding-block: var(--section-y) var(--s-7);
 }
 
 .page-header__eyebrow {

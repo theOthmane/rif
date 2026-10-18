@@ -53,6 +53,19 @@
   color: var(--c-text);
 }
 
+/* Poster-scale page titles (spec 25): opt-in, one class, nothing else changes.
+   Declared straight after `.t-page-title` on purpose — same specificity, so the
+   modifier only wins where both classes sit on the same element. --lh-poster
+   is --lh-tight: Tenor closes up at this size. */
+.t-page-title--poster {
+  font-size: var(--fs-display);
+  line-height: var(--lh-poster);
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+
 /* Safety net: no unstyled link may fall back to UA blue. Component rules
    (header, footer, cards, tiles) outrank this element selector. */
 a {

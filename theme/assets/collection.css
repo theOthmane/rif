@@ -48,6 +48,14 @@
   margin: 0;
 }
 
+/* Spec 25: the poster title wants the next gap one step larger on desktop; the
+   grid's own --s-5 padding-top is unchanged. */
+@media (min-width: 768px) {
+  .collection-title {
+    margin-block-end: var(--s-6);
+  }
+}
+
 .collection-description {
   max-width: var(--measure);
   color: var(--c-text-2);
