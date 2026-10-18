@@ -223,7 +223,8 @@
   align-items: center;
   gap: var(--s-3);
   padding: var(--s-3) var(--gutter);
-  border-bottom: var(--hairline);
+  /* Spec 30: no hairlines — the drawer separates by space. */
+  border-bottom: 0;
 }
 
 .menu-drawer__welcome {
@@ -233,8 +234,8 @@
 .menu-drawer__search {
   display: flex;
   gap: var(--s-2);
-  padding: var(--s-4) var(--gutter);
-  border-bottom: var(--hairline);
+  padding: var(--s-5) var(--gutter);
+  border-bottom: 0;
 }
 
 .menu-drawer__search input[type="search"] {
@@ -253,7 +254,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  gap: var(--s-4);
 }
 
 /* Display type for drawer nav rows. `.menu-drawer__link` is the row's link;
@@ -263,12 +264,18 @@
   display: flex;
   align-items: center;
   min-width: 0;
-  min-height: var(--s-7);
+  min-height: var(--target);
   font-family: var(--font-display);
   font-weight: 400;
   font-synthesis: none;
   font-size: var(--fs-xl);
   line-height: var(--lh-snug);
+  color: var(--c-text-2);
+}
+
+/* Spec 30: the current page keeps the full ink; everything else is quiet. */
+.menu-drawer__link[aria-current="page"],
+.menu-drawer__sublink[aria-current="page"] {
   color: var(--c-text);
 }
 
@@ -278,6 +285,7 @@
 }
 
 .menu-drawer__link:hover {
+  color: var(--c-text);
   text-decoration: underline;
   text-underline-offset: var(--s-1);
 }
@@ -337,8 +345,8 @@
 }
 
 .menu-drawer__bottom {
-  padding: var(--s-4) var(--gutter) var(--s-5);
-  border-top: var(--hairline);
+  padding: var(--s-6) var(--gutter) var(--s-5);
+  border-top: 0;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -368,9 +376,19 @@
   background: var(--c-surface-2);
 }
 
+/* Token adoption (spec 30): same ring, named offset token. */
+.menu-drawer :focus-visible {
+  outline-offset: var(--focus-offset);
+}
+
 @media (min-width: 768px) {
   .menu-drawer__nav {
     padding-inline: var(--gutter);
+  }
+
+  .menu-drawer__link,
+  .menu-drawer__label {
+    font-size: var(--fs-2xl);
   }
 }
 
