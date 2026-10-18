@@ -193,16 +193,19 @@
 .product-info__inner {
   display: flex;
   flex-direction: column;
-  gap: var(--s-5);
+  gap: var(--s-6);
 }
 
 .product-info__eyebrow {
   margin: 0;
 }
 
-/* The title is the page title: Tenor at --fs-2xl, never a synthetic bold. */
+/* The title is the page title: Tenor at --fs-2xl, never a synthetic bold
+   (spec 27: the poster size is not allowed on the buy page). */
 .product-info__title {
   margin: 0;
+  font-size: var(--fs-2xl);
+  line-height: var(--lh-tight);
   text-wrap: balance;
 }
 
@@ -227,6 +230,7 @@
   font-weight: 400;
   font-synthesis: none;
   font-size: var(--fs-xl);
+  line-height: var(--lh-tight);
   letter-spacing: var(--tracking-display);
   color: var(--c-text);
 }
@@ -309,7 +313,7 @@
 
 .product-info__pill:has(.product-info__pill-input:focus-visible) {
   outline: var(--focus-ring) solid var(--c-accent);
-  outline-offset: var(--s-1);
+  outline-offset: var(--focus-offset);
 }
 
 /* An unavailable value stays selectable — a shopper may want to see it —
@@ -340,12 +344,20 @@
 }
 
 /* Quantity + add to cart share one row: the quantity is a control the
-   shopper may skip, so it never takes a row of its own. */
+   shopper may skip, so it never takes a row of its own. When option pills
+   exist the row's own top margin is the variants → ATC rhythm (--s-6, spec
+   27); with one variant the row is the form's only visible child and the
+   column's gap already spaces it, so the margin would double the rhythm and
+   push the button past the 375×812 fold. */
 .product-info__row {
   display: flex;
   align-items: stretch;
   gap: var(--s-3);
-  margin-block-start: var(--s-5);
+  margin-block-start: 0;
+}
+
+.product-info__form:has(.product-info__option) .product-info__row {
+  margin-block-start: var(--s-6);
 }
 
 .product-info__qty {
@@ -422,7 +434,7 @@
 }
 
 .product-info__atc[aria-busy="true"] {
-  opacity: 0.7;
+  opacity: var(--opacity-dim);
   cursor: progress;
 }
 
@@ -448,17 +460,23 @@
   display: contents;
 }
 
-/* Details: hairlines, not boxes. Each summary is a 48px row with the
-   price-line rhythm of the whole column. The band gets a full extra step of
-   air above it: it is a different kind of thing to the buy controls, and it
-   should read as one quiet block rather than three more rows. */
+/* Details: no rules — each row is 48px of air, and the open row carries the
+   tone step (spec 27 change 4). The band gets a full extra step of air above
+   it: it is a different kind of thing to the buy controls, and it should read
+   as one quiet block rather than three more rows. */
 .product-info__details {
-  margin-block-start: var(--s-5);
-  border-top: var(--hairline);
+  margin-block-start: var(--s-6);
+  border-block-start: 0;
 }
 
 .product-info__detail {
-  border-bottom: var(--hairline);
+  border-block-end: 0;
+}
+
+.product-info__detail[open] {
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+  padding-inline: var(--s-5);
 }
 
 .product-info__summary {
@@ -466,8 +484,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--s-3);
-  min-block-size: var(--s-8);
-  padding-block: var(--s-3);
+  min-block-size: var(--target);
+  padding-block: var(--s-4);
   font-family: var(--font-body);
   font-weight: 500;
   font-size: var(--fs-sm);
