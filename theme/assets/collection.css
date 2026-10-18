@@ -4,9 +4,9 @@
 .collection-header {
   display: flex;
   flex-direction: column;
-  gap: var(--s-3);
-  padding-block-start: var(--s-5);
-  padding-block-end: var(--s-4);
+  gap: var(--s-4);
+  padding-block-start: var(--s-6);
+  padding-block-end: var(--s-6);
 }
 
 .collection-breadcrumb__list {
@@ -63,16 +63,18 @@
 
 .collection-count {
   margin: 0;
+  color: var(--c-text-2);
 }
 
 /* Toolbar: sticky under the header, one 48px row. The exact offset comes
-   from JS measuring `.site-chrome`; the token below is the no-JS fallback. */
+   from JS measuring `.site-chrome`; the token below is the no-JS fallback.
+   Spec 26: no hairline under the header — the bar separates by its own
+   --c-bg ground and space, not rules. */
 .collection-toolbar {
   position: sticky;
   top: var(--s-8);
   background: var(--c-bg);
-  border-top: var(--hairline);
-  border-bottom: var(--hairline);
+  border-block: 0;
   min-height: var(--s-7);
   display: flex;
   align-items: center;
@@ -112,6 +114,8 @@
 @media (min-width: 768px) {
   .collection-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    /* Spec 26: cards read as objects, not a table. */
+    gap: var(--s-7) var(--gap-grid);
   }
 }
 
@@ -186,6 +190,12 @@
 @media (min-width: 768px) {
   .boutique-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-grid-lg) var(--gap-grid);
+  }
+
+  /* Spec 26: the uneven gallery-wall rhythm — every second tile drops. */
+  .boutique-grid > .tile:nth-child(even) {
+    margin-block-start: var(--s-7);
   }
 }
 
@@ -195,7 +205,7 @@
   }
 }
 
-/* Tile: 4/5 media, title over a bottom --c-bg gradient, count. */
+/* Tile: 4/5 media, name + count below the image (spec 26: no scrim). */
 .tile__link {
   position: relative;
   display: block;
@@ -204,7 +214,7 @@
 }
 
 .tile__link:focus-visible {
-  outline-offset: var(--s-2);
+  outline-offset: var(--focus-offset-card);
 }
 
 .tile__media {
@@ -235,22 +245,34 @@
 }
 
 .tile__info {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--s-1);
-  padding: var(--s-5) var(--s-4) var(--s-4);
-  background: linear-gradient(to top, var(--c-bg) 0%, transparent 100%);
+  gap: var(--s-2);
+  padding-block-start: var(--s-4);
 }
 
 .tile__title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-md);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: var(--fs-xl);
   line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-display);
   color: var(--c-text);
+  text-wrap: balance;
+}
+
+.tile__count {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-text-2);
+}
+
+@media (min-width: 768px) {
+  .tile__title {
+    font-size: var(--fs-2xl);
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
