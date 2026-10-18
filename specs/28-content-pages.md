@@ -31,3 +31,16 @@ Token adoption: the mission quote uses `--fs-statement` (a statement, never a he
 
 ## Rollback
 `git revert` the spec 28 commit.
+
+## Amendments (scout, 2026-10-18)
+- **A-6 — which pages can be shot live.** `/pages/faq`, `/pages/mission` and `/pages/packs` all
+  404 on the preview store (owner must create them). Concretely: only `/pages/contact` and
+  packs' empty state can be shot live; mission and FAQ need an owner-created page or a harness.
+  Do not create pages in admin — that is the owner's step (AGENTS.md §5).
+- **A-7 — change 3's "13px floor" has no CSS rule.** Measured `.contact__title` contrast is
+  8.93:1 (4.5:1 passes); the only failing criterion is the 12px `.t-label` size. Corrected:
+  "`--fs-md` sentence case is required for `.contact__title` — `--c-text-2` at `--fs-xs` passes
+  contrast but not the size floor."
+- **A-8 — the closing lockup already exists** (`page-mission.liquid:41-45`: monogram + tagline +
+  CTA). Change 1's only implied edit is left-aligning it (`align-items: start; text-align:
+  start`). Keep the monogram `--logo-size: var(--s-8)` as it is.

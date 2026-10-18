@@ -29,3 +29,13 @@ Token adoption: grid gaps `--gap-grid` / `--gap-grid-lg`, tile focus ring `--foc
 
 ## Rollback
 `git revert` the spec 26 commit.
+
+## Amendments (scout, 2026-10-18)
+- **A-2 — the "1 pièces" backlog item is already closed.** `fr.default.json:65` has `one`/`other`
+  and the live store renders `1 pièce` / `0 pièce`. The acceptance line "Backlog item '1 pièces'
+  is checked" is satisfied by verification, not by a code change. Do not re-fix.
+- **A-4 — change 1's tile name must be allowed two lines.** `--fs-2xl` at 1200px is 40px; a
+  3-column Boutique tile is ≈ 442px wide; "Pochettes & Sacs" fits only if it wraps. Add
+  `text-wrap: balance` to `.tile__title` and verify with harness case E.
+- **A-5 — the "empty collection" to shoot is `/collections/colliers`** (measured 0 products).
+  Corrected acceptance C wording: "an empty collection = `/collections/colliers`".

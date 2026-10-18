@@ -33,3 +33,20 @@ Token adoption (value-identical swaps only): `--opacity-dim` at `product.css` op
 
 ## Rollback
 `git revert` the spec 27 commit.
+
+## Amendments (scout, 2026-10-18)
+- **A-15 — the token-adoption line is factually wrong.** There is no `100svh` literal in
+  `product.css`; it uses `100dvh` (line 158) and `100vw`. Corrected: "value-identical swaps
+  only: `--opacity-dim` (opacity 0.7) and `--focus-offset` at the pill focus ring. Leave every
+  `100dvh`/`100vw` literal alone — `--screen` is `100svh`, which is not the same unit on
+  mobile."
+- **A-16 — change 1's "Price: Tenor at `--fs-xl`" is already the current state**
+  (`product.css:229`); the only real work is the title's `--lh-tight` and the `--s-6` rhythm.
+- **A-17 — C-5's baseline number is restated.** Measured 2026-10-18 on the preview (spec-24
+  build, median of 3, mobile, shared-CDP harness): product **82 / A11y 97 / BP 100**, LCP 2.3 s,
+  CLS 0, TBT 390–700 ms. Judge C-5 against a clean 3-run median taken in the build session with
+  nothing else touching the browser, and state which number was used.
+- **A-18 — C-2's variant-radio half is CAN'T VERIFY live**: the only product has 1 variant, so
+  `product.has_only_default_variant` is true and the radio block (`product-info.liquid:81-112`)
+  never renders. Report it as such; only the `--focus-offset` swap touches
+  `.product-info__pill*`.

@@ -29,3 +29,18 @@ Token adoption: use `--lh-poster` for the title line-height (not a literal).
 
 ## Rollback
 `git revert` the spec 25 commit; nothing else depends on it except 26/28 reusing the class.
+
+## Amendments (scout, 2026-10-18)
+- **A-1 — file list, change 2.** The measured baselines show neither `packs.css` nor `system.css`
+  needs a spacing change (`.packs__header` gap `--s-3` + `.packs__grid` `padding-top: var(--s-5)`;
+  `.search__title` `margin-block-end: var(--s-5)` + `.search__form` `margin-block-end: var(--s-6)`).
+  Corrected: only `collection.css` and `pages.css` are expected to need a spacing line; touch
+  `packs.css`/`system.css` only if a screenshot proves the grid sits tight.
+- **A-2 (cross-listed from spec 26) — the "1 pièces" backlog item is already closed.**
+  `fr.default.json:65` carries the `one`/`other` forms and the live store renders `1 pièce` /
+  `0 pièce`. Nothing to fix here.
+- **A-3 — cart title.** Spec 29 wants `.t-page-title--poster` on the cart page h1, but this
+  spec's file list does not contain `main-cart.liquid`. Corrected: spec 29 changes `cart.css`
+  and `system.css` only; the cart title stays `.t-page-title`. Owner-question default **B**
+  (brief §9.1, no answer supplied) is taken and recorded in spec 29's amendments: no modifier
+  on the cart title.

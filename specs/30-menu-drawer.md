@@ -28,3 +28,15 @@ Token adoption: link targets `--target` (48px), focus ring `--focus-offset`.
 
 ## Rollback
 `git revert` the spec 30 commit.
+
+## Amendments (scout, 2026-10-18)
+- **A-12 — the active-page link is live-verifiable on `/collections`**: `menu-drawer.liquid:86-88`
+  emits `aria-current="page"` for the current page, so open the drawer on `/collections` and
+  check "Catalog" is full ink while the other links are `--c-text-2`.
+- **A-13 — menu-size cases.** Live the drawer has 3 links (all English — owner to-do). The
+  one-link and five-link cases are CAN'T VERIFY unless the owner changes `main-menu`; a static
+  harness with N links is acceptable (spec 24 guardrail 10).
+- **A-14 — change 4 needs no width change.** The panel measures 420px
+  (`min(calc(var(--s-9)*4 + var(--s-6) + var(--s-1)), 100vw)`), i.e. full viewport width below
+  420px; "Pochettes & Sacs" at `--fs-2xl` needs ≈ 300px inside a 420px panel minus gutters — it
+  fits. Keep the expression as it is.
