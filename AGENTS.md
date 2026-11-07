@@ -1,14 +1,15 @@
 # AGENTS.md — RIFANO theme: rules, architecture, workflow, progress
 
 You build the RIFANO Shopify theme in `theme/`. **One spec per session.**
-Only three docs exist at the root: this file, `PRODUCT.md` (product truth) and `DESIGN.md` (visual system + `theme/assets/tokens.css`).
+Root docs: this file (rules, architecture, workflow), `PRODUCT.md` (product truth), `DESIGN.md` (visual system + `theme/assets/tokens.css`), `STATUS.md` (session state), `DECISIONS.md` (decision log) and `CLAUDE.md` (session entry point).
 History lives in git (`git log`), not in docs.
 
 ## 1. Read first, in this order
-1. This file (all of it)
-2. `PRODUCT.md`: never contradict it, never invent facts
-3. `DESIGN.md` + `theme/assets/tokens.css`
-4. The spec you were given: `specs/NN-*.md`
+1. `STATUS.md` and `DECISIONS.md`: current state and locked decisions.
+2. This file (all of it)
+3. `PRODUCT.md`: never contradict it, never invent facts
+4. `DESIGN.md` + `theme/assets/tokens.css`
+5. The spec you were given: `specs/NN-*.md`
 
 ## 2. Fixed decisions (do not reopen)
 | Topic | Decision |
@@ -57,7 +58,7 @@ config/                → settings_schema.json (RIFANO group), settings_data.js
 - Zero-products safe: placeholders (`placeholder_svg_tag`) or a styled empty state everywhere.
 - Never show third-party brand names or logos. Never invent prices, reviews, stats or promises beyond `PRODUCT.md`.
 - Touch only the files the spec lists. If you must touch another, stop and explain.
-- Don't create new docs, reports or plans at the root. Results go in your reply and the commit message.
+- Don't create new docs, reports or plans at the root beyond the handoff files (`STATUS.md`, `DECISIONS.md`, `CLAUDE.md`). Results go in your reply and the commit message.
 
 ## 5. Tools and stores
 - Shopify CLI: always `npx @shopify/cli@latest …` (global `shopify` is broken).
@@ -84,8 +85,8 @@ config/                → settings_schema.json (RIFANO group), settings_data.js
    - Check: no console errors, `document.documentElement.scrollWidth === clientWidth` (no horizontal overflow), no "translation missing", fonts render (not fallback), interactive parts of the spec actually work (open/close, click, keyboard Tab/Esc).
    - A visual acceptance item is PASS **only with a screenshot path** as evidence. Otherwise mark it CAN'T VERIFY.
 6. Check every acceptance item: PASS / FAIL / CAN'T VERIFY, with file:line or screenshot path.
-7. Update the **Progress** table below (status + commit hash, one line). Nothing else in this file.
-8. Stage only the spec's files + `AGENTS.md` (progress line). Anything else in `git status`: list it in your reply, leave it unstaged.
+7. Update the **Progress** table below (status + commit hash, one line) and `STATUS.md` (done / in progress / next / open questions).
+8. Stage only the spec's files + `AGENTS.md` (progress line) + `STATUS.md` + `DECISIONS.md`. Anything else in `git status`: list it in your reply, leave it unstaged.
    `git commit -m "feat(NN): <summary>"` (body: gate results A/B/C + open items), then `git push`.
 9. Reply: files changed, gate results, acceptance checklist, owner admin to-dos. Then stop.
 
